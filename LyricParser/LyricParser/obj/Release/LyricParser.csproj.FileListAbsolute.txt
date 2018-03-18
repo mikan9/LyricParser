@@ -1,0 +1,95 @@
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\bin\Release\LyricParser.exe.config
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\bin\Release\LyricParser.exe
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\bin\Release\LyricParser.pdb
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\MainWindow.baml
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\MainWindow.g.cs
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\App.g.cs
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\LyricParser_MarkupCompile.cache
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\LyricParser.g.resources
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\LyricParser.Properties.Resources.resources
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\LyricParser.csproj.GenerateResource.Cache
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\LyricParser.exe
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\LyricParser.pdb
+C:\Users\Sebastian\documents\visual studio 2012\Projects\LyricParser\LyricParser\obj\Release\LyricParser.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\LyricParser.exe.config
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.exe
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.pdb
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\LyricParser.exe
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\LyricParser.pdb
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\MainWindow.baml
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\MainWindow.g.cs
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\App.g.cs
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser_MarkupCompile.cache
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.g.resources
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.Properties.Resources.resources
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.csproj.GenerateResource.Cache
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\LyricParser.exe.config
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.exe
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.pdb
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\LyricParser.exe
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\LyricParser.pdb
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.csprojResolveAssemblyReference.cache
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\MainWindow.baml
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\MainWindow.g.cs
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\App.g.cs
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser_MarkupCompile.cache
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.g.resources
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.Properties.Resources.resources
+G:\WD SmartWare.swstor\SEBASTIAN-MSI\Backup\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\LyricParser.csproj.GenerateResource.Cache
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\EntityFramework.dll
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\EntityFramework.SqlServer.dll
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\System.Data.SQLite.dll
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\System.Data.SQLite.EF6.dll
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\System.Data.SQLite.Linq.dll
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\EntityFramework.xml
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\EntityFramework.SqlServer.xml
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\bin\Release\System.Data.SQLite.xml
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\EditLyrics.baml
+D:\Documents\Visual Studio 2013\Projects\LyricParser\LyricParser\obj\Release\EditLyrics.g.cs
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\LyricParser.exe.config
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\LyricParser.exe
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\LyricParser.pdb
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\EntityFramework.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\System.Data.SQLite.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\System.Data.SQLite.EF6.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\System.Data.SQLite.Linq.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\EntityFramework.xml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\System.Data.SQLite.xml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\EditLyrics.baml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\MainWindow.baml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\EditLyrics.g.cs
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\MainWindow.g.cs
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\App.g.cs
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser_MarkupCompile.cache
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser.g.resources
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser.csproj.GenerateResource.Cache
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser.csproj.CoreCompileInputs.cache
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser.exe
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser.pdb
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\HtmlAgilityPack.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\HtmlAgilityPack.pdb
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\HtmlAgilityPack.xml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser_MarkupCompile.lref
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\Resources.baml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\SettingsWindow.g.cs
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\GeneratedInternalTypeHelper.g.cs
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\SettingsWindow.baml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\Themes\Dark.xaml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\Themes\Light.xaml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser_Content.g.cs
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\App.baml
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\sv-SE\LyricParser.resources.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\en-US\LyricParser.resources.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\bin\Release\ja-JP\LyricParser.resources.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser.LocaleResources.resources
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser.LocaleResources.sv-SE.resources
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser.LocaleResources.en-US.resources
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\LyricParser.LocaleResources.ja-JP.resources
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\sv-SE\LyricParser.resources.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\en-US\LyricParser.resources.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\ja-JP\LyricParser.resources.dll
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\WindowStyle.g.cs
+C:\Users\ahlst\Documents\Visual Studio 2017\Projects\LyricParser\LyricParser\obj\Release\WindowStyle.baml

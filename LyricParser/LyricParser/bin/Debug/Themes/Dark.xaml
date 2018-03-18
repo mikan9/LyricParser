@@ -1,0 +1,42 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:LyricParser.Themes">
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#FF1D1D1D" />
+
+    <SolidColorBrush x:Key="ForegroundBrush" Color="#FFF0EFF1" />
+    <SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#535355" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#434346" />
+
+    <Color x:Key="TopGradientColor">#FF2D2D30</Color>
+    <Color x:Key="TopGradientColorShadow">#FF000000</Color>
+    <Color x:Key="TopGradientColorShadow2">#FF1D1D1D</Color>
+    
+    <SolidColorBrush x:Key="TopBackgroundBrush" Color="#FF2D2D30" />
+    <SolidColorBrush x:Key="TopSeparatorBrush" Color="#FF404040" />
+    <SolidColorBrush x:Key="BottomBackgroundBrush" Color="#FF2D2D30" />
+
+    <SolidColorBrush x:Key="LyricsForegroundBrush" Color="#FFF0EFF1" />
+
+    <SolidColorBrush x:Key="TextBoxBorderBrush" Color="#434346" />
+    <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="#FF1D1D1D" />
+    <SolidColorBrush x:Key="TextBoxDisabledBackgroundBrush" Color="#EEEEF2" />
+    <SolidColorBrush x:Key="TextBoxSelectionBrush" Color="#1F4F77" />
+
+    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#3E3E40" />
+    <SolidColorBrush x:Key="ButtonSelectedBrush" Color="#007ACC" />
+    
+    <SolidColorBrush x:Key="ComboBoxForegroundBrush" Color="#FFF0EFF1" />
+    <SolidColorBrush x:Key="ComboBoxNormalBorderBrush" Color="#FF434346" />
+    <SolidColorBrush x:Key="ComboBoxNormalBackgroundBrush" Color="#FF333337" />
+
+    <SolidColorBrush x:Key="ComboBoxArrowBrush" Color="#717171" />
+    <SolidColorBrush x:Key="ComboBoxArrowHoverBrush" Color="#007ACC" />
+    <SolidColorBrush x:Key="ComboBoxToggleButtonCheckedBrush" Color="#007ACC" />
+    <SolidColorBrush x:Key="ComboBoxToggleButtonHoverBrush" Color="#1F1F20" />
+    <SolidColorBrush x:Key="ComboBoxToggleButtonBorderBrush" Color="#007ACC" />
+    <Thickness x:Key="ComboBoxToggleButtonBorderThickness">1, 0, 0, 0</Thickness>
+
+    <SolidColorBrush x:Key="ComboBoxItemHoverBrush" Color="#3F3F46" />
+    <SolidColorBrush x:Key="ComboBoxPanelBackgroundBrush" Color="#1B1B1C" />
+
+</ResourceDictionary>

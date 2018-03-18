@@ -1,0 +1,87 @@
+﻿<ResourceDictionary x:Class="LyricParser.WindowStyle"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Caption Button -->
+    <Style x:Key="CaptionButtonStyle" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="LayoutRoot" Background="Transparent" Width="20" Height="15">
+                        <TextBlock x:Name="txt" Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" FontSize="10"
+                                   Foreground="#FFF0EFF1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   RenderOptions.ClearTypeHint="Auto" TextOptions.TextRenderingMode="Aliased"  TextOptions.TextFormattingMode="Display"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="LayoutRoot" Property="Background" Value="#3E3E40"/>
+                        </Trigger>
+                        <Trigger Property="Content" Value="&#xE711;">
+                            <Setter TargetName="txt" Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+        <Setter Property="Content" Value="&#xE949;"/>
+    </Style>
+    
+    <Style x:Key="MinimizeButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+        <Setter Property="Content" Value="&#xE949;"/>
+    </Style>
+
+    <Style x:Key="MaximizeButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+        <Setter Property="Content" Value="&#xE739;"/>
+    </Style>
+
+    <Style x:Key="RestoreButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+        <Setter Property="Content" Value="&#xE923;"/>
+    </Style>
+
+    <!-- Window -->
+    <Style x:Key="CustomWindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome CaptionHeight="20" CornerRadius="0" GlassFrameThickness="0,0,0,1" NonClientFrameEdges="None" ResizeBorderThickness="2" UseAeroCaptionButtons="False" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="#FF2D2D30" />
+        <Setter Property="Background" Value="Gray" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="5,30,5,5">
+                            <AdornerDecorator>
+                                <ContentPresenter />
+                            </AdornerDecorator>
+                        </Border>
+                        <DockPanel Margin="8, 8, 8, 8" Height="20" VerticalAlignment="Top" LastChildFill="False">
+                            <TextBlock Margin="5, 0, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontFamily="Segoe MDL2 Assets" Foreground="White" Text="&#xE90B;" FontSize="16" />
+                            <TextBlock Margin="15, 0, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="16" Foreground="White" Text="{TemplateBinding Title}"/>
+                            <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE711;" x:Name="CloseBtn" Click="CloseClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                            <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE922;" x:Name="RestoreBtn" Click="MaximizeRestoreClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                            <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE921;" x:Name="MinimizeBtn" Click="MinimizeClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                        </DockPanel>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="WindowState" Value="Maximized">
+                            <Setter TargetName="RestoreBtn" Property="Content" Value="&#xE923;"/>
+                            <Setter Property="WindowChrome.WindowChrome">
+                                <Setter.Value>
+                                    <WindowChrome ResizeBorderThickness="0" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+
+</ResourceDictionary>

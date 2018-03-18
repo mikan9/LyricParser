@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:LyricParser.Themes">
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#000" />
+
+    <SolidColorBrush x:Key="ForegroundBrush" Color="#FFF" />
+    <SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#FFACACAC" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#CCCEDB" />
+
+    <Color x:Key="TopGradientColor">#EEEEF2</Color>
+    <Color x:Key="TopGradientColorShadow">#002D2D30</Color>
+    <Color x:Key="TopGradientColorShadow2">#00404040</Color>
+    
+    <SolidColorBrush x:Key="TopBackgroundBrush" Color="#EEEEF2" />
+    <SolidColorBrush x:Key="TopSeparatorBrush" Color="#FFBBBBBB" />
+    <SolidColorBrush x:Key="BottomBackgroundBrush" Color="#EEEEF2" />
+
+    <SolidColorBrush x:Key="LyricsForegroundBrush" Color="#404040" />
+
+    <SolidColorBrush x:Key="TextBoxBorderBrush" Color="#CCCEDB" />
+    <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="#FFF" />
+    <SolidColorBrush x:Key="TextBoxDisabledBackgroundBrush" Color="#EEEEF2" />
+    <SolidColorBrush x:Key="TextBoxSelectionBrush" Color="#99CAEB" />
+
+    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#C9DEF5" />
+    <SolidColorBrush x:Key="ButtonSelectedBrush" Color="#007ACC" />
+
+    <SolidColorBrush x:Key="ComboBoxForegroundBrush" Color="#404040" />
+    <SolidColorBrush x:Key="ComboBoxNormalBorderBrush" Color="#FF434346" />
+    <SolidColorBrush x:Key="ComboBoxNormalBackgroundBrush" Color="#EEEEF2" />
+
+    <SolidColorBrush x:Key="ComboBoxArrowBrush" Color="#717171" />
+    <SolidColorBrush x:Key="ComboBoxArrowHoverBrush" Color="#404040" />
+    <SolidColorBrush x:Key="ComboBoxToggleButtonCheckedBrush" Color="#007ACC" />
+    <SolidColorBrush x:Key="ComboBoxToggleButtonHoverBrush" Color="#C9DEF5" />
+    <SolidColorBrush x:Key="ComboBoxToggleButtonBorderBrush" Color="#007ACC" />
+
+    <SolidColorBrush x:Key="ComboBoxItemHoverBrush" Color="#C9DEF5" />
+    <SolidColorBrush x:Key="ComboBoxPanelBackgroundBrush" Color="#F6F6F6" />
+
+</ResourceDictionary>
