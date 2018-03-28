@@ -58,7 +58,7 @@ namespace LyricParser
         {
             InitializeComponent();
             this.main = main;
-            this.Title = LocaleResources.EditWindowTitle + " | " + main.songInfoTxt.Text;
+            this.Title = LocaleResources.EditWindowTitle + " | " + main.currentSong.Artist + " - " + main.currentSong.Title;
             DatabaseHandler.LoadLyrics();
             foreach (Lyric l in LyricHandler.LoadLyrics())
             {

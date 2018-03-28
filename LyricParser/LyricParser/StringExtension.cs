@@ -82,5 +82,15 @@ namespace LyricParser
                 return false;
             }
         }
+
+        public static string GetString (this List<string> list)
+        {
+            string str = "";
+            foreach(string s in list)
+            {
+                str += "{" + s + "}";
+            }
+            return str;
+        }
     }
 }

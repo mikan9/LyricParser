@@ -480,16 +480,69 @@ namespace LyricParser
                     artist = artist.Remove(index, 1).Insert(index, "”");
                 }
 
-                string url = "https://www.musixmatch.com/lyrics/" + artist.Replace(' ', '-').Replace("!", "") + "/" + name.Replace(' ', '-').Replace(" '", "").Replace("'", "-").Replace("'", "");
+                //string url = "https://www.musixmatch.com/lyrics/" + artist.Replace(' ', '-').Replace("!", "") + "/" + name.Replace(' ', '-').Replace(" '", "").Replace("'", "-").Replace("'", "");
+                string url = "";
+                string _url = "https://www.musixmatch.com/search/" + artist.Replace(" ", "%20") + "-" + name.Replace(" ", "%20");
 
-                Trace.WriteLine(url);
-                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
-                req.KeepAlive = false;
-                req.ProtocolVersion = HttpVersion.Version10;
-                req.ServicePoint.ConnectionLimit = 1;
-                response = req.GetResponse();
-                ParseLyrics(LyricsDatabase.Musicxmatch, response);
+                //Trace.WriteLine(url);
+                //ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                //HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
+                //req.KeepAlive = false;
+                //req.ProtocolVersion = HttpVersion.Version10;
+                //req.ServicePoint.ConnectionLimit = 1;
+                //response = req.GetResponse();
+                //ParseLyrics(LyricsDatabase.Musicxmatch, response);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
+                request.Method = "GET";
+                response = request.GetResponse();
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    var doc = new HtmlDocument();
+                    doc.LoadHtml(reader.ReadToEnd());
+                    var cards = doc.DocumentNode.SelectNodes("//*[contains(@class,'media-card-text')]");
+                    try
+                    {
+                        for (var i = 0; i < cards.Count; ++i)
+                        {
+                            var child = cards.ElementAt(i);
+                            var titleWrapper = child.SelectSingleNode(".//*[contains(@class, 'title')]");
+                            var artistWrapper = child.SelectSingleNode(".//*[contains(@class, 'artist')]");
+
+                            string _title = titleWrapper.FirstChild.InnerText.ToLower().TrimStart().TrimEnd();
+                            string _artist = artistWrapper.InnerText.ToLower().TrimStart().TrimEnd();
+
+                            List<string> artists = new List<string>();
+                            artists.AddRange(currentSong.Artist.Split(new string[] { ".feat", ",", "&" }, StringSplitOptions.RemoveEmptyEntries));
+                            for(int j = 0; j < artists.Count; ++j)
+                            {
+                                artists[j] = artists[j].ToLower().TrimStart().TrimEnd();
+                            }
+
+                            if (_title == currentSong.Title.ToLower() && artists.Any(a => _artist.Contains(a.ToLower())))
+                            {
+                                //url = "https://www.musixmatch.com" + titleWrapper.GetAttributeValue("href", "/null"); // Not working for some unknown reason...
+                                url = "https://www.musixmatch.com" + titleWrapper.InnerHtml.Split(new string[] { "href=\"" }, StringSplitOptions.None)[1].Split('"')[0];
+                                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                                req.Method = "GET";
+                                response = req.GetResponse();
+                                ParseLyrics(LyricsDatabase.Musicxmatch, response);
+                                break;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        if (autoSearch == true)
+                        {
+                            Trace.WriteLine("Failed searching for western lyrics...");
+                            RetryGettingLyrics(Category.JP, name);
+                        }
+                        return;
+                    }
+                }
+                return;
+
             }
             catch(Exception e)
             {

@@ -111,13 +111,13 @@ namespace LyricParser
             switch (MainWindow.currentPlayer)
             {
                 case Player.Winamp:
-                    return Song.GetWinampInfo();
+                    return GetWinampInfo();
                 case Player.Spotify:
-                    return Song.GetSpotifyInfo();
+                    return GetSpotifyInfo();
                 case Player.Youtube:
-                    return Song.GetYoutubeInfo();
+                    return GetYoutubeInfo();
                 case Player.GooglePlayMusic:
-                    return Song.GetGooglePlayMusicInfo();
+                    return GetGooglePlayMusicInfo();
             }
 
             Song song = new Song();
@@ -224,9 +224,13 @@ namespace LyricParser
             Process[] procs = Process.GetProcessesByName("chrome");
             foreach (Process p in procs)
             {
-                if (p.MainWindowTitle.Length > 0)
+                if (p.MainWindowTitle.Length > 0 && p.MainWindowTitle.EndsWith(" - YouTube - Google Chrome"))
                 {
-                    tabName = p.MainWindowTitle;
+                    tabName = p.MainWindowTitle.Replace(" - YouTube - Google Chrome", "");
+                    tabName = tabName.Split(new string[] { "(feat" }, StringSplitOptions.None)[0];
+                    tabName = tabName.Split(new string[] { "(Lyric" }, StringSplitOptions.None)[0];
+                    tabName = tabName.Split(new string[] { "(Official" }, StringSplitOptions.None)[0];
+                    tabName = tabName.Split(new string[] { "[Official" }, StringSplitOptions.None)[0];
                 }
             }
 
