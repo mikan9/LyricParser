@@ -24,6 +24,26 @@ namespace LyricParser
         {
             InitializeComponent();
             Properties.UserSettings.Default.Reload();
+
+            LoadTheme();
+        }
+
+        public void LoadTheme()
+        {
+            Uri resUri = new Uri("/Resources.xaml", UriKind.Relative);
+            Uri themeUri = new Uri(AppDomain.CurrentDomain.BaseDirectory + @"Themes\" + Properties.UserSettings.Default.ThemePath);
+
+            var resource = Application.Current.Windows[1].Resources.MergedDictionaries;
+            resource.Clear();
+
+            var resDic = new ResourceDictionary();
+            var themeDic = new ResourceDictionary();
+
+            resDic.Source = resUri;
+            themeDic.Source = themeUri;
+
+            resDic.MergedDictionaries.Add(themeDic);
+            resource.Add(resDic);
         }
 
         public bool newSettings = false;

@@ -77,7 +77,6 @@ C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\bin\Debug\Entity
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\bin\Debug\HtmlAgilityPack.xml
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\bin\Debug\System.Data.SQLite.xml
-C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Debug\LyricParser.csprojResolveAssemblyReference.cache
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Debug\WindowStyle.baml
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Debug\App.baml
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Debug\EditLyrics.g.cs
@@ -106,3 +105,4 @@ C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Debug\ja-JP\
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Debug\LyricParser.csproj.CopyComplete
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Debug\LyricParser.exe
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Debug\LyricParser.pdb
+C:\Users\ahlst\Source\Repos\LyricParser\LyricParser\LyricParser\obj\Debug\LyricParser.csprojAssemblyReference.cache

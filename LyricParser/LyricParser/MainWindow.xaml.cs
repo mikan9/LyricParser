@@ -38,7 +38,7 @@ namespace LyricParser
         private int MAX_RETRIES = 6;
         private static int retries = 6;
         private static bool paused = false;
-        double heightDiff = 100 + 20;
+        double heightDiff = 100 + 23;
 
         private double zoomValue = 100.0;
         private double defFontSize = 12.0;
@@ -61,6 +61,7 @@ namespace LyricParser
 
         public Status currentStatus = Status.Standby;
         public Song currentSong;
+        public string currentUrl = "";
         string currentSongID = "";
         public static Player currentPlayer = Player.Winamp;
         static Category cat = Category.JP;
@@ -90,6 +91,18 @@ namespace LyricParser
            
             LoadTheme();
 
+            if (!Properties.UserSettings.Default.SearchAnime) animeRad.Visibility = Visibility.Collapsed;
+            else animeRad.Visibility = Visibility.Visible;
+
+            if (!Properties.UserSettings.Default.SearchTouhou) touhouRad.Visibility = Visibility.Collapsed;
+            else touhouRad.Visibility = Visibility.Visible;
+
+            if (!Properties.UserSettings.Default.SearchWest) westRad.Visibility = Visibility.Collapsed;
+            else westRad.Visibility = Visibility.Visible;
+
+            if (!Properties.UserSettings.Default.SearchJP) jpRad.Visibility = Visibility.Collapsed;
+            else jpRad.Visibility = Visibility.Visible;
+
             if (Properties.UserSettings.Default.DebugMode) debug_mode = (Category)Properties.UserSettings.Default.DebugCategory;
             else debug_mode = Category.None;
 
@@ -103,6 +116,7 @@ namespace LyricParser
             Uri themeUri = new Uri(AppDomain.CurrentDomain.BaseDirectory + @"Themes\" + Properties.UserSettings.Default.ThemePath);
 
             var resource = Application.Current.MainWindow.Resources.MergedDictionaries;
+            //var settingsRes = Application.Current.Windows[]
             resource.Clear();
 
             var resDic = new ResourceDictionary();
@@ -235,7 +249,9 @@ namespace LyricParser
             }
             else if(autoSearchBox.IsChecked == true)
             {
+                Trace.WriteLine("Force Searching");
                 retries = MAX_RETRIES;
+                currentSong = Song.GetSongInfo();
                 GetLyricsHTML(Song.GetSongInfo().Title);
             }
         }
@@ -250,12 +266,35 @@ namespace LyricParser
             westRad.Checked -= westRad_Checked;
 
             Trace.WriteLine("Category: " + cat);
-            Trace.WriteLine("Beginning search of lyrics for Artist: " + currentSong.Artist + " - Title: " + currentSong.Title);
+            Trace.WriteLine("Beginning search of lyrics for Artist: " + currentSong);
             CleanUp();
             name = currentSong.Title;
 
             songInfoTxt.Text = currentSong.Artist + " - " + currentSong.Title;
             anime_retry = 0;
+
+            if (Properties.UserSettings.Default.SearchAnime)
+            {
+                animeRad.Checked += animeRad_Checked;
+                cat = Category.Anime;
+            }
+            if (Properties.UserSettings.Default.SearchTouhou)
+            {
+                touhouRad.Checked += touhouRad_Checked;
+                cat = Category.Touhou;
+            }
+            if (Properties.UserSettings.Default.SearchWest)
+            {
+                westRad.Checked += westRad_Checked;
+                cat = Category.Western;
+            }
+            if (Properties.UserSettings.Default.SearchJP)
+            {
+                jpRad.Checked += jpRad_Checked;
+                cat = Category.JP;
+            }
+
+
 
             if (lyricsThread == null || lyricsThread.ThreadState == System.Threading.ThreadState.Stopped)
             {
@@ -263,15 +302,12 @@ namespace LyricParser
                 lyricsThread.Start();
             }
 
-            animeRad.Checked += animeRad_Checked;
-            touhouRad.Checked += touhouRad_Checked;
-            jpRad.Checked += jpRad_Checked;
-            westRad.Checked += westRad_Checked;
+
         }
 
         private void GetLyrics(Category category)
         {
-
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             anime_retry = 0;
             western_retry = 0;
             switch (category)
@@ -283,7 +319,7 @@ namespace LyricParser
                     GetTouhouLyricUrl(currentSong.Title);
                     break;
                 case Category.Western:
-                    GetWesternLyricUrl();
+                    GetWesternLyricUrl(currentSong.Title);
                     break;
                 case Category.JP:
                     GetJPLyricUrl(currentSong.Title);
@@ -301,20 +337,32 @@ namespace LyricParser
                 SetStatus(Status.Searching);
                 cat = category;
                 Interlocked.Decrement(ref retries);
-                //retries--;
+
                 switch (category)
                 {
                     case Category.Anime:
-                        GetAnimeLyricUrl(name);
+                        if (Properties.UserSettings.Default.SearchTouhou) GetTouhouLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchWest) GetWesternLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchJP) GetJPLyricUrl(name);
+                        else GetAnimeLyricUrl(name);
                         break;
                     case Category.Touhou:
-                        GetTouhouLyricUrl(name);
+                        if (Properties.UserSettings.Default.SearchWest) GetWesternLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchJP) GetJPLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchAnime) GetAnimeLyricUrl(name);
+                        else GetTouhouLyricUrl(name);
                         break;
                     case Category.Western:
-                        GetWesternLyricUrl();
+                        if (Properties.UserSettings.Default.SearchJP) GetJPLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchAnime) GetAnimeLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchTouhou) GetTouhouLyricUrl(name);
+                        else GetWesternLyricUrl(name);
                         break;
                     case Category.JP:
-                        GetJPLyricUrl(name);
+                        if (Properties.UserSettings.Default.SearchAnime) GetAnimeLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchTouhou) GetTouhouLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchWest) GetWesternLyricUrl(name);
+                        else GetJPLyricUrl(name);
                         break;
                 }
             }
@@ -356,10 +404,11 @@ namespace LyricParser
             CleanUp();
 
             string url = "";
-            string _url = _url = "http://gendou.com/amusic/?filter=" + currentSong.Artist.Replace(" ", "+") + "+" + name.Replace(" ", "+");
+            //string _url = "http://gendou.com/amusic/?filter=" + currentSong.Artist.Replace(" ", "+") + "+" + name.Replace(" ", "+");
+            string _url = GetURL(currentSong.Artist, name, LyricsDatabase.Gendou);
             if (anime_retry > 0)
             {
-                _url = "http://gendou.com/amusic/?filter=" + currentSong.Artist.Replace(" ", "+") + "+" + name.Replace(" ", "+") + "&page=" + anime_retry;
+                _url = GetURL(currentSong.Artist, name, LyricsDatabase.Gendou, "&page=" + anime_retry);
             }
 
             Trace.WriteLine(_url);
@@ -408,7 +457,7 @@ namespace LyricParser
                     }
                     else if (autoSearch == true)
                     {
-                        RetryGettingLyrics(Category.Touhou, name);
+                        RetryGettingLyrics(Category.Anime, name);
                     }
                     return;
                 }
@@ -423,13 +472,14 @@ namespace LyricParser
             Application.Current.Dispatcher.Invoke(new Action(() => { touhouRad.IsChecked = true; }));
 
             string url = "";
-            string _url = "https://en.touhouwiki.net/index.php?search=" + name + "+" + currentSong.Artist;
+            //string _url = "https://en.touhouwiki.net/index.php?search=" + name + "+" + currentSong.Artist;
+            string _url = GetURL(currentSong.Artist, name, LyricsDatabase.Touhouwiki);
 
-            url = "https://en.touhouwiki.net/wiki/Lyrics:_" + name.Replace(" ", "_").Replace("[", "(").Replace("]", ")");
+            url = GetURL(currentSong.Artist, name, LyricsDatabase.Touhouwiki);
             if (url != "")
             {
                 Trace.WriteLine(url);
-                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+               
                 HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
                 req.KeepAlive = false;
                 req.ProtocolVersion = HttpVersion.Version10;
@@ -445,7 +495,7 @@ namespace LyricParser
                 {
                     if (autoSearch == true)
                     {
-                        RetryGettingLyrics(Category.Western, currentSong.Title);
+                        RetryGettingLyrics(Category.Touhou, currentSong.Title);
                     }
                 }
             }
@@ -453,7 +503,7 @@ namespace LyricParser
             {
                 if (autoSearch == true)
                 {
-                    RetryGettingLyrics(Category.Western, currentSong.Title);
+                    RetryGettingLyrics(Category.Touhou, currentSong.Title);
                 }
             }
         }
@@ -482,7 +532,8 @@ namespace LyricParser
 
                 //string url = "https://www.musixmatch.com/lyrics/" + artist.Replace(' ', '-').Replace("!", "") + "/" + name.Replace(' ', '-').Replace(" '", "").Replace("'", "-").Replace("'", "");
                 string url = "";
-                string _url = "https://www.musixmatch.com/search/" + artist.Replace(" ", "%20") + "-" + name.Replace(" ", "%20");
+                //string _url = "https://www.musixmatch.com/search/" + artist.Replace(" ", "%20") + "-" + name.Replace(" ", "%20");
+                string _url = GetURL(artist, name, LyricsDatabase.Musicxmatch);
 
                 //Trace.WriteLine(url);
                 //ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -513,13 +564,14 @@ namespace LyricParser
                             string _artist = artistWrapper.InnerText.ToLower().TrimStart().TrimEnd();
 
                             List<string> artists = new List<string>();
-                            artists.AddRange(currentSong.Artist.Split(new string[] { ".feat", ",", "&" }, StringSplitOptions.RemoveEmptyEntries));
+                            artists.AddRange(currentSong.Artist.Split(new string[] { "feat.", ",", "&", ".ft", "ft.", " x " }, StringSplitOptions.RemoveEmptyEntries));
                             for(int j = 0; j < artists.Count; ++j)
                             {
                                 artists[j] = artists[j].ToLower().TrimStart().TrimEnd();
                             }
 
-                            if (_title == currentSong.Title.ToLower() && artists.Any(a => _artist.Contains(a.ToLower())))
+                            Trace.WriteLine(_title.RemoveBracket('(').Trim() + " - " + currentSong.Title.ToLower());
+                            if (_title.RemoveBracket('(').Trim().Replace('’', '\'').Contains(currentSong.Title.ToLower()) && artists.Any(a => _artist.Contains(a.ToLower())))
                             {
                                 //url = "https://www.musixmatch.com" + titleWrapper.GetAttributeValue("href", "/null"); // Not working for some unknown reason...
                                 url = "https://www.musixmatch.com" + titleWrapper.InnerHtml.Split(new string[] { "href=\"" }, StringSplitOptions.None)[1].Split('"')[0];
@@ -531,12 +583,13 @@ namespace LyricParser
                             }
                         }
                     }
-                    catch
+                    catch(Exception e)
                     {
+                        Trace.WriteLine(e.ToString());
                         if (autoSearch == true)
                         {
                             Trace.WriteLine("Failed searching for western lyrics...");
-                            RetryGettingLyrics(Category.JP, name);
+                            RetryGettingLyrics(Category.Western, name);
                         }
                         return;
                     }
@@ -573,7 +626,7 @@ namespace LyricParser
                     {
                         if (autoSearch == true)
                         {
-                            RetryGettingLyrics(Category.JP, currentSong.Title);
+                            RetryGettingLyrics(Category.Western, currentSong.Title);
                         }
                     }
                 }
@@ -586,7 +639,8 @@ namespace LyricParser
             Application.Current.Dispatcher.Invoke(new Action(() => { jpRad.IsChecked = true; }));
             string name = currentSong.Title;
             string url = "";
-            string _url = _url = "http://search.j-lyric.net/index.php?kt=" + name.Replace(" ", "+") + "&ct=1&ka=" + currentSong.Artist;
+            //string _url = "http://search.j-lyric.net/index.php?kt=" + name.Replace(" ", "+") + "&ct=1&ka=" + currentSong.Artist;
+            string _url = GetURL(currentSong.Artist, name, LyricsDatabase.JLyric);
             Trace.WriteLine(_url);
             bool foundMatch = false;
 
@@ -601,17 +655,17 @@ namespace LyricParser
                     doc.LoadHtml(reader.ReadToEnd());
 
                     var mnb = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'mnb')]");
-                    var bdy = mnb.Elements("div");
+                    var bdy = mnb.SelectNodes(".//*[contains(@class, 'bdy')]");
 
-                    for (int i = 1; i < bdy.ToArray().Length; ++i)
+                    for (int i = 0; i < bdy.ToArray().Length; ++i)
                     {
                         string _title = "";
                         string _artist = "";
-                        //Trace.WriteLine("ID: " + i + " | " + bdy.ElementAt(i).InnerHtml);
+
                         try
                         {
-                            var mid = bdy.ElementAt(i).SelectSingleNode("*[contains(@class,'mid')]");
-                            var sml = bdy.ElementAt(i).SelectSingleNode("*[contains(@class,'sml')]");
+                            var mid = bdy.ElementAt(i).SelectSingleNode(".//*[contains(@class,'mid')]");
+                            var sml = bdy.ElementAt(i).SelectSingleNode(".//*[contains(@class,'sml')]");
 
                             _title = mid.FirstChild.InnerText.ToLower().TrimStart().TrimEnd();
                             _artist = sml.ChildNodes.ElementAt(1).InnerText.ToLower().TrimStart().TrimEnd();
@@ -628,22 +682,33 @@ namespace LyricParser
                                 break;
                             }
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            Trace.WriteLine(e.ToString());
+                        }
                     }
                 }
             }
-            catch (WebException e)
+            catch (Exception e)
             {
                 Trace.WriteLine(e.ToString());
             }
 
-            if (!foundMatch) SearchUtanet();
+            if (!foundMatch)
+            {
+                // SearchUtanet(); To deal with GDPR usage is blocked in EU.
+                if (autoSearch == true)
+                {
+                    RetryGettingLyrics(Category.JP, name);
+                }
+            }
         }
         private void SearchUtanet()
         {
             string name = currentSong.Title;
             string url = "";
-            string _url = _url = "https://www.uta-net.com/search/?Aselect=2&Keyword=" + name.Replace(" ", "+");
+            //string _url = "https://www.uta-net.com/search/?Aselect=2&Keyword=" + name.Replace(" ", "+");
+            string _url = GetURL(currentSong.Artist, name, LyricsDatabase.Utanet);
             Trace.WriteLine(_url);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
@@ -680,22 +745,22 @@ namespace LyricParser
                         {
                             if (autoSearch == true)
                             {
-                                RetryGettingLyrics(Category.Anime, name);
+                                RetryGettingLyrics(Category.JP, name);
                             }
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
-
+                        Trace.WriteLine(e.ToString());
                     }
                 }
             }
-            catch (WebException e)
+            catch (Exception e)
             {
                 Trace.WriteLine(e.ToString());
                 if (autoSearch == true)
                 {
-                    RetryGettingLyrics(Category.Anime, name);
+                    RetryGettingLyrics(Category.JP, name);
                 }
             }
         }
@@ -935,6 +1000,34 @@ namespace LyricParser
             ));
         }
 
+        private string GetURL(string artist, string title, LyricsDatabase database, string optional = "")
+        {
+            string url = "";
+
+            switch (database)
+            {
+                case LyricsDatabase.Gendou:
+                    url = "http://gendou.com/amusic/?filter=" + artist.Replace(" ", "+") + "+" + title.Replace(" ", "+") + optional;
+                    break;
+                case LyricsDatabase.Touhouwiki:
+                    //return "https://en.touhouwiki.net/index.php?search=" + title + "+" + artist;
+                    url = "https://en.touhouwiki.net/wiki/Lyrics:_" + title.Replace(" ", "_").Replace("[", "(").Replace("]", ")");
+                    break;
+                case LyricsDatabase.Musicxmatch:
+                    url = "https://www.musixmatch.com/search/" + artist.Replace(" ", "%20") + "-" + title.Replace(" ", "%20");
+                    break;
+                case LyricsDatabase.JLyric:
+                    url = "http://search.j-lyric.net/index.php?kt=" + title.Replace(" ", "+") + "&ct=1&ka=" + artist;
+                    break;
+                case LyricsDatabase.Utanet:
+                    url = "https://www.uta-net.com/search/?Aselect=2&Keyword=" + title.Replace(" ", "+");
+                    break;
+            }
+            currentUrl = url;
+
+            return url;
+        }
+
         private void CleanUp()
         {
             Application.Current.Dispatcher.Invoke(new Action(() => {
@@ -959,19 +1052,19 @@ namespace LyricParser
                 switch (status)
                 {
                     case Status.Done:
-                        statusTxt.Text = "Found Lyrics!";
+                        statusTxt.Text = LocaleResources.FoundLyrics;
                         break;
                     case Status.Searching:
-                        statusTxt.Text = "Searching...";
+                        statusTxt.Text = LocaleResources.Searching;
                         break;
                     case Status.Parsing:
-                        statusTxt.Text = "Parsing...";
+                        statusTxt.Text = LocaleResources.Parsing; ;
                         break;
                     case Status.Failed:
-                        statusTxt.Text = "No Lyrics Found!";
+                        statusTxt.Text = LocaleResources.Failed;
                         break;
                     case Status.Standby:
-                        statusTxt.Text = "Standby";
+                        statusTxt.Text = LocaleResources.Standby;
                         break;
                 }
             }));
@@ -1270,7 +1363,8 @@ namespace LyricParser
         }
         private void SearchInBrowser_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Process.Start("https://www.musixmatch.com/search/" + songNameTxt.Text);
+            //Process.Start("https://www.musixmatch.com/search/" + songNameTxt.Text);
+            if(currentUrl != "") Process.Start(currentUrl);
         }
 
         private void settingsBtn_Click(object sender, RoutedEventArgs e)

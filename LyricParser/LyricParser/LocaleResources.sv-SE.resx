@@ -123,20 +123,50 @@
   <data name="AutoSearchCheck" xml:space="preserve">
     <value>Autosökning</value>
   </data>
+  <data name="EditWindowTitle" xml:space="preserve">
+    <value>Redigera låttext</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>Kunde inte hitta några låttexter.</value>
+  </data>
+  <data name="FoundLyrics" xml:space="preserve">
+    <value>Hittade låttext!</value>
+  </data>
+  <data name="GetCurrentSong" xml:space="preserve">
+    <value>Visa nuvarande låt</value>
+  </data>
   <data name="JapaneseRadio" xml:space="preserve">
     <value>JP</value>
   </data>
   <data name="OriginalLabel" xml:space="preserve">
     <value>Original</value>
   </data>
+  <data name="Parsing" xml:space="preserve">
+    <value>Läser in...</value>
+  </data>
   <data name="RomajiLabel" xml:space="preserve">
     <value>Romaji</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Spara</value>
+  </data>
+  <data name="SavedLyrics" xml:space="preserve">
+    <value>Sparade låttexter</value>
   </data>
   <data name="SearchButton" xml:space="preserve">
     <value>Sök</value>
   </data>
+  <data name="SearchInBrowser" xml:space="preserve">
+    <value>Sök i Webbläsare</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>Söker...</value>
+  </data>
   <data name="SearchText" xml:space="preserve">
     <value>Artist - Title</value>
+  </data>
+  <data name="Standby" xml:space="preserve">
+    <value>Standby</value>
   </data>
   <data name="TouhouRadio" xml:space="preserve">
     <value>Touhou</value>

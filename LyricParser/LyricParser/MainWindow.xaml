@@ -43,8 +43,12 @@
                             </ContextMenu>
                         </TextBox.ContextMenu>
                     </TextBox>
-                    <Button Width="40" Name="getLyricsBtn" Content="{Binding Source={x:Static w:LocaleResources.SearchButton}}" Margin="5, 0, 0, 0" Click="getLyricsBtn_Click" IsDefault="True" Height="20" VerticalAlignment="Center"/>
-                    <Button Name="editLyricsBtn" Content="Edit" Margin="5,0,0,0" Click="editLyricsBtn_Click" IsEnabled="True" Visibility="Visible"/>
+                    <Button  Name="getLyricsBtn" Margin="5, 0, 0, 0" Click="getLyricsBtn_Click" IsDefault="True" Height="20" VerticalAlignment="Center">
+                        <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.SearchButton}}"/>
+                    </Button>
+                    <Button Name="editLyricsBtn" Click="editLyricsBtn_Click" IsEnabled="True" Visibility="Visible">
+                        <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.EditWindowTitle}}"/>
+                    </Button>
                     <CheckBox Content="{Binding Source={x:Static w:LocaleResources.AutoSearchCheck}}" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.AutoSearch}" Name="autoSearchBox" Checked="AutoSearchBox_Checked" VerticalAlignment="Center" Margin="5, 0, 0, 0" Unchecked="AutoSearchBox_Unchecked"/>
                     <RadioButton Name="animeRad" Content="{Binding Source={x:Static w:LocaleResources.AnimeRadio}}" IsChecked="False" Margin="5, 0, 0, 0" VerticalAlignment="Center" Checked="animeRad_Checked" Click="catRad_Click"/>
                     <RadioButton Name="touhouRad" Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}" IsChecked="True" Margin="5, 0, 0, 0" VerticalAlignment="Center"  Checked="touhouRad_Checked" Click="catRad_Click"/>
@@ -81,9 +85,9 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock TextAlignment="Center" Name="originalLbl" Foreground="{DynamicResource ForegroundBrush}" VerticalAlignment="Top" Text="{Binding Source={x:Static w:LocaleResources.OriginalLabel}}" HorizontalAlignment="Center" Grid.Column="0"/>
-                    <TextBlock TextAlignment="Center" Name="romajiLbl" Foreground="{DynamicResource ForegroundBrush}" VerticalAlignment="Top" Text="{Binding Source={x:Static w:LocaleResources.RomajiLabel}}" HorizontalAlignment="Center" Grid.Column="1"/>
-                    <TextBlock TextAlignment="Center" Name="englishLbl" Foreground="{DynamicResource ForegroundBrush}" VerticalAlignment="Top" Text="{Binding Source={x:Static w:LocaleResources.TranslationLabel}}" HorizontalAlignment="Center" Grid.Column="2"/>
+                    <TextBlock TextAlignment="Center" Name="originalLbl" Foreground="{DynamicResource ForegroundBrush}" Padding="0 3 0 0" Text="{Binding Source={x:Static w:LocaleResources.OriginalLabel}}" HorizontalAlignment="Center" Grid.Column="0"/>
+                    <TextBlock TextAlignment="Center" Name="romajiLbl" Foreground="{DynamicResource ForegroundBrush}" Padding="0 3 0 0" Text="{Binding Source={x:Static w:LocaleResources.RomajiLabel}}" HorizontalAlignment="Center" Grid.Column="1"/>
+                    <TextBlock TextAlignment="Center" Name="englishLbl" Foreground="{DynamicResource ForegroundBrush}" Padding="0 3 0 0" Text="{Binding Source={x:Static w:LocaleResources.TranslationLabel}}" HorizontalAlignment="Center" Grid.Column="2"/>
                 </Grid>
             </Border>
         </StackPanel>
@@ -103,7 +107,7 @@
             <TextBox DockPanel.Dock="Left" Name="zoomTxt" Margin="5, 0, 5, 0" Text="100 %" Width="45" FontSize="11" VerticalAlignment="Center" LostFocus="zoomTxt_LostFocus" KeyDown="zoomTxt_KeyDown" PreviewMouseWheel="zoomTxt_PreviewMouseWheel"></TextBox>
             <Button DockPanel.Dock="Left"  Name="enlargeBtn" Height="15" Width="15" Content="&#xE948;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="enlargeBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="enlargeBtn_PreviewMouseLeftButtonUp"/>
             <Button DockPanel.Dock="Left"  Name="shrinkBtn" Height="15" Width="15" Content="&#xE949;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="shrinkBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="shrinkBtn_PreviewMouseLeftButtonUp" />
-            <TextBlock DockPanel.Dock="Right"  Padding="0, 4, 5, 0" Name="statusTxt" Text="Searching..." FontSize="11" Foreground="{DynamicResource ForegroundBrush}"  Margin="0 0 5 0" TextAlignment="Right" />
+            <TextBlock DockPanel.Dock="Right"  Padding="0, 4, 5, 0" Name="statusTxt" Text="{Binding Source={x:Static w:LocaleResources.Searching}}" FontSize="11" Foreground="{DynamicResource ForegroundBrush}"  Margin="0 0 5 0" TextAlignment="Right" />
         </DockPanel>
     </Grid>
 </Window>

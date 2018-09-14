@@ -12,7 +12,7 @@ namespace LyricParser.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
     public sealed partial class UserSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static UserSettings defaultInstance = ((UserSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new UserSettings())));
@@ -265,6 +265,54 @@ namespace LyricParser.Properties {
             }
             set {
                 this["Locales"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SearchAnime {
+            get {
+                return ((bool)(this["SearchAnime"]));
+            }
+            set {
+                this["SearchAnime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SearchTouhou {
+            get {
+                return ((bool)(this["SearchTouhou"]));
+            }
+            set {
+                this["SearchTouhou"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SearchWest {
+            get {
+                return ((bool)(this["SearchWest"]));
+            }
+            set {
+                this["SearchWest"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SearchJP {
+            get {
+                return ((bool)(this["SearchJP"]));
+            }
+            set {
+                this["SearchJP"] = value;
             }
         }
     }

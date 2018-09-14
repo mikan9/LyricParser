@@ -126,11 +126,23 @@
   <data name="EditWindowTitle" xml:space="preserve">
     <value>Edit Lyrics</value>
   </data>
+  <data name="Failed" xml:space="preserve">
+    <value>No Lyrics Found...</value>
+  </data>
+  <data name="FoundLyrics" xml:space="preserve">
+    <value>Found Lyrics!</value>
+  </data>
+  <data name="GetCurrentSong" xml:space="preserve">
+    <value>Get Current Song</value>
+  </data>
   <data name="JapaneseRadio" xml:space="preserve">
     <value>JP</value>
   </data>
   <data name="OriginalLabel" xml:space="preserve">
     <value>Original</value>
+  </data>
+  <data name="Parsing" xml:space="preserve">
+    <value>Parsing...</value>
   </data>
   <data name="RomajiLabel" xml:space="preserve">
     <value>Romaji</value>
@@ -144,8 +156,17 @@
   <data name="SearchButton" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="SearchInBrowser" xml:space="preserve">
+    <value>Search In Browser</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>Searching...</value>
+  </data>
   <data name="SearchText" xml:space="preserve">
     <value>Artist - Title</value>
+  </data>
+  <data name="Standby" xml:space="preserve">
+    <value>Standby</value>
   </data>
   <data name="TouhouRadio" xml:space="preserve">
     <value>Touhou</value>

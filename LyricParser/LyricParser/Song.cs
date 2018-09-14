@@ -144,6 +144,7 @@ namespace LyricParser
 
             string lpText = new string((char)0, 100);
             int intLength = GetWindowText(hwnd, lpText, lpText.Length);
+            if (lpText.Contains("Winamp 5")) return song;
 
             if ((intLength <= 0) || (intLength > lpText.Length))
             {
@@ -151,45 +152,14 @@ namespace LyricParser
                 return song;
             }
 
-            string strTitle = lpText.Substring(0, intLength);
-            int intName = strTitle.IndexOf(strTtlEnd);
-            int intLeft = strTitle.IndexOf("[");
-            int intRight = strTitle.IndexOf("]");
-
-            if ((intName >= 0) && (intLeft >= 0) && (intName < intLeft) && (intRight >= 0) && (intLeft + 1 < intRight))
+            string strTitle = lpText.Substring(0, intLength).Replace(" - Winamp", "").Remove(0, lpText.IndexOf('.') + 1);
+            Trace.WriteLine(strTitle);
+            if(strTitle != "")
             {
-                //paused = true;
-                song.Title = strTitle.Substring(intLeft + 1, intRight - intLeft - 1);
-                return song;
-            }
-            else
-            {
-                //paused = false;
+                song = CleanUpInfo(strTitle);
             }
 
-            if ((strTitle.EndsWith(strTtlEnd)) && (strTitle.Length > strTtlEnd.Length))
-            {
-                strTitle = strTitle.Substring(0, strTitle.Length - strTtlEnd.Length);
-            }
-
-            int intDot = strTitle.IndexOf(".");
-            if ((intDot > 0) && strTitle.Substring(0, intDot).IsNumeric())
-            {
-                strTitle = strTitle.Remove(0, intDot + 1);
-            }
-
-            int index = strTitle.Trim().IndexOf(" - ");
-            if (index >= 0)
-            {
-                song.Artist = strTitle.Trim().Substring(0, index);
-                song.Title = strTitle.Trim().Substring(index + 3);
-                return song;
-            }
-            else
-            {
-                song.Title = strTitle.Trim();
-                return song;
-            }
+            return song;
         }
 
         public static Song GetSpotifyInfo()
@@ -208,15 +178,14 @@ namespace LyricParser
             }
             if (spotifyName != "" && spotifyName != "spotify" && spotifyName.Contains(" - "))
             {
-                int index = spotifyName.Trim().IndexOf(" - ");
-                song.Artist = spotifyName.Trim().Substring(0, index);
-                song.Title = spotifyName.Trim().Substring(index + 3);
+                song = CleanUpInfo(spotifyName);
             }
 
             return song;
         }
         public static Song GetYoutubeInfo()
         {
+            //Trace.WriteLine("Retrieving song info from Youtube");
             Song song = new Song();
             song.Genre = Category.Anime;
 
@@ -227,18 +196,12 @@ namespace LyricParser
                 if (p.MainWindowTitle.Length > 0 && p.MainWindowTitle.EndsWith(" - YouTube - Google Chrome"))
                 {
                     tabName = p.MainWindowTitle.Replace(" - YouTube - Google Chrome", "");
-                    tabName = tabName.Split(new string[] { "(feat" }, StringSplitOptions.None)[0];
-                    tabName = tabName.Split(new string[] { "(Lyric" }, StringSplitOptions.None)[0];
-                    tabName = tabName.Split(new string[] { "(Official" }, StringSplitOptions.None)[0];
-                    tabName = tabName.Split(new string[] { "[Official" }, StringSplitOptions.None)[0];
                 }
             }
 
-            if (tabName != "" && tabName.Contains(" - "))
+            if (tabName != "")
             {
-                int index = tabName.Trim().IndexOf(" - ");
-                song.Artist = tabName.Trim().Substring(0, index);
-                song.Title = tabName.Trim().Substring(index + 3);
+                song = CleanUpInfo(tabName);
             }
 
             return song;
@@ -260,10 +223,71 @@ namespace LyricParser
 
             if (tabName != "" && tabName.EndsWith("Google Play Music - Google Chrome"))
             {
-                int index = tabName.Trim().IndexOf(" - ");
-                song.Artist = tabName.Trim().Substring(0, index);
-                song.Title = tabName.Trim().Substring(index + 3);
+                song = CleanUpInfo(tabName.Replace("Google Play Music - Google Chrome", ""));
             }
+
+            return song;
+        }
+
+        private static Song CleanUpInfo(string data)
+        {
+            Song song = new Song();
+            song.genre = Category.Anime;
+
+            data = data.Split(new string[] { " / " }, StringSplitOptions.None)[0];
+            data = data.RemoveBracket('[');
+            data = data.RemoveBracket('(', new string[] { "(ft.", "(feat" });
+            data = data.Replace(new string[] { "(", ")" }, "");
+            data = data.Replace("*", "");
+
+            string[] separators = new string[] { " - ", " – " };
+            string[] jpSeparators = new string[] { "「", "『" };
+            Dictionary<string, string> jpDict = new Dictionary<string, string>();
+            jpDict.Add("「", "」");
+            jpDict.Add("『", "』");
+
+            if (data != "")
+            {
+                if (separators.Any(s => data.Contains(s)))
+                {
+                    string separator = separators.Where(s => data.Contains(s)).ElementAt(0);
+
+                    int index = data.Trim().IndexOf(separator);
+                    song.Artist = data.Trim().Substring(0, index).Replace(new string[] { " x ", " ft. ", " vs ", " feat ", " feat. " }, " & ");
+                    string[] keyWords = new string[] { "ft.", "feat.", "(ft.", "(feat" };
+
+                    if (keyWords.Any(f => data.Contains(f)))
+                    {
+                        string ft = data.Split(keyWords, StringSplitOptions.RemoveEmptyEntries)[1].Replace(")", "").TrimStart().TrimEnd();
+                        if (ft.Length > 0 && data.Trim().IndexOf(ft) > index)
+                        {
+                            song.Artist += " & " + ft;
+                            song.Title = data.Split(keyWords, StringSplitOptions.RemoveEmptyEntries)[0].Trim().Substring(index + 3);
+                        }
+                        else
+                        {
+                            index = data.Trim().IndexOf(separator);
+                            song.Title = data.Trim().Substring(index + 3);
+                        }
+                    }
+                    else
+                    {
+                        index = data.Trim().IndexOf(separator);
+                        song.Title = data.Trim().Substring(index + 3);
+                    }
+                }
+                else if (jpDict.Keys.Any(s => data.Contains(s)))
+                {
+                    string match = jpDict.Keys.Where(s => data.Contains(s)).ElementAt(0);
+
+                    int index = data.IndexOf(match);
+                    int endOfTitle = data.IndexOf(jpDict[match]);
+                    song.artist = data.Split(new string[] { match }, StringSplitOptions.None)[0].Trim();
+                    song.title = data.Substring(index + 1, endOfTitle - index - 1).Trim();
+                }
+
+            }
+            if (song.title.Contains(" - ")) song.title = song.title.Split(new string[] { " - " }, StringSplitOptions.None)[0];
 
             return song;
         }

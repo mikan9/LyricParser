@@ -9,7 +9,7 @@ namespace LyricParser
 {
     public static class Command
     {
-        public static readonly RoutedUICommand GetCurrentSong = new RoutedUICommand("Get Current Song", "GetCurrentSong", typeof(MainWindow));
-        public static readonly RoutedUICommand SearchInBrowser = new RoutedUICommand("Search In Browser", "SearchInBrowser", typeof(MainWindow));
+        public static readonly RoutedUICommand GetCurrentSong = new RoutedUICommand(LocaleResources.GetCurrentSong, "GetCurrentSong", typeof(MainWindow));
+        public static readonly RoutedUICommand SearchInBrowser = new RoutedUICommand(LocaleResources.SearchInBrowser, "SearchInBrowser", typeof(MainWindow));
     }
 }

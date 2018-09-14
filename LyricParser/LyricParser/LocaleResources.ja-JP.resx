@@ -124,13 +124,25 @@
     <value>自動検索</value>
   </data>
   <data name="EditWindowTitle" xml:space="preserve">
-    <value>歌手編集</value>
+    <value>歌詞編集</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>歌詞が見つかりませんでした</value>
+  </data>
+  <data name="FoundLyrics" xml:space="preserve">
+    <value>歌詞が見つかりました</value>
+  </data>
+  <data name="GetCurrentSong" xml:space="preserve">
+    <value>現在再生中の曲を表示</value>
   </data>
   <data name="JapaneseRadio" xml:space="preserve">
     <value>邦楽</value>
   </data>
   <data name="OriginalLabel" xml:space="preserve">
     <value>オリジナル</value>
+  </data>
+  <data name="Parsing" xml:space="preserve">
+    <value>読み込み中</value>
   </data>
   <data name="RomajiLabel" xml:space="preserve">
     <value>ローマ字</value>
@@ -144,8 +156,17 @@
   <data name="SearchButton" xml:space="preserve">
     <value>検索</value>
   </data>
+  <data name="SearchInBrowser" xml:space="preserve">
+    <value>ウェッブブラウザで検索</value>
+  </data>
+  <data name="Searching" xml:space="preserve">
+    <value>検索中</value>
+  </data>
   <data name="SearchText" xml:space="preserve">
     <value>歌手 - 曲名</value>
+  </data>
+  <data name="Standby" xml:space="preserve">
+    <value>待機中</value>
   </data>
   <data name="TouhouRadio" xml:space="preserve">
     <value>東方</value>

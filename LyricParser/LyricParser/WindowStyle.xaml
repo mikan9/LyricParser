@@ -6,7 +6,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid x:Name="LayoutRoot" Background="Transparent" Width="20" Height="15">
+                    <Grid x:Name="LayoutRoot" Background="Transparent" Width="35" Height="25">
                         <TextBlock x:Name="txt" Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" FontSize="10"
                                    Foreground="#FFF0EFF1" HorizontalAlignment="Center" VerticalAlignment="Center"
                                    RenderOptions.ClearTypeHint="Auto" TextOptions.TextRenderingMode="Aliased"  TextOptions.TextFormattingMode="Display"/>
@@ -17,6 +17,9 @@
                         </Trigger>
                         <Trigger Property="Content" Value="&#xE711;">
                             <Setter TargetName="txt" Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                        <Trigger Property="Content" Value="&#xE921;">
+                            <Setter TargetName="txt" Property="Padding" Value="0 7 0 0 " />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -29,7 +32,7 @@
     </Style>
     
     <Style x:Key="MinimizeButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
-        <Setter Property="Content" Value="&#xE949;"/>
+        <Setter Property="Content" Value="&#xE921;"/>
     </Style>
 
     <Style x:Key="MaximizeButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
@@ -44,7 +47,7 @@
     <Style x:Key="CustomWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
-                <WindowChrome CaptionHeight="20" CornerRadius="0" GlassFrameThickness="0,0,0,1" NonClientFrameEdges="None" ResizeBorderThickness="2" UseAeroCaptionButtons="False" />
+                <WindowChrome CaptionHeight="25" CornerRadius="0" GlassFrameThickness="0,0,0,1" NonClientFrameEdges="None" ResizeBorderThickness="4" UseAeroCaptionButtons="False" />
             </Setter.Value>
         </Setter>
         <Setter Property="BorderBrush" Value="#FF2D2D30" />
@@ -53,16 +56,16 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
                     <Grid>
-                        <Border Background="{TemplateBinding Background}"
+                        <Border x:Name="TitleBorder" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="5,30,5,5">
+                                BorderThickness="5,27,5,5">
                             <AdornerDecorator>
                                 <ContentPresenter />
                             </AdornerDecorator>
                         </Border>
-                        <DockPanel Margin="8, 8, 8, 8" Height="20" VerticalAlignment="Top" LastChildFill="False">
-                            <TextBlock Margin="5, 0, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontFamily="Segoe MDL2 Assets" Foreground="White" Text="&#xE90B;" FontSize="16" />
-                            <TextBlock Margin="15, 0, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="16" Foreground="White" Text="{TemplateBinding Title}"/>
+                        <DockPanel x:Name="TitleBar" Margin="8, -2, 0, 8" Height="27" VerticalAlignment="Top" LastChildFill="False">
+                            <TextBlock x:Name="IconTxt" Margin="5, 0, 0, 0" Padding="0, 5, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontFamily="Segoe MDL2 Assets" Foreground="White" Text="&#xE90B;" FontSize="16" />
+                            <TextBlock x:Name="TitleTxt" Margin="15, 0, 0, 0" Padding="0, 5, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="16" Foreground="White" Text="{TemplateBinding Title}"/>
                             <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE711;" x:Name="CloseBtn" Click="CloseClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
                             <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE922;" x:Name="RestoreBtn" Click="MaximizeRestoreClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
                             <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE921;" x:Name="MinimizeBtn" Click="MinimizeClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
@@ -71,6 +74,8 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="WindowState" Value="Maximized">
                             <Setter TargetName="RestoreBtn" Property="Content" Value="&#xE923;"/>
+                            <Setter TargetName="TitleBar" Property="Margin" Value="8, 6, 8, 8"/>
+                            <Setter TargetName="TitleBorder" Property="BorderThickness" Value="5, 35, 5, 5"/>
                             <Setter Property="WindowChrome.WindowChrome">
                                 <Setter.Value>
                                     <WindowChrome ResizeBorderThickness="0" />

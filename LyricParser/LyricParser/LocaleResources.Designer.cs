@@ -88,6 +88,33 @@ namespace LyricParser {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Lyrics Found....
+        /// </summary>
+        public static string Failed {
+            get {
+                return ResourceManager.GetString("Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found Lyrics!.
+        /// </summary>
+        public static string FoundLyrics {
+            get {
+                return ResourceManager.GetString("FoundLyrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Current Song.
+        /// </summary>
+        public static string GetCurrentSong {
+            get {
+                return ResourceManager.GetString("GetCurrentSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to JP.
         /// </summary>
         public static string JapaneseRadio {
@@ -102,6 +129,15 @@ namespace LyricParser {
         public static string OriginalLabel {
             get {
                 return ResourceManager.GetString("OriginalLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing....
+        /// </summary>
+        public static string Parsing {
+            get {
+                return ResourceManager.GetString("Parsing", resourceCulture);
             }
         }
         
@@ -142,11 +178,38 @@ namespace LyricParser {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search In Browser.
+        /// </summary>
+        public static string SearchInBrowser {
+            get {
+                return ResourceManager.GetString("SearchInBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searching....
+        /// </summary>
+        public static string Searching {
+            get {
+                return ResourceManager.GetString("Searching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Artist - Title.
         /// </summary>
         public static string SearchText {
             get {
                 return ResourceManager.GetString("SearchText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standby.
+        /// </summary>
+        public static string Standby {
+            get {
+                return ResourceManager.GetString("Standby", resourceCulture);
             }
         }
         
