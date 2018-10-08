@@ -69,11 +69,11 @@ namespace LyricParser
             LoadTheme();
 
             currentLyric = LyricHandler.CreateLyric(main.currentSong.Artist, main.currentSong.Title, main.currentSong.Genre,
-                                                    main.originalTxt.Text, main.romajiTxt.Text, main.englishTxt.Text);
+                                                    main.OriginalTxt.Text, main.RomajiTxt.Text, main.EnglishTxt.Text);
 
-            artistBox.Text = currentLyric.artist;
-            titleBox.Text = currentLyric.title;
-            genreBox.SelectedIndex = (int)currentLyric.genre;
+            ArtistBox.Text = currentLyric.artist;
+            TitleBox.Text = currentLyric.title;
+            GenreBox.SelectedIndex = (int)currentLyric.genre;
 
             SetUpTables();
 
@@ -86,24 +86,24 @@ namespace LyricParser
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             initComplete = true;
-            origCheck.IsChecked = Properties.Settings.Default.EditOriginal;
-            romajiCheck.IsChecked = Properties.Settings.Default.EditRomaji;
-            engCheck.IsChecked = Properties.Settings.Default.EditEnglish;
+            OrigCheck.IsChecked = Properties.Settings.Default.EditOriginal;
+            RomajiCheck.IsChecked = Properties.Settings.Default.EditRomaji;
+            EngCheck.IsChecked = Properties.Settings.Default.EditEnglish;
             SetUpTables();
         }
 
         private void SetUpTables()
         {
             Properties.Settings.Default.Save();
-            originalTxt.Visibility = System.Windows.Visibility.Collapsed;
-            originalLbl.Visibility = originalTxt.Visibility;
-            romajiTxt.Visibility = System.Windows.Visibility.Collapsed;
-            romajiLbl.Visibility = romajiTxt.Visibility;
-            englishTxt.Visibility = System.Windows.Visibility.Collapsed;
-            englishLbl.Visibility = englishTxt.Visibility;
+            OriginalTxt.Visibility = System.Windows.Visibility.Collapsed;
+            OriginalLbl.Visibility = OriginalTxt.Visibility;
+            RomajiTxt.Visibility = System.Windows.Visibility.Collapsed;
+            RomajiLbl.Visibility = RomajiTxt.Visibility;
+            EnglishTxt.Visibility = System.Windows.Visibility.Collapsed;
+            EnglishLbl.Visibility = EnglishTxt.Visibility;
 
-            contentGrid.ColumnDefinitions.Clear();
-            headerGrid.ColumnDefinitions.Clear();
+            ContentGrid.ColumnDefinitions.Clear();
+            HeaderGrid.ColumnDefinitions.Clear();
 
             bool bShowOrig = false;
             bool bShowRom = false;
@@ -115,48 +115,48 @@ namespace LyricParser
 
             if (bShowOrig)
             {
-                contentGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                headerGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                ContentGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
-                Grid.SetColumn(originalTxt, 0);
-                Grid.SetColumn(originalLbl, 0);
+                Grid.SetColumn(OriginalTxt, 0);
+                Grid.SetColumn(OriginalLbl, 0);
 
-                originalTxt.Visibility = System.Windows.Visibility.Visible;
-                originalLbl.Visibility = originalTxt.Visibility;
+                OriginalTxt.Visibility = System.Windows.Visibility.Visible;
+                OriginalLbl.Visibility = OriginalTxt.Visibility;
 
                 if (bShowRom)
                 {
-                    contentGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                    headerGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                    ContentGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                    HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
-                    Grid.SetColumn(romajiLbl, 1);
-                    Grid.SetColumn(romajiTxt, 1);
+                    Grid.SetColumn(RomajiLbl, 1);
+                    Grid.SetColumn(RomajiTxt, 1);
 
-                    romajiTxt.Visibility = System.Windows.Visibility.Visible;
-                    romajiLbl.Visibility = romajiTxt.Visibility;
+                    RomajiTxt.Visibility = System.Windows.Visibility.Visible;
+                    RomajiLbl.Visibility = RomajiTxt.Visibility;
                 }
                 if (bShowEng)
                 {
-                    contentGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                    headerGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                    ContentGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                    HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
                     int col = 2;
                     if (!bShowRom) col = 1;
 
-                    Grid.SetColumn(englishLbl, col);
-                    Grid.SetColumn(englishTxt, col);
+                    Grid.SetColumn(EnglishLbl, col);
+                    Grid.SetColumn(EnglishTxt, col);
 
-                    englishTxt.Visibility = System.Windows.Visibility.Visible;
-                    englishLbl.Visibility = englishTxt.Visibility;
+                    EnglishTxt.Visibility = System.Windows.Visibility.Visible;
+                    EnglishLbl.Visibility = EnglishTxt.Visibility;
                 }
             }
 
             //artistBox.Text = currentLyric.artist;
             //titleBox.Text = currentLyric.title;
             //genreBox.SelectedIndex = (int)currentLyric.genre;
-            originalTxt.Text = currentLyric.original;
-            romajiTxt.Text = currentLyric.romaji;
-            englishTxt.Text = currentLyric.translation;
+            OriginalTxt.Text = currentLyric.original;
+            RomajiTxt.Text = currentLyric.romaji;
+            EnglishTxt.Text = currentLyric.translation;
 
             return;
         }
@@ -166,15 +166,15 @@ namespace LyricParser
             double newHeight = this.ActualHeight - heightDiff;
             if (newHeight > 0)
             {
-                originalTxt.Height = newHeight;
-                romajiTxt.Height = newHeight;
-                englishTxt.Height = newHeight;
+                OriginalTxt.Height = newHeight;
+                RomajiTxt.Height = newHeight;
+                EnglishTxt.Height = newHeight;
             }
         }
 
-        private void saveBtn_Click(object sender, RoutedEventArgs e)
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            main.EditLyrics(titleBox.Text, "", artistBox.Text, originalTxt.Text, romajiTxt.Text, englishTxt.Text, (Category)genreBox.SelectedIndex);
+            main.EditLyrics(TitleBox.Text, "", ArtistBox.Text, OriginalTxt.Text, RomajiTxt.Text, EnglishTxt.Text, (Category)GenreBox.SelectedIndex);
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -190,16 +190,16 @@ namespace LyricParser
             keysDown.Remove(e.Key);
         }
 
-        private void zoom(double d)
+        private void Zoom(double d)
         {
             zoomValue = d > 5 ? d : 5;
-            zoomTxt.Text = zoomValue.ToString() + " %";
+            ZoomTxt.Text = zoomValue.ToString() + " %";
 
             double newSize = defFontSize / 100 * zoomValue;
 
-            romajiTxt.FontSize = newSize;
-            englishTxt.FontSize = romajiTxt.FontSize;
-            originalTxt.FontSize = romajiTxt.FontSize;
+            RomajiTxt.FontSize = newSize;
+            EnglishTxt.FontSize = RomajiTxt.FontSize;
+            OriginalTxt.FontSize = RomajiTxt.FontSize;
         }
 
         private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -208,26 +208,26 @@ namespace LyricParser
             {
                 e.Handled = true;
                 double x = e.Delta > 0 ? zoomStep : -zoomStep;
-                zoom(zoomValue + x);
+                Zoom(zoomValue + x);
             }
         }
 
-        private void zoomTxt_LostFocus(object sender, RoutedEventArgs e)
+        private void ZoomTxt_LostFocus(object sender, RoutedEventArgs e)
         {
-            zoom(double.Parse(new string(zoomTxt.Text.TakeWhile(Char.IsDigit).ToArray())));
+            Zoom(double.Parse(new string(ZoomTxt.Text.TakeWhile(Char.IsDigit).ToArray())));
         }
 
-        private void zoomTxt_KeyDown(object sender, KeyEventArgs e)
+        private void ZoomTxt_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                zoom(double.Parse(new string(zoomTxt.Text.TakeWhile(Char.IsDigit).ToArray())));
+                Zoom(double.Parse(new string(ZoomTxt.Text.TakeWhile(Char.IsDigit).ToArray())));
             }
         }
 
-        private void zoomTxt_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void ZoomTxt_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (zoomTxt.IsFocused)
+            if (ZoomTxt.IsFocused)
             {
                 bool inc = e.Delta > 0;
                 double step = 10;
@@ -235,7 +235,7 @@ namespace LyricParser
                 else if (!inc && zoomValue - step >= 0) zoomValue -= step;
                 else zoomValue = 0;
 
-                zoomTxt.Text = zoomValue.ToString();
+                ZoomTxt.Text = zoomValue.ToString();
             }
         }
 
@@ -243,92 +243,92 @@ namespace LyricParser
         {
             if (zoomMode != 0)
             {
-                zoom(zoomValue + zoomStep * zoomMode);
+                Zoom(zoomValue + zoomStep * zoomMode);
             }
         }
 
-        private void enlargeBtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void EnlargeBtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             zoomMode = 1;
             zoomTimer.Start();
         }
 
-        private void enlargeBtn_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void EnlargeBtn_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             zoomMode = 0;
             zoomTimer.Stop();
-            zoom(zoomValue + zoomStep);
+            Zoom(zoomValue + zoomStep);
         }
 
-        private void shrinkBtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void ShrinkBtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             zoomMode = -1;
             zoomTimer.Start();
         }
 
-        private void shrinkBtn_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void ShrinkBtn_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             zoomMode = 0;
             zoomTimer.Stop();
-            zoom(zoomValue - zoomStep);
+            Zoom(zoomValue - zoomStep);
         }
 
-        private void origCheck_Checked(object sender, RoutedEventArgs e)
+        private void OrigCheck_Checked(object sender, RoutedEventArgs e)
         {
             if (initComplete)
             {
-                originalLbl.Visibility = Visibility.Visible;
-                originalTxt.Visibility = originalLbl.Visibility;
+                OriginalLbl.Visibility = Visibility.Visible;
+                OriginalTxt.Visibility = OriginalLbl.Visibility;
                 SetUpTables();
             }
         }
 
-        private void romajiCheck_Checked(object sender, RoutedEventArgs e)
+        private void RomajiCheck_Checked(object sender, RoutedEventArgs e)
         {
             if (initComplete)
             {
-                romajiLbl.Visibility = Visibility.Visible;
-                romajiTxt.Visibility = romajiLbl.Visibility;
+                RomajiLbl.Visibility = Visibility.Visible;
+                RomajiTxt.Visibility = RomajiLbl.Visibility;
                 SetUpTables();
             }
         }
 
-        private void engCheck_Checked(object sender, RoutedEventArgs e)
+        private void EngCheck_Checked(object sender, RoutedEventArgs e)
         {
             if (initComplete)
             {
-                englishLbl.Visibility = Visibility.Visible;
-                englishTxt.Visibility = englishLbl.Visibility;
+                EnglishLbl.Visibility = Visibility.Visible;
+                EnglishTxt.Visibility = EnglishLbl.Visibility;
                 SetUpTables();
             }
         }
 
-        private void origCheck_Unchecked(object sender, RoutedEventArgs e)
+        private void OrigCheck_Unchecked(object sender, RoutedEventArgs e)
         {
             if (initComplete)
             {
-                originalLbl.Visibility = Visibility.Collapsed;
-                originalTxt.Visibility = originalLbl.Visibility;
+                OriginalLbl.Visibility = Visibility.Collapsed;
+                OriginalTxt.Visibility = OriginalLbl.Visibility;
                 SetUpTables();
             }
         }
 
-        private void romajiCheck_Unchecked(object sender, RoutedEventArgs e)
+        private void RomajiCheck_Unchecked(object sender, RoutedEventArgs e)
         {
             if (initComplete)
             {
-                romajiLbl.Visibility = Visibility.Collapsed;
-                romajiTxt.Visibility = romajiLbl.Visibility;
+                RomajiLbl.Visibility = Visibility.Collapsed;
+                RomajiTxt.Visibility = RomajiLbl.Visibility;
                 SetUpTables();
             }
         }
 
-        private void engCheck_Unchecked(object sender, RoutedEventArgs e)
+        private void EngCheck_Unchecked(object sender, RoutedEventArgs e)
         {
             if (initComplete)
             {
-                englishLbl.Visibility = Visibility.Collapsed;
-                englishTxt.Visibility = englishLbl.Visibility;
+                EnglishLbl.Visibility = Visibility.Collapsed;
+                EnglishTxt.Visibility = EnglishLbl.Visibility;
                 SetUpTables();
             }
         }

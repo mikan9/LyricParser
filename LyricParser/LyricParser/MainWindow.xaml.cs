@@ -82,7 +82,7 @@ namespace LyricParser
         {
             MAX_RETRIES = Properties.UserSettings.Default.MaxRetries;
             zoomValue = Properties.Settings.Default.ZoomLevel;
-            zoom(zoomValue);
+            Zoom(zoomValue);
             retries = MAX_RETRIES;
             newSettings = true;
 
@@ -91,17 +91,17 @@ namespace LyricParser
            
             LoadTheme();
 
-            if (!Properties.UserSettings.Default.SearchAnime) animeRad.Visibility = Visibility.Collapsed;
-            else animeRad.Visibility = Visibility.Visible;
+            if (!Properties.UserSettings.Default.SearchAnime) AnimeRad.Visibility = Visibility.Collapsed;
+            else AnimeRad.Visibility = Visibility.Visible;
 
-            if (!Properties.UserSettings.Default.SearchTouhou) touhouRad.Visibility = Visibility.Collapsed;
-            else touhouRad.Visibility = Visibility.Visible;
+            if (!Properties.UserSettings.Default.SearchTouhou) TouhouRad.Visibility = Visibility.Collapsed;
+            else TouhouRad.Visibility = Visibility.Visible;
 
-            if (!Properties.UserSettings.Default.SearchWest) westRad.Visibility = Visibility.Collapsed;
-            else westRad.Visibility = Visibility.Visible;
+            if (!Properties.UserSettings.Default.SearchWest) WestRad.Visibility = Visibility.Collapsed;
+            else WestRad.Visibility = Visibility.Visible;
 
-            if (!Properties.UserSettings.Default.SearchJP) jpRad.Visibility = Visibility.Collapsed;
-            else jpRad.Visibility = Visibility.Visible;
+            if (!Properties.UserSettings.Default.SearchJP) JpRad.Visibility = Visibility.Collapsed;
+            else JpRad.Visibility = Visibility.Visible;
 
             if (Properties.UserSettings.Default.DebugMode) debug_mode = (Category)Properties.UserSettings.Default.DebugCategory;
             else debug_mode = Category.None;
@@ -165,16 +165,16 @@ namespace LyricParser
             switch (cat)
             {
                 case Category.Anime:
-                    animeRad.IsChecked = true;
+                    AnimeRad.IsChecked = true;
                     break;
                 case Category.Touhou:
-                    touhouRad.IsChecked = true;
+                    TouhouRad.IsChecked = true;
                     break;
                 case Category.Western:
-                    westRad.IsChecked = true;
+                    WestRad.IsChecked = true;
                     break;
                 case Category.JP:
-                    jpRad.IsChecked = true;
+                    JpRad.IsChecked = true;
                     break;
             }
 
@@ -185,7 +185,7 @@ namespace LyricParser
 
             SetStatus(Status.Standby);
             timer.Interval = new TimeSpan(0, 0, 0, 0, 1000 / 60);
-            timer.Tick += timer_Tick;
+            timer.Tick += Timer_Tick;
             timer.Start();
             initComplete = true;
         }
@@ -215,7 +215,7 @@ namespace LyricParser
             SetUpTables(true);
         }
 
-        private void timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object sender, EventArgs e)
         {
             autoSearch = autoSearchBox.IsChecked;
             if (autoSearch == true && Song.GetSongInfo().Title != "Winamp 5.666 Build 3516")
@@ -233,15 +233,15 @@ namespace LyricParser
             }
         }
         
-        private void getLyricsBtn_Click(object sender, RoutedEventArgs e)
+        private void GetLyricsBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(songNameTxt.Text) && autoSearchBox.IsChecked == false)
+            if (!string.IsNullOrWhiteSpace(SongNameTxt.Text) && autoSearchBox.IsChecked == false)
             {
-                int index = songNameTxt.Text.Trim().IndexOf(" - ");
-                currentSong.Artist = songNameTxt.Text.Trim().Substring(0, index);
-                currentSong.Title = songNameTxt.Text.Trim().Substring(index + 3);
+                int index = SongNameTxt.Text.Trim().IndexOf(" - ");
+                currentSong.Artist = SongNameTxt.Text.Trim().Substring(0, index);
+                currentSong.Title = SongNameTxt.Text.Trim().Substring(index + 3);
 
-                Properties.Settings.Default.LastSong = songNameTxt.Text;
+                Properties.Settings.Default.LastSong = SongNameTxt.Text;
                 Properties.Settings.Default.Save();
                 retries = MAX_RETRIES;
 
@@ -260,37 +260,37 @@ namespace LyricParser
         {
             SetStatus(Status.Searching);
             if (currentSong.Title == "Not running" || currentSong.Artist == null) return;
-            animeRad.Checked -= animeRad_Checked;
-            touhouRad.Checked -= touhouRad_Checked;
-            jpRad.Checked -= jpRad_Checked;
-            westRad.Checked -= westRad_Checked;
+            AnimeRad.Checked -= AnimeRad_Checked;
+            TouhouRad.Checked -= TouhouRad_Checked;
+            JpRad.Checked -= JpRad_Checked;
+            WestRad.Checked -= WestRad_Checked;
 
             Trace.WriteLine("Category: " + cat);
             Trace.WriteLine("Beginning search of lyrics for Artist: " + currentSong);
             CleanUp();
             name = currentSong.Title;
 
-            songInfoTxt.Text = currentSong.Artist + " - " + currentSong.Title;
+            SongInfoTxt.Text = currentSong.Artist + " - " + currentSong.Title;
             anime_retry = 0;
 
             if (Properties.UserSettings.Default.SearchAnime)
             {
-                animeRad.Checked += animeRad_Checked;
+                AnimeRad.Checked += AnimeRad_Checked;
                 cat = Category.Anime;
             }
             if (Properties.UserSettings.Default.SearchTouhou)
             {
-                touhouRad.Checked += touhouRad_Checked;
+                TouhouRad.Checked += TouhouRad_Checked;
                 cat = Category.Touhou;
             }
             if (Properties.UserSettings.Default.SearchWest)
             {
-                westRad.Checked += westRad_Checked;
+                WestRad.Checked += WestRad_Checked;
                 cat = Category.Western;
             }
             if (Properties.UserSettings.Default.SearchJP)
             {
-                jpRad.Checked += jpRad_Checked;
+                JpRad.Checked += JpRad_Checked;
                 cat = Category.JP;
             }
 
@@ -400,7 +400,7 @@ namespace LyricParser
         private void GetAnimeLyricUrl(string name)
         {
             if (name == null) return;
-            Application.Current.Dispatcher.Invoke(new Action(() => { animeRad.IsChecked = true; }));
+            Application.Current.Dispatcher.Invoke(new Action(() => { AnimeRad.IsChecked = true; }));
             CleanUp();
 
             string url = "";
@@ -469,7 +469,7 @@ namespace LyricParser
         {
             Trace.WriteLine("Searching for Touhou Lyrics with Title: " + name);
             if (name == null) return;
-            Application.Current.Dispatcher.Invoke(new Action(() => { touhouRad.IsChecked = true; }));
+            Application.Current.Dispatcher.Invoke(new Action(() => { TouhouRad.IsChecked = true; }));
 
             string url = "";
             //string _url = "https://en.touhouwiki.net/index.php?search=" + name + "+" + currentSong.Artist;
@@ -512,7 +512,7 @@ namespace LyricParser
         {
             Trace.WriteLine("Searching for Western Lyrics with Title: " + name + " Artist: " + currentSong.Artist);
             if (currentSong.Title == null) return;
-            Application.Current.Dispatcher.Invoke(new Action(() => { westRad.IsChecked = true; }));
+            Application.Current.Dispatcher.Invoke(new Action(() => { WestRad.IsChecked = true; }));
 
             if (name == "") name = currentSong.Title;
             //“ ”
@@ -636,7 +636,7 @@ namespace LyricParser
         private void SearchJLyric()
         {
             if (currentSong.Title == null) return;
-            Application.Current.Dispatcher.Invoke(new Action(() => { jpRad.IsChecked = true; }));
+            Application.Current.Dispatcher.Invoke(new Action(() => { JpRad.IsChecked = true; }));
             string name = currentSong.Title;
             string url = "";
             //string _url = "http://search.j-lyric.net/index.php?kt=" + name.Replace(" ", "+") + "&ct=1&ka=" + currentSong.Artist;
@@ -913,11 +913,10 @@ namespace LyricParser
                     }
 
                     var _english = doc.DocumentNode.SelectNodes("//*[contains(@class,'mxm-lyrics__content ')]");
-                    
 
                     foreach (var n in _english)
                     {
-                        english.Add(n.InnerHtml);
+                        english.Add(n.Element("span").InnerHtml);
                         english.Add("\r\n");
                     }
                     english.Add("\r\n");
@@ -994,7 +993,7 @@ namespace LyricParser
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                songInfoTxt.Text = value;
+                SongInfoTxt.Text = value;
                 this.Title = value;
             }
             ));
@@ -1033,9 +1032,9 @@ namespace LyricParser
             Application.Current.Dispatcher.Invoke(new Action(() => {
                 rows.Clear();
 
-                originalTxt.Clear();
-                romajiTxt.Clear();
-                englishTxt.Clear();
+                OriginalTxt.Clear();
+                RomajiTxt.Clear();
+                EnglishTxt.Clear();
 
                 original.Clear();
                 romaji.Clear();
@@ -1052,19 +1051,19 @@ namespace LyricParser
                 switch (status)
                 {
                     case Status.Done:
-                        statusTxt.Text = LocaleResources.FoundLyrics;
+                        StatusTxt.Text = LocaleResources.FoundLyrics;
                         break;
                     case Status.Searching:
-                        statusTxt.Text = LocaleResources.Searching;
+                        StatusTxt.Text = LocaleResources.Searching;
                         break;
                     case Status.Parsing:
-                        statusTxt.Text = LocaleResources.Parsing; ;
+                        StatusTxt.Text = LocaleResources.Parsing; ;
                         break;
                     case Status.Failed:
-                        statusTxt.Text = LocaleResources.Failed;
+                        StatusTxt.Text = LocaleResources.Failed;
                         break;
                     case Status.Standby:
-                        statusTxt.Text = LocaleResources.Standby;
+                        StatusTxt.Text = LocaleResources.Standby;
                         break;
                 }
             }));
@@ -1083,16 +1082,16 @@ namespace LyricParser
             {
                 SetStatus(Status.Done);
 
-                originalTxt.Text = "";
-                romajiTxt.Text = "";
-                englishTxt.Text = "";
+                OriginalTxt.Text = "";
+                RomajiTxt.Text = "";
+                EnglishTxt.Text = "";
 
-                originalTxt.Visibility = System.Windows.Visibility.Collapsed;
-                originalLbl.Visibility = originalTxt.Visibility;
-                romajiTxt.Visibility = System.Windows.Visibility.Collapsed;
-                romajiLbl.Visibility = romajiTxt.Visibility;
-                englishTxt.Visibility = System.Windows.Visibility.Collapsed;
-                englishLbl.Visibility = englishTxt.Visibility;
+                OriginalTxt.Visibility = System.Windows.Visibility.Collapsed;
+                OriginalLbl.Visibility = OriginalTxt.Visibility;
+                RomajiTxt.Visibility = System.Windows.Visibility.Collapsed;
+                RomajiLbl.Visibility = RomajiTxt.Visibility;
+                EnglishTxt.Visibility = System.Windows.Visibility.Collapsed;
+                EnglishLbl.Visibility = EnglishTxt.Visibility;
 
                 if (english.Count > 0 && original.Count == 0)
                 {
@@ -1100,8 +1099,8 @@ namespace LyricParser
                     english.Clear();
                 }
 
-                contentGrid.ColumnDefinitions.Clear();
-                headerGrid.ColumnDefinitions.Clear();
+                ContentGrid.ColumnDefinitions.Clear();
+                HeaderGrid.ColumnDefinitions.Clear();
 
                 bool bShowOrig = false;
                 bool bShowRom = false;
@@ -1133,39 +1132,39 @@ namespace LyricParser
 
                 if (bShowOrig && original.Count > 0)
                 {
-                    contentGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                    headerGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                    ContentGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                    HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
-                    Grid.SetColumn(originalTxt, 0);
-                    Grid.SetColumn(originalLbl, 0);
+                    Grid.SetColumn(OriginalTxt, 0);
+                    Grid.SetColumn(OriginalLbl, 0);
 
-                    originalTxt.Visibility = System.Windows.Visibility.Visible;
-                    originalLbl.Visibility = originalTxt.Visibility;
+                    OriginalTxt.Visibility = System.Windows.Visibility.Visible;
+                    OriginalLbl.Visibility = OriginalTxt.Visibility;
 
                     if (bShowRom && romaji.Count > 0)
                     {
-                        contentGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                        headerGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                        ContentGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                        HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
-                        Grid.SetColumn(romajiLbl, 1);
-                        Grid.SetColumn(romajiTxt, 1);
+                        Grid.SetColumn(RomajiLbl, 1);
+                        Grid.SetColumn(RomajiTxt, 1);
 
-                        romajiTxt.Visibility = System.Windows.Visibility.Visible;
-                        romajiLbl.Visibility = romajiTxt.Visibility;
+                        RomajiTxt.Visibility = System.Windows.Visibility.Visible;
+                        RomajiLbl.Visibility = RomajiTxt.Visibility;
                     }
                     if (bShowEng && english.Count > 0)
                     {
-                        contentGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                        headerGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                        ContentGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                        HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
                         int col = 2;
                         if (!bShowRom) col = 1;
 
-                        Grid.SetColumn(englishLbl, col);
-                        Grid.SetColumn(englishTxt, col);
+                        Grid.SetColumn(EnglishLbl, col);
+                        Grid.SetColumn(EnglishTxt, col);
 
-                        englishTxt.Visibility = System.Windows.Visibility.Visible;
-                        englishLbl.Visibility = englishTxt.Visibility;
+                        EnglishTxt.Visibility = System.Windows.Visibility.Visible;
+                        EnglishLbl.Visibility = EnglishTxt.Visibility;
                     }
                 }
 
@@ -1185,36 +1184,36 @@ namespace LyricParser
                 {
                     foreach (string s in original)
                     {
-                        originalTxt.Text += HtmlEntity.DeEntitize(s);
+                        OriginalTxt.Text += HtmlEntity.DeEntitize(s);
                     }
                 }
                 if (romaji.Count > 0)
                 {
                     foreach (string s in romaji)
                     {
-                        romajiTxt.Text += HtmlEntity.DeEntitize(s);
+                        RomajiTxt.Text += HtmlEntity.DeEntitize(s);
                     }
                 }
                 if (english.Count > 0)
                 {
                     foreach (string s in english)
                     {
-                        englishTxt.Text += HtmlEntity.DeEntitize(s);
+                        EnglishTxt.Text += HtmlEntity.DeEntitize(s);
                     }
                 }
             }));
         }
 
-        private void zoom(double d)
+        private void Zoom(double d)
         {
             zoomValue = d > 5 ? d : 5;
-            zoomTxt.Text = zoomValue.ToString() + " %";
+            ZoomTxt.Text = zoomValue.ToString() + " %";
 
             double newSize = defFontSize / 100 * zoomValue;
 
-            romajiTxt.FontSize = newSize;
-            englishTxt.FontSize = romajiTxt.FontSize;
-            originalTxt.FontSize = romajiTxt.FontSize;
+            RomajiTxt.FontSize = newSize;
+            EnglishTxt.FontSize = RomajiTxt.FontSize;
+            OriginalTxt.FontSize = RomajiTxt.FontSize;
         }
 
         private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -1223,35 +1222,35 @@ namespace LyricParser
             {
                 e.Handled = true;
                 double x = e.Delta > 0 ? zoomStep : -zoomStep;
-                zoom(zoomValue + x);
+                Zoom(zoomValue + x);
             }
         }
 
-        private void enlargeBtn_Click(object sender, RoutedEventArgs e)
+        private void EnlargeBtn_Click(object sender, RoutedEventArgs e)
         {
-            zoom(zoomValue + zoomStep);
+            Zoom(zoomValue + zoomStep);
         }
-        private void shrinkBtn_Click(object sender, RoutedEventArgs e)
+        private void ShrinkBtn_Click(object sender, RoutedEventArgs e)
         {
-            zoom(zoomValue - zoomStep);
+            Zoom(zoomValue - zoomStep);
         }
 
-        private void animeRad_Checked(object sender, RoutedEventArgs e)
+        private void AnimeRad_Checked(object sender, RoutedEventArgs e)
         {
             SetCategory(Category.Anime);
         }
 
-        private void touhouRad_Checked(object sender, RoutedEventArgs e)
+        private void TouhouRad_Checked(object sender, RoutedEventArgs e)
         {
             SetCategory(Category.Touhou);
         }
 
-        private void jpRad_Checked(object sender, RoutedEventArgs e)
+        private void JpRad_Checked(object sender, RoutedEventArgs e)
         {
             SetCategory(Category.JP);
         }
 
-        private void westRad_Checked(object sender, RoutedEventArgs e)
+        private void WestRad_Checked(object sender, RoutedEventArgs e)
         {
             SetCategory(Category.Western);
         }
@@ -1261,9 +1260,9 @@ namespace LyricParser
             double newHeight = this.ActualHeight - heightDiff;
             if (newHeight > 0)
             {
-                originalTxt.Height = newHeight;
-                romajiTxt.Height = newHeight;
-                englishTxt.Height = newHeight;
+                OriginalTxt.Height = newHeight;
+                RomajiTxt.Height = newHeight;
+                EnglishTxt.Height = newHeight;
             }
         }
 
@@ -1273,7 +1272,7 @@ namespace LyricParser
         private void AutoSearchBox_Checked(object sender, RoutedEventArgs e)
         {
             //getLyricsBtn.IsEnabled = false;
-            songNameTxt.IsEnabled = false;
+            SongNameTxt.IsEnabled = false;
             autoSearch = true;
             Properties.Settings.Default.AutoSearch = true;
             Properties.Settings.Default.Save();
@@ -1282,8 +1281,8 @@ namespace LyricParser
         private void AutoSearchBox_Unchecked(object sender, RoutedEventArgs e)
         {
             Trace.WriteLine("Unchecked");
-            getLyricsBtn.IsEnabled = true;
-            songNameTxt.IsEnabled = true;
+            GetLyricsBtn.IsEnabled = true;
+            SongNameTxt.IsEnabled = true;
             autoSearch = false;
             Properties.Settings.Default.AutoSearch = false;
             Properties.Settings.Default.Save();
@@ -1305,7 +1304,7 @@ namespace LyricParser
             img.Source = bmp;
         }
 
-        private void editLyricsBtn_Click(object sender, RoutedEventArgs e)
+        private void EditLyricsBtn_Click(object sender, RoutedEventArgs e)
         {
             EditLyrics el = new EditLyrics(this);
             el.ShowDialog();
@@ -1327,7 +1326,7 @@ namespace LyricParser
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Properties.Settings.Default.LastCategory = (int)cat;
-            Properties.Settings.Default.LastPlayer = playerBox.SelectedIndex;
+            Properties.Settings.Default.LastPlayer = PlayerBox.SelectedIndex;
             Properties.Settings.Default.ZoomLevel = zoomValue;
 
             if (WindowState == WindowState.Maximized)
@@ -1349,7 +1348,7 @@ namespace LyricParser
             Properties.Settings.Default.Save();
         }
 
-        private void playerBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void PlayerBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             currentPlayer = (Player)((ComboBox)sender).SelectedIndex;
         }
@@ -1359,7 +1358,7 @@ namespace LyricParser
             currentSong = Song.GetSongInfo();
             string artist = currentSong.Artist;
             string title = currentSong.Title;
-            songNameTxt.Text = artist + " - " + title;
+            SongNameTxt.Text = artist + " - " + title;
         }
         private void SearchInBrowser_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -1367,34 +1366,34 @@ namespace LyricParser
             if(currentUrl != "") Process.Start(currentUrl);
         }
 
-        private void settingsBtn_Click(object sender, RoutedEventArgs e)
+        private void SettingsBtn_Click(object sender, RoutedEventArgs e)
         {
             SettingsWindow win = new SettingsWindow();
-            win.Closed += settings_Closed;
+            win.Closed += Settings_Closed;
             win.ShowDialog();
         }
 
-        private void settings_Closed(object sender, EventArgs e)
+        private void Settings_Closed(object sender, EventArgs e)
         {
             if(((SettingsWindow)sender).newSettings) LoadSettings();  
         }
 
-        private void zoomTxt_LostFocus(object sender, RoutedEventArgs e)
+        private void ZoomTxt_LostFocus(object sender, RoutedEventArgs e)
         {
-            zoom(double.Parse(new string(zoomTxt.Text.TakeWhile(Char.IsDigit).ToArray())));
+            Zoom(double.Parse(new string(ZoomTxt.Text.TakeWhile(Char.IsDigit).ToArray())));
         }
 
-        private void zoomTxt_KeyDown(object sender, KeyEventArgs e)
+        private void ZoomTxt_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Enter)
             {
-                zoom(double.Parse(new string(zoomTxt.Text.TakeWhile(Char.IsDigit).ToArray())));
+                Zoom(double.Parse(new string(ZoomTxt.Text.TakeWhile(Char.IsDigit).ToArray())));
             }
         }
 
-        private void zoomTxt_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void ZoomTxt_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (zoomTxt.IsFocused)
+            if (ZoomTxt.IsFocused)
             {
                 bool inc = e.Delta > 0;
                 double step = 10;
@@ -1402,7 +1401,7 @@ namespace LyricParser
                 else if (!inc && zoomValue - step >= 0) zoomValue -= step;
                 else zoomValue = 0;
 
-                zoomTxt.Text = zoomValue.ToString();
+                ZoomTxt.Text = zoomValue.ToString();
             }
         }
 
@@ -1410,37 +1409,37 @@ namespace LyricParser
         {
             if(zoomMode != 0)
             {
-                zoom(zoomValue + zoomStep * zoomMode);
+                Zoom(zoomValue + zoomStep * zoomMode);
             }
         }
 
-        private void enlargeBtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void EnlargeBtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             zoomMode = 1;
             zoomTimer.Start();
         }
 
-        private void enlargeBtn_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void EnlargeBtn_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             zoomMode = 0;
             zoomTimer.Stop();
-            zoom(zoomValue + zoomStep);
+            Zoom(zoomValue + zoomStep);
         }
 
-        private void shrinkBtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void ShrinkBtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             zoomMode = -1;
             zoomTimer.Start();
         }
 
-        private void shrinkBtn_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void ShrinkBtn_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             zoomMode = 0;
             zoomTimer.Stop();
-            zoom(zoomValue - zoomStep);
+            Zoom(zoomValue - zoomStep);
         }
 
-        private void catRad_Click(object sender, RoutedEventArgs e)
+        private void CatRad_Click(object sender, RoutedEventArgs e)
         {
             retries = MAX_RETRIES;
         }

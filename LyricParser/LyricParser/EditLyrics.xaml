@@ -27,27 +27,27 @@
                 </Grid.ColumnDefinitions>
                 <DockPanel Grid.Column="0">
                     <Label Content="Artist" Margin="5,0,0,0"/>
-                    <TextBox IsReadOnly="True" Name="artistBox" Width="200" HorizontalAlignment="Left" Margin="5,0,0,0" Height="20"/>
+                    <TextBox IsReadOnly="True" Name="ArtistBox" Width="200" HorizontalAlignment="Left" Margin="5,0,0,0" Height="20"/>
                     <Label Content="Title"/>
-                    <TextBox IsReadOnly="True" Name="titleBox" Width="200" HorizontalAlignment="Left" Margin="5,0,5,0" Height="20"/>
+                    <TextBox IsReadOnly="True" Name="TitleBox" Width="200" HorizontalAlignment="Left" Margin="5,0,5,0" Height="20"/>
                     <Label Content="{Binding Source={x:Static w:LocaleResources.SavedLyrics}}"/>
                     <ComboBox Name="SavedLyricsBox" Width="250" HorizontalAlignment="Left" SelectionChanged="SavedLyricsBox_SelectionChanged"/>
                 </DockPanel>
                 <DockPanel Grid.Column="1" HorizontalAlignment="Right">
-                    <CheckBox VerticalAlignment="Center" Name="origCheck" Margin="5,0,0,0" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.EditOriginal}" Content="{Binding Source={x:Static w:LocaleResources.OriginalLabel}}" Checked="origCheck_Checked" Unchecked="origCheck_Unchecked" />
-                    <CheckBox VerticalAlignment="Center" Name="romajiCheck" Margin="5,0,0,0" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.EditRomaji}" Content="{Binding Source={x:Static w:LocaleResources.RomajiLabel}}" Checked="romajiCheck_Checked" Unchecked="romajiCheck_Unchecked" />
-                    <CheckBox VerticalAlignment="Center" Name="engCheck" Margin="5,0,0,0" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.EditEnglish}" Content="{Binding Source={x:Static w:LocaleResources.TranslationLabel}}" Checked="engCheck_Checked"  Unchecked="engCheck_Unchecked" />
-                    <ComboBox Name="genreBox" Width="100" Height="23" VerticalAlignment="Center" Margin="15, 0, 5, 0" SelectedIndex="0">
-                        <ComboBoxItem Name="anItem" Content="{Binding Source={x:Static w:LocaleResources.AnimeRadio}}"/>
-                        <ComboBoxItem Name="thItem" Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}"/>
-                        <ComboBoxItem Name="weItem" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}"/>
-                        <ComboBoxItem Name="jpItem" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}"/>
+                    <CheckBox VerticalAlignment="Center" Name="OrigCheck" Margin="5,0,0,0" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.EditOriginal}" Content="{Binding Source={x:Static w:LocaleResources.OriginalLabel}}" Checked="OrigCheck_Checked" Unchecked="OrigCheck_Unchecked" />
+                    <CheckBox VerticalAlignment="Center" Name="RomajiCheck" Margin="5,0,0,0" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.EditRomaji}" Content="{Binding Source={x:Static w:LocaleResources.RomajiLabel}}" Checked="RomajiCheck_Checked" Unchecked="RomajiCheck_Unchecked" />
+                    <CheckBox VerticalAlignment="Center" Name="EngCheck" Margin="5,0,0,0" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.EditEnglish}" Content="{Binding Source={x:Static w:LocaleResources.TranslationLabel}}" Checked="EngCheck_Checked"  Unchecked="EngCheck_Unchecked" />
+                    <ComboBox Name="GenreBox" Width="100" Height="23" VerticalAlignment="Center" Margin="15, 0, 5, 0" SelectedIndex="0">
+                        <ComboBoxItem Name="AnItem" Content="{Binding Source={x:Static w:LocaleResources.AnimeRadio}}"/>
+                        <ComboBoxItem Name="ThItem" Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}"/>
+                        <ComboBoxItem Name="WeItem" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}"/>
+                        <ComboBoxItem Name="JpItem" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}"/>
                     </ComboBox>
-                    <Button Name="saveBtn" Content="{Binding Source={x:Static w:LocaleResources.SaveButton}}" Width="60" Height="23" VerticalAlignment="Center" Margin="0,0,5,0" Click="saveBtn_Click"/>
+                    <Button Name="SaveBtn" Content="{Binding Source={x:Static w:LocaleResources.SaveButton}}" Width="60" Height="23" VerticalAlignment="Center" Margin="0,0,5,0" Click="SaveBtn_Click"/>
                 </DockPanel>
             </Grid>
             <Border BorderBrush="{DynamicResource TopSeparatorBrush}" BorderThickness="0, 1, 0, 0">
-                <Grid Height="30" Name="headerGrid">
+                <Grid Height="30" Name="HeaderGrid">
                     <Grid.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="{DynamicResource TopGradientColor}" Offset="0"/>
@@ -61,28 +61,28 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock TextAlignment="Center" Name="originalLbl" VerticalAlignment="Top" Text="{Binding Source={x:Static w:LocaleResources.OriginalLabel}}" HorizontalAlignment="Center" Grid.Column="0"/>
-                    <TextBlock TextAlignment="Center" Name="romajiLbl" VerticalAlignment="Top" Text="{Binding Source={x:Static w:LocaleResources.RomajiLabel}}" HorizontalAlignment="Center" Grid.Column="1"/>
-                    <TextBlock TextAlignment="Center" Name="englishLbl" VerticalAlignment="Top" Text="{Binding Source={x:Static w:LocaleResources.TranslationLabel}}" HorizontalAlignment="Center" Grid.Column="2"/>
+                    <TextBlock TextAlignment="Center" Name="OriginalLbl" VerticalAlignment="Top" Text="{Binding Source={x:Static w:LocaleResources.OriginalLabel}}" HorizontalAlignment="Center" Grid.Column="0"/>
+                    <TextBlock TextAlignment="Center" Name="RomajiLbl" VerticalAlignment="Top" Text="{Binding Source={x:Static w:LocaleResources.RomajiLabel}}" HorizontalAlignment="Center" Grid.Column="1"/>
+                    <TextBlock TextAlignment="Center" Name="EnglishLbl" VerticalAlignment="Top" Text="{Binding Source={x:Static w:LocaleResources.TranslationLabel}}" HorizontalAlignment="Center" Grid.Column="2"/>
                 </Grid>
             </Border>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <Grid Name="contentGrid">
+            <Grid Name="ContentGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <TextBox Style="{x:Null}" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Name="originalTxt"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0" Height="590" BorderThickness="0" TextAlignment="Center" AcceptsReturn="True"/>
-                <TextBox Style="{x:Null}" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Name="romajiTxt" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="1" Height="590" BorderThickness="0" TextAlignment="Center" AcceptsReturn="True"/>
-                <TextBox Style="{x:Null}" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Name="englishTxt" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="2" Height="590" BorderThickness="0" TextAlignment="Center" AcceptsReturn="True"/>
+                <TextBox Style="{x:Null}" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Name="OriginalTxt"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0" Height="590" BorderThickness="0" TextAlignment="Center" AcceptsReturn="True"/>
+                <TextBox Style="{x:Null}" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Name="RomajiTxt" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="1" Height="590" BorderThickness="0" TextAlignment="Center" AcceptsReturn="True"/>
+                <TextBox Style="{x:Null}" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Name="EnglishTxt" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="2" Height="590" BorderThickness="0" TextAlignment="Center" AcceptsReturn="True"/>
             </Grid>
         </StackPanel>
         <DockPanel Grid.Row="2" VerticalAlignment="Stretch" Background="{DynamicResource BottomBackgroundBrush}">
-            <TextBox Name="zoomTxt" Margin="5, 0, 5, 0" Text="100 %" Width="45" FontSize="11" VerticalAlignment="Center" LostFocus="zoomTxt_LostFocus" KeyDown="zoomTxt_KeyDown" PreviewMouseWheel="zoomTxt_PreviewMouseWheel"></TextBox>
-            <Button Name="enlargeBtn" Height="15" Width="15" Content="&#xE948;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="enlargeBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="enlargeBtn_PreviewMouseLeftButtonUp"/>
-            <Button HorizontalAlignment="Left" Name="shrinkBtn" Height="15" Width="15" Content="&#xE949;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="shrinkBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="shrinkBtn_PreviewMouseLeftButtonUp" />
+            <TextBox Name="ZoomTxt" Margin="5, 0, 5, 0" Text="100 %" Width="45" FontSize="11" VerticalAlignment="Center" LostFocus="ZoomTxt_LostFocus" KeyDown="ZoomTxt_KeyDown" PreviewMouseWheel="ZoomTxt_PreviewMouseWheel"></TextBox>
+            <Button Name="EnlargeBtn" Height="15" Width="15" Content="&#xE948;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="EnlargeBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="EnlargeBtn_PreviewMouseLeftButtonUp"/>
+            <Button HorizontalAlignment="Left" Name="ShrinkBtn" Height="15" Width="15" Content="&#xE949;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="ShrinkBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="ShrinkBtn_PreviewMouseLeftButtonUp" />
         </DockPanel>
     </Grid>
 </Window>

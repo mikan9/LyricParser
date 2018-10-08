@@ -48,7 +48,7 @@ namespace LyricParser
 
         public bool newSettings = false;
 
-        private void saveBtn_Click(object sender, RoutedEventArgs e)
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             Save();
             this.Close();
@@ -58,9 +58,9 @@ namespace LyricParser
         {
             newSettings = true;
             bool debugMode = (bool)debugFlag.IsChecked;
-            int debugCategory = debugCategories.SelectedIndex;
+            int debugCategory = DebugCategories.SelectedIndex;
             int maxRetries = Properties.UserSettings.Default.MaxRetries;
-            int.TryParse(maxRetriesTxt.Text, out maxRetries);
+            int.TryParse(MaxRetriesTxt.Text, out maxRetries);
             Properties.UserSettings.Default.ThemePath = Properties.UserSettings.Default.Themes[themeBox.SelectedIndex] + ".xaml";
             Properties.UserSettings.Default.MaxRetries = maxRetries;
             Properties.UserSettings.Default.Save();
