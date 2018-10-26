@@ -153,7 +153,7 @@ namespace LyricParser
             }
 
             string strTitle = lpText.Substring(0, intLength).Replace(" - Winamp", "").Remove(0, lpText.IndexOf('.') + 1);
-            Trace.WriteLine(strTitle);
+
             if(strTitle != "")
             {
                 song = CleanUpInfo(strTitle);

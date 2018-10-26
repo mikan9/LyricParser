@@ -394,6 +394,9 @@ namespace LyricParser
                 case LyricsDatabase.Utanet:
                     ParseUtanet(resp);
                     break;
+                case LyricsDatabase.Atwiki:
+                    ParseAtwiki(resp);
+                    break;
             }
         }
 
@@ -639,7 +642,7 @@ namespace LyricParser
             Application.Current.Dispatcher.Invoke(new Action(() => { JpRad.IsChecked = true; }));
             string name = currentSong.Title;
             string url = "";
-            //string _url = "http://search.j-lyric.net/index.php?kt=" + name.Replace(" ", "+") + "&ct=1&ka=" + currentSong.Artist;
+            //string _url = "http://search2.j-lyric.net/index.php?kt=" + name.Replace(" ", "+") + "&ct=1&ka=" + currentSong.Artist;
             string _url = GetURL(currentSong.Artist, name, LyricsDatabase.JLyric);
             Trace.WriteLine(_url);
             bool foundMatch = false;
@@ -696,11 +699,12 @@ namespace LyricParser
 
             if (!foundMatch)
             {
+                SearchAtwiki();
                 // SearchUtanet(); To deal with GDPR usage is blocked in EU.
-                if (autoSearch == true)
-                {
-                    RetryGettingLyrics(Category.JP, name);
-                }
+                //if (autoSearch == true)
+                //{
+                //    RetryGettingLyrics(Category.JP, name);
+                //}
             }
         }
         private void SearchUtanet()
@@ -741,6 +745,67 @@ namespace LyricParser
                                 break;
                             }
                         }
+                        if (!foundMatch)
+                        {
+                            if (autoSearch == true)
+                            {
+                                RetryGettingLyrics(Category.JP, name);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine(e.ToString());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.ToString());
+                if (autoSearch == true)
+                {
+                    RetryGettingLyrics(Category.JP, name);
+                }
+            }
+        }
+
+        private void SearchAtwiki()
+        {
+            string name = currentSong.Title.Replace("-", "");
+            string url = "";
+            string _url = GetURL(currentSong.Artist, name, LyricsDatabase.Atwiki);
+            Trace.WriteLine(_url);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
+            request.Method = "GET";
+            try
+            {
+                response = request.GetResponse();
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    var doc = new HtmlDocument();
+                    doc.LoadHtml(reader.ReadToEnd());
+                    try
+                    {
+                        bool foundMatch = false;
+                        var body = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'wikibody')]");
+                        var ul = body.SelectSingleNode("ul");
+                        foreach (var child in ul.SelectNodes("li"))
+                        {
+                            var a = child.SelectSingleNode("a");
+                            if(a.InnerText.ToLower().TrimStart().TrimEnd() == name.ToLower().TrimStart().TrimEnd())
+                            {
+                                foundMatch = true;
+                                url = "https:" + a.GetAttributeValue("href", "null").Replace(" ", "%20");
+
+                                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                                req.Method = "GET";
+                                response = req.GetResponse();
+                                ParseLyrics(LyricsDatabase.Atwiki, response);
+                                break;
+                            }
+                        }
+
                         if (!foundMatch)
                         {
                             if (autoSearch == true)
@@ -979,6 +1044,59 @@ namespace LyricParser
             }
         }
 
+        private void ParseAtwiki(WebResponse resp)
+        {
+            try
+            {
+                Trace.WriteLine("Parsing atwiki");
+                Trace.WriteLine(resp.ResponseUri);
+                currentSong = Song.GetSongInfo();
+                currentSong.Genre = cat;
+
+                using (StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
+                {
+                    string _kanji = "";
+                    SetCurrentSong(currentSong.Artist + " - " + currentSong.Title);
+                    var doc = new HtmlDocument();
+                    doc.LoadHtml(sr.ReadToEnd());
+                    // _kanji = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'kashi_area')]").InnerHtml.Replace("<br>", "\r\n") + "\r\n";
+                    var body = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'wikibody')]");
+
+                    bool foundLyrics = false;
+
+                    foreach(var child in body.ChildNodes)
+                    {
+                        if (!foundLyrics && child.InnerText != "歌詞")
+                            continue;
+                        else if (child.InnerText == "歌詞" && !foundLyrics)
+                        {
+                            foundLyrics = true;
+                            continue;
+                        }
+
+                        if (foundLyrics)
+                        {
+                            if (child.InnerText == "コメント") break;
+
+                            if (child.HasChildNodes)
+                            {
+                                if (_kanji.Length > 0) _kanji += "\r\n\r\n";
+                                _kanji += child.InnerHtml.Replace("\n", "").Replace("<br>", "\n");
+                                //Trace.WriteLine(child.InnerText.Replace(Environment.NewLine, ""));
+                            }
+                        }
+
+                    }
+
+                    original.Add(_kanji);
+                    SetUpTables(true);
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
         private void ParseJPLyrics(WebResponse resp)
         {
             if (resp == null)
@@ -1016,10 +1134,14 @@ namespace LyricParser
                     url = "https://www.musixmatch.com/search/" + artist.Replace(" ", "%20") + "-" + title.Replace(" ", "%20");
                     break;
                 case LyricsDatabase.JLyric:
-                    url = "http://search.j-lyric.net/index.php?kt=" + title.Replace(" ", "+") + "&ct=1&ka=" + artist;
+                    url = "http://search2.j-lyric.net/index.php?kt=" + title.Replace(" ", "+") + "&ct=1&ka=" + artist;
                     break;
                 case LyricsDatabase.Utanet:
                     url = "https://www.uta-net.com/search/?Aselect=2&Keyword=" + title.Replace(" ", "+");
+                    break;
+                case LyricsDatabase.Atwiki:
+                    //url = "https://www5.atwiki.jp/hmiku/?cmd=wikisearch&keyword=" + artist + "++" + title.Replace(" ", "+");
+                    url = "https://www5.atwiki.jp/hmiku/?cmd=wikisearch&keyword=" + title.Replace(" ", "+");
                     break;
             }
             currentUrl = url;

@@ -12,6 +12,7 @@ namespace LyricParser
         Touhouwiki,
         Musicxmatch,
         JLyric,
-        Utanet
+        Utanet,
+        Atwiki
     }
 }
