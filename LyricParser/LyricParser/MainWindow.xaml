@@ -9,6 +9,7 @@
     <Window.CommandBindings>
         <CommandBinding Command="w:Command.GetCurrentSong" Executed="GetCurrentSong_Executed" />
         <CommandBinding Command="w:Command.SearchInBrowser" Executed="SearchInBrowser_Executed" />
+        <CommandBinding Command="w:Command.ClearSearchHistory" Executed="ClearSearchHistory_Executed" />
     </Window.CommandBindings>
     <Window.Resources>
         <ResourceDictionary>
@@ -30,8 +31,8 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <DockPanel Margin="5,5,0,5" Grid.Column="0">
-                    <TextBox Name="SongNameTxt" Width="338" Height="20" VerticalAlignment="Top" Text="{Binding Source={StaticResource Settings}, Path=Default.LastSong}">
-                        <TextBox.ContextMenu>
+                    <ComboBox Name="SongNameTxt" Width="338" Height="20" VerticalAlignment="Top" IsEditable="True" ItemsSource="{Binding SearchHistory}" DisplayMemberPath="Data" SelectedValuePath="Data" SelectionChanged="SongNameTxt_SelectionChanged">
+                        <ComboBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="ApplicationCommands.Cut" />
                                 <MenuItem Command="ApplicationCommands.Copy" />
@@ -40,9 +41,10 @@
                                 <Separator />
                                 <MenuItem Command="w:Command.GetCurrentSong"/>
                                 <MenuItem Command="w:Command.SearchInBrowser"/>
+                                <MenuItem Command="w:Command.ClearSearchHistory"/>
                             </ContextMenu>
-                        </TextBox.ContextMenu>
-                    </TextBox>
+                        </ComboBox.ContextMenu>
+                    </ComboBox>
                     <Button  Name="GetLyricsBtn" Margin="5, 0, 0, 0" Click="GetLyricsBtn_Click" IsDefault="True" Height="20" VerticalAlignment="Center">
                         <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.SearchButton}}"/>
                     </Button>

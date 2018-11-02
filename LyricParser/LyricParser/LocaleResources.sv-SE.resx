@@ -177,4 +177,7 @@
   <data name="WesternRadio" xml:space="preserve">
     <value>Western</value>
   </data>
+  <data name="ClearSearchHistory" xml:space="preserve">
+    <value>Rensa Sökhistorik</value>
+  </data>
 </root>

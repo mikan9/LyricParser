@@ -133,6 +133,7 @@
     <Compile Include="Song.cs" />
     <Compile Include="Status.cs" />
     <Compile Include="StringExtension.cs" />
+    <Compile Include="ViewModel.cs" />
     <Compile Include="WebRequestExtension.cs" />
     <Compile Include="WindowStyle.xaml.cs">
       <DependentUpon>WindowStyle.xaml</DependentUpon>

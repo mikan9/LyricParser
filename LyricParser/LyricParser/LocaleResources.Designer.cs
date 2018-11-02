@@ -79,6 +79,15 @@ namespace LyricParser {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear Search History.
+        /// </summary>
+        public static string ClearSearchHistory {
+            get {
+                return ResourceManager.GetString("ClearSearchHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Lyrics.
         /// </summary>
         public static string EditWindowTitle {

@@ -27,6 +27,7 @@ using System.Windows.Markup;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace LyricParser
 {
@@ -129,8 +130,34 @@ namespace LyricParser
             resource.Add(resDic);
         }
 
+        //public StringCollection SearchHistory
+        //{
+        //    get
+        //    {
+        //        return Properties.Settings.Default.SearchHistory;
+        //    }
+        //    set
+        //    {
+        //        Properties.Settings.Default.SearchHistory = value;
+        //        Properties.Settings.Default.Save();
+        //        NotifyPropertyChanged("SearchHistory");
+        //    }
+        //}
+
+        //public event PropertyChangedEventHandler PropertyChanged;
+        //public void NotifyPropertyChanged(string name)
+        //{
+        //    if(PropertyChanged != null)
+        //    {
+        //        PropertyChanged(this, new PropertyChangedEventArgs(name));
+        //    }
+        //}
+
+        private ViewModel viewModel = new ViewModel();
+
         public MainWindow()
         {
+            this.DataContext = viewModel;
             InitializeComponent();
 
             this.Top = Properties.Settings.Default.Top >= 0 ? Properties.Settings.Default.Top : 0;
@@ -138,6 +165,9 @@ namespace LyricParser
             this.Height = Properties.Settings.Default.Height;
             this.Width = Properties.Settings.Default.Width;
             if (Properties.Settings.Default.Maximized) WindowState = WindowState.Maximized;
+
+            if (Properties.Settings.Default.LastSong != null && Properties.Settings.Default.LastSong.Data.Length > 0)
+                SongNameTxt.SelectedItem = Properties.Settings.Default.LastSong;
        
 
             LoadTheme();
@@ -232,16 +262,33 @@ namespace LyricParser
                 }
             }
         }
+
+        private void AddHistoryEntry(string data)
+        {
+            if (data == " - ") return;
+            if (viewModel.SearchHistory.Count == 20)
+            {
+                viewModel.SearchHistory.RemoveAt(19);
+            }
+            if (viewModel.SearchHistory.Any(s => s.Data == data)) viewModel.SearchHistory.Remove(viewModel.SearchHistory.Single(s => s.Data == data));
+            viewModel.SearchHistory.Insert(0, new HistoryEntry { Data = data });
+            SongNameTxt.SelectedItem = viewModel.SearchHistory.ElementAt(0);
+        }
         
         private void GetLyricsBtn_Click(object sender, RoutedEventArgs e)
         {
+            
             if (!string.IsNullOrWhiteSpace(SongNameTxt.Text) && autoSearchBox.IsChecked == false)
             {
-                int index = SongNameTxt.Text.Trim().IndexOf(" - ");
-                currentSong.Artist = SongNameTxt.Text.Trim().Substring(0, index);
-                currentSong.Title = SongNameTxt.Text.Trim().Substring(index + 3);
 
-                Properties.Settings.Default.LastSong = SongNameTxt.Text;
+                string data = ((HistoryEntry)SongNameTxt.SelectedItem).Data;
+                AddHistoryEntry(data);
+
+                int index = data.Trim().IndexOf(" - ");
+                currentSong.Artist = data.Trim().Substring(0, index);
+                currentSong.Title = data.Trim().Substring(index + 3);
+
+                Properties.Settings.Default.LastSong = new HistoryEntry { Data = data };
                 Properties.Settings.Default.Save();
                 retries = MAX_RETRIES;
 
@@ -1049,7 +1096,7 @@ namespace LyricParser
             try
             {
                 Trace.WriteLine("Parsing atwiki");
-                Trace.WriteLine(resp.ResponseUri);
+
                 currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
@@ -1059,7 +1106,6 @@ namespace LyricParser
                     SetCurrentSong(currentSong.Artist + " - " + currentSong.Title);
                     var doc = new HtmlDocument();
                     doc.LoadHtml(sr.ReadToEnd());
-                    // _kanji = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'kashi_area')]").InnerHtml.Replace("<br>", "\r\n") + "\r\n";
                     var body = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'wikibody')]");
 
                     bool foundLyrics = false;
@@ -1082,7 +1128,6 @@ namespace LyricParser
                             {
                                 if (_kanji.Length > 0) _kanji += "\r\n\r\n";
                                 _kanji += child.InnerHtml.Replace("\n", "").Replace("<br>", "\n");
-                                //Trace.WriteLine(child.InnerText.Replace(Environment.NewLine, ""));
                             }
                         }
 
@@ -1480,7 +1525,7 @@ namespace LyricParser
             currentSong = Song.GetSongInfo();
             string artist = currentSong.Artist;
             string title = currentSong.Title;
-            SongNameTxt.Text = artist + " - " + title;
+            AddHistoryEntry(artist + " - " + title);
         }
         private void SearchInBrowser_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -1564,6 +1609,16 @@ namespace LyricParser
         private void CatRad_Click(object sender, RoutedEventArgs e)
         {
             retries = MAX_RETRIES;
+        }
+
+        private void SongNameTxt_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //SongNameTxt.Text = ((HistoryEntry)SongNameTxt.SelectedItem).Data;
+        }
+
+        private void ClearSearchHistory_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            viewModel.SearchHistory.Clear();
         }
     }
 }

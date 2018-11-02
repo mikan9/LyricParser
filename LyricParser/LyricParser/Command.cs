@@ -11,5 +11,6 @@ namespace LyricParser
     {
         public static readonly RoutedUICommand GetCurrentSong = new RoutedUICommand(LocaleResources.GetCurrentSong, "GetCurrentSong", typeof(MainWindow));
         public static readonly RoutedUICommand SearchInBrowser = new RoutedUICommand(LocaleResources.SearchInBrowser, "SearchInBrowser", typeof(MainWindow));
+        public static readonly RoutedUICommand ClearSearchHistory = new RoutedUICommand(LocaleResources.ClearSearchHistory, "ClearSearchHistory", typeof(MainWindow));
     }
 }

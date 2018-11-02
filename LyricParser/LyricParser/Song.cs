@@ -239,8 +239,12 @@ namespace LyricParser
             data = data.RemoveBracket('(', new string[] { "(ft.", "(feat" });
             data = data.Replace(new string[] { "(", ")" }, "");
             data = data.Replace("*", "");
+            data = data.Replace(": ", " : ");
+            data = data.Replace("\"", "");
+            data = data.Replace("Official Music Video", "");
+            data = data.Replace("Official Video", "");
 
-            string[] separators = new string[] { " - ", " – " };
+            string[] separators = new string[] { " - ", " – ", " : " };
             string[] jpSeparators = new string[] { "「", "『" };
             Dictionary<string, string> jpDict = new Dictionary<string, string>();
             jpDict.Add("「", "」");
@@ -248,21 +252,29 @@ namespace LyricParser
 
             if (data != "")
             {
-                if (separators.Any(s => data.Contains(s)))
+                try
                 {
-                    string separator = separators.Where(s => data.Contains(s)).ElementAt(0);
-
-                    int index = data.Trim().IndexOf(separator);
-                    song.Artist = data.Trim().Substring(0, index).Replace(new string[] { " x ", " ft. ", " vs ", " feat ", " feat. " }, " & ");
-                    string[] keyWords = new string[] { "ft.", "feat.", "(ft.", "(feat" };
-
-                    if (keyWords.Any(f => data.Contains(f)))
+                    if (separators.Any(s => data.Contains(s)))
                     {
-                        string ft = data.Split(keyWords, StringSplitOptions.RemoveEmptyEntries)[1].Replace(")", "").TrimStart().TrimEnd();
-                        if (ft.Length > 0 && data.Trim().IndexOf(ft) > index)
+                        string separator = separators.Where(s => data.Contains(s)).ElementAt(0);
+
+                        int index = data.Trim().IndexOf(separator);
+                        song.Artist = data.Trim().Substring(0, index).Replace(new string[] { " x ", " ft. ", " vs ", " feat ", " feat. " }, " & ");
+                        string[] keyWords = new string[] { "ft.", "feat.", "(ft.", "(feat" };
+
+                        if (keyWords.Any(f => data.Contains(f)))
                         {
-                            song.Artist += " & " + ft;
-                            song.Title = data.Split(keyWords, StringSplitOptions.RemoveEmptyEntries)[0].Trim().Substring(index + 3);
+                            string ft = data.Split(keyWords, StringSplitOptions.RemoveEmptyEntries)[1].Replace(")", "").TrimStart().TrimEnd();
+                            if (ft.Length > 0 && data.Trim().IndexOf(ft) > index)
+                            {
+                                song.Artist += " & " + ft;
+                                song.Title = data.Split(keyWords, StringSplitOptions.RemoveEmptyEntries)[0].Trim().Substring(index + 3);
+                            }
+                            else
+                            {
+                                index = data.Trim().IndexOf(separator);
+                                song.Title = data.Trim().Substring(index + 3);
+                            }
                         }
                         else
                         {
@@ -270,22 +282,22 @@ namespace LyricParser
                             song.Title = data.Trim().Substring(index + 3);
                         }
                     }
-                    else
+                    else if (jpDict.Keys.Any(s => data.Contains(s)))
                     {
-                        index = data.Trim().IndexOf(separator);
-                        song.Title = data.Trim().Substring(index + 3);
+                        string match = jpDict.Keys.Where(s => data.Contains(s)).ElementAt(0);
+
+                        int index = data.IndexOf(match);
+                        int endOfTitle = data.IndexOf(jpDict[match]);
+
+                        if (match.Any(m => data.Contains(m)))
+                            song.artist = data.Split(new string[] { match }, StringSplitOptions.None)[0].Trim();
+                        song.title = data.Substring(index + 1, endOfTitle - index - 1).Trim();
                     }
                 }
-                else if (jpDict.Keys.Any(s => data.Contains(s)))
+                catch(Exception e)
                 {
-                    string match = jpDict.Keys.Where(s => data.Contains(s)).ElementAt(0);
-
-                    int index = data.IndexOf(match);
-                    int endOfTitle = data.IndexOf(jpDict[match]);
-                    song.artist = data.Split(new string[] { match }, StringSplitOptions.None)[0].Trim();
-                    song.title = data.Substring(index + 1, endOfTitle - index - 1).Trim();
+                    Trace.WriteLine(e.Message);
                 }
-
             }
             if (song.title.Contains(" - ")) song.title = song.title.Split(new string[] { " - " }, StringSplitOptions.None)[0];
 

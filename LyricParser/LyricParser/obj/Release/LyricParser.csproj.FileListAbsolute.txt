@@ -140,4 +140,3 @@ C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Release\ja-J
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Release\LyricParser.csproj.CopyComplete
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Release\LyricParser.exe
 C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Release\LyricParser.pdb
-C:\Users\ahlst\source\repos\LyricParser\LyricParser\LyricParser\obj\Release\LyricParser.csprojAssemblyReference.cache

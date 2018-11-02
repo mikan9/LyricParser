@@ -177,4 +177,7 @@
   <data name="WesternRadio" xml:space="preserve">
     <value>洋楽</value>
   </data>
+  <data name="ClearSearchHistory" xml:space="preserve">
+    <value>検索履歴削除</value>
+  </data>
 </root>
