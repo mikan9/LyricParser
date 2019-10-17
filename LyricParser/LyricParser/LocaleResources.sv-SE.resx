@@ -186,7 +186,7 @@
   <data name="OtherRadio" xml:space="preserve">
     <value>Annat</value>
   </data>
-  <data name="Saved" xml:space="preserve">
+  <data name="SaveSuccessful" xml:space="preserve">
     <value>Sparning Lyckades!</value>
   </data>
   <data name="SaveFailed" xml:space="preserve">

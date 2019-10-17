@@ -189,7 +189,7 @@
   <data name="SaveFailed" xml:space="preserve">
     <value>Save Failed!</value>
   </data>
-  <data name="SaveSucessful" xml:space="preserve">
+  <data name="SaveSuccessful" xml:space="preserve">
     <value>Save Successful!</value>
   </data>
   <data name="Saving" xml:space="preserve">

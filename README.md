@@ -1,2 +1,2 @@
 # LyricParser
-Automatically get lyrics from different sources for Spotify, Winamp, Google Play Music and Youtube.
+Automatically fetch lyrics from different sources for music played with Spotify, Winamp, Google Play Music and Youtube.
