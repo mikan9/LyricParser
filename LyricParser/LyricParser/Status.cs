@@ -12,6 +12,9 @@ namespace LyricParser
         Searching,
         Parsing,
         Failed,
-        Standby
+        Standby,
+        SaveSuccessFul,
+        SaveFailed,
+        Saving
     }
 }

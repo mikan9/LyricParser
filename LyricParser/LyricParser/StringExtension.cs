@@ -16,8 +16,6 @@ namespace LyricParser
 
             bool firstLetter = true;
 
-            bool secondWordFirstLetter = false;
-
             for (int i = 0; i < chars.Length; i++)
             {
                 char c = chars[i];

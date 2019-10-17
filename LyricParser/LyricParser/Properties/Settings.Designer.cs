@@ -14,7 +14,7 @@ namespace LyricParser.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.0.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -24,16 +24,17 @@ namespace LyricParser.Properties {
                 return defaultInstance;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SettingsSerializeAs(System.Configuration.SettingsSerializeAs.Binary)]
-        [global::System.Configuration.DefaultSettingValueAttribute(null)]
-        public HistoryEntry LastSong {
-            get {
-                return ((HistoryEntry)(this["LastSong"]));
+        public HistoryEntry LastSong
+        {
+            get
+            {
+                return (HistoryEntry)(this["LastSong"]);
             }
-            set {
+            set
+            {
                 this["LastSong"] = value;
             }
         }
@@ -224,7 +225,7 @@ namespace LyricParser.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute(null)]
         public ObservableCollection<HistoryEntry> SearchHistory {
             get {
-                return ((ObservableCollection<HistoryEntry>)(this["SearchHistory"]));
+                return (ObservableCollection<HistoryEntry>)(this["SearchHistory"]);
             }
             set {
                 this["SearchHistory"] = value;

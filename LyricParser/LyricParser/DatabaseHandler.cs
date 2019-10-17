@@ -11,7 +11,6 @@ namespace LyricParser
     static class DatabaseHandler
     {
         public static string database = "";
-        static MainWindow main;
 
         public static void CreateDB()
         {
@@ -34,8 +33,10 @@ namespace LyricParser
         {
             return new SQLiteConnection(db);
         }
-        public static void AddParameter(string artist, string title, string title_en, Category genre, List<string> lyrics, bool exist, string id)
+        public static bool AddSong(string artist, string title, string title_en, Category genre, List<string> lyrics, bool exist, string id)
         {
+            bool success = true;
+
             using (var dbConn = createConnection(database))
             {
                 if (dbConn.State != System.Data.ConnectionState.Open)
@@ -125,13 +126,23 @@ namespace LyricParser
                             Value = id
                         });
                     }
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch(SQLiteException e)
+                    {
+                        Trace.WriteLine(e.Message);
+                        success = false;
+                    }
                 }
                 if (dbConn.State != System.Data.ConnectionState.Closed)
                 {
                     dbConn.Close();
+                    
                 }
             }
+            return success;
         }
 
         public static void GetEnglishTitle(Song song)

@@ -180,4 +180,19 @@
   <data name="ClearSearchHistory" xml:space="preserve">
     <value>Clear Search History</value>
   </data>
+  <data name="Empty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OtherRadio" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>Save Failed!</value>
+  </data>
+  <data name="SaveSucessful" xml:space="preserve">
+    <value>Save Successful!</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Saving...</value>
+  </data>
 </root>

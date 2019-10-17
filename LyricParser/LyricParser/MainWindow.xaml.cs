@@ -65,19 +65,15 @@ namespace LyricParser
         public string currentUrl = "";
         string currentSongID = "";
         public static Player currentPlayer = Player.Winamp;
-        static Category cat = Category.JP;
+        static Category cat = Category.Western;
         public static Category debug_mode = Category.None;
         int anime_retry = 0;
         int western_retry = 0;
-        string prevSongName;
 
         public string dbFile = @"lyrics.db";
         public string connectionString = "";
 
         List<Key> keysDown = new List<Key>();
-
-        bool newSettings = false;
-
 
         public void LoadSettings()
         {
@@ -85,7 +81,6 @@ namespace LyricParser
             zoomValue = Properties.Settings.Default.ZoomLevel;
             Zoom(zoomValue);
             retries = MAX_RETRIES;
-            newSettings = true;
 
             CultureInfo newCulture = new CultureInfo(Properties.UserSettings.Default.Locale);
             if (Thread.CurrentThread.CurrentCulture.Name != newCulture.Name) App.ChangeCulture(newCulture);
@@ -104,6 +99,9 @@ namespace LyricParser
             if (!Properties.UserSettings.Default.SearchJP) JpRad.Visibility = Visibility.Collapsed;
             else JpRad.Visibility = Visibility.Visible;
 
+            if (!Properties.UserSettings.Default.SearchOther) OtherRad.Visibility = Visibility.Collapsed;
+            else OtherRad.Visibility = Visibility.Visible;
+
             if (Properties.UserSettings.Default.DebugMode) debug_mode = (Category)Properties.UserSettings.Default.DebugCategory;
             else debug_mode = Category.None;
 
@@ -117,7 +115,6 @@ namespace LyricParser
             Uri themeUri = new Uri(AppDomain.CurrentDomain.BaseDirectory + @"Themes\" + Properties.UserSettings.Default.ThemePath);
 
             var resource = Application.Current.MainWindow.Resources.MergedDictionaries;
-            //var settingsRes = Application.Current.Windows[]
             resource.Clear();
 
             var resDic = new ResourceDictionary();
@@ -206,6 +203,9 @@ namespace LyricParser
                 case Category.JP:
                     JpRad.IsChecked = true;
                     break;
+                case Category.Other:
+                    OtherRad.IsChecked = true;
+                    break;
             }
 
             zoomTimer = new DispatcherTimer();
@@ -220,17 +220,20 @@ namespace LyricParser
             initComplete = true;
         }
 
-        public void EditLyrics(string title, string title_en, string artist, string original, string romaji, string english, Category genre)
+        public bool EditLyrics(string title, string title_en, string artist, string original, string romaji, string english, Category genre)
         {
+            bool success = true;
 
             List<string> lyrics = new List<string>();
             lyrics.Add(original);
             lyrics.Add(romaji);
             lyrics.Add(english);
 
-            DatabaseHandler.AddParameter(artist, title, title_en, genre, lyrics, DatabaseHandler.lyricsExist(currentSong, false, this), currentSongID);
+            success = DatabaseHandler.AddSong(artist, title, title_en, genre, lyrics, DatabaseHandler.lyricsExist(currentSong, false, this), currentSongID);
 
             SetLyrics(original, romaji, english, genre);
+
+            return success;
         }
 
         public void SetLyrics(string orig = "", string rom = "", string eng = "", Category cat = Category.Anime)
@@ -252,7 +255,6 @@ namespace LyricParser
             {
                 if ((Song.GetSongInfo().Title != currentSong.Title && !paused))
                 {
-                    newSettings = false;
                     currentSong = Song.GetSongInfo();
                     if (!DatabaseHandler.lyricsExist(currentSong, true, this))
                     {
@@ -266,11 +268,14 @@ namespace LyricParser
         private void AddHistoryEntry(string data)
         {
             if (data == " - ") return;
-            if (viewModel.SearchHistory.Count == 20)
+            if (viewModel.SearchHistory != null && viewModel.SearchHistory.Count > 0)
             {
-                viewModel.SearchHistory.RemoveAt(19);
+                if (viewModel.SearchHistory.Count == 20)
+                {
+                    viewModel.SearchHistory.RemoveAt(19);
+                }
+                if (viewModel.SearchHistory.Any(s => s.Data == data)) viewModel.SearchHistory.Remove(viewModel.SearchHistory.Single(s => s.Data == data));
             }
-            if (viewModel.SearchHistory.Any(s => s.Data == data)) viewModel.SearchHistory.Remove(viewModel.SearchHistory.Single(s => s.Data == data));
             viewModel.SearchHistory.Insert(0, new HistoryEntry { Data = data });
             SongNameTxt.SelectedItem = viewModel.SearchHistory.ElementAt(0);
         }
@@ -281,7 +286,12 @@ namespace LyricParser
             if (!string.IsNullOrWhiteSpace(SongNameTxt.Text) && autoSearchBox.IsChecked == false)
             {
 
-                string data = ((HistoryEntry)SongNameTxt.SelectedItem).Data;
+                string data;
+                if (viewModel.SearchHistory != null && viewModel.SearchHistory.Count > 0)
+                    data = SongNameTxt.Text;
+                else
+                    data = new HistoryEntry { Data = SongNameTxt.Text }.Data;
+
                 AddHistoryEntry(data);
 
                 int index = data.Trim().IndexOf(" - ");
@@ -340,6 +350,11 @@ namespace LyricParser
                 JpRad.Checked += JpRad_Checked;
                 cat = Category.JP;
             }
+            if (Properties.UserSettings.Default.SearchOther)
+            {
+                OtherRad.Checked += OtherRad_Checked;
+                cat = Category.Other;
+            }
 
 
 
@@ -366,6 +381,7 @@ namespace LyricParser
                     GetTouhouLyricUrl(currentSong.Title);
                     break;
                 case Category.Western:
+                case Category.Other:
                     GetWesternLyricUrl(currentSong.Title);
                     break;
                 case Category.JP:
@@ -406,10 +422,16 @@ namespace LyricParser
                         else GetWesternLyricUrl(name);
                         break;
                     case Category.JP:
+                        if (Properties.UserSettings.Default.SearchTouhou) GetTouhouLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchWest) GetWesternLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchOther) GetWesternLyricUrl(name);
+                        else GetJPLyricUrl(name);
+                        break;
+                    case Category.Other:
                         if (Properties.UserSettings.Default.SearchAnime) GetAnimeLyricUrl(name);
                         else if (Properties.UserSettings.Default.SearchTouhou) GetTouhouLyricUrl(name);
-                        else if (Properties.UserSettings.Default.SearchWest) GetWesternLyricUrl(name);
-                        else GetJPLyricUrl(name);
+                        else if (Properties.UserSettings.Default.SearchAnime) GetAnimeLyricUrl(name);
+                        else GetWesternLyricUrl(name);
                         break;
                 }
             }
@@ -689,7 +711,6 @@ namespace LyricParser
             Application.Current.Dispatcher.Invoke(new Action(() => { JpRad.IsChecked = true; }));
             string name = currentSong.Title;
             string url = "";
-            //string _url = "http://search2.j-lyric.net/index.php?kt=" + name.Replace(" ", "+") + "&ct=1&ka=" + currentSong.Artist;
             string _url = GetURL(currentSong.Artist, name, LyricsDatabase.JLyric);
             Trace.WriteLine(_url);
             bool foundMatch = false;
@@ -747,7 +768,7 @@ namespace LyricParser
             if (!foundMatch)
             {
                 SearchAtwiki();
-                // SearchUtanet(); To deal with GDPR usage is blocked in EU.
+                // SearchUtanet(); Usage is blocked in EU due to GDPR.
                 //if (autoSearch == true)
                 //{
                 //    RetryGettingLyrics(Category.JP, name);
@@ -897,7 +918,6 @@ namespace LyricParser
                 currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
                 DatabaseHandler.GetEnglishTitle(currentSong);
-                prevSongName = currentSong.Title;
 
                 anime_retry = 0;
 
@@ -1038,6 +1058,7 @@ namespace LyricParser
             }
             catch (Exception e)
             {
+                Trace.WriteLine(e.Message);
             }
         }
 
@@ -1063,6 +1084,7 @@ namespace LyricParser
             }
             catch (Exception e)
             {
+                Trace.WriteLine(e.Message);
             }
         }
 
@@ -1088,6 +1110,7 @@ namespace LyricParser
             }
             catch (Exception e)
             {
+                Trace.WriteLine(e.Message);
             }
         }
 
@@ -1139,6 +1162,7 @@ namespace LyricParser
             }
             catch (Exception e)
             {
+                Trace.WriteLine(e.Message);
             }
         }
 
@@ -1179,7 +1203,7 @@ namespace LyricParser
                     url = "https://www.musixmatch.com/search/" + artist.Replace(" ", "%20") + "-" + title.Replace(" ", "%20");
                     break;
                 case LyricsDatabase.JLyric:
-                    url = "http://search2.j-lyric.net/index.php?kt=" + title.Replace(" ", "+") + "&ct=1&ka=" + artist;
+                    url = "http://search.j-lyric.net/index.php?kt=" + title.Replace(" ", "+") + "&ct=1&ka=" + artist;
                     break;
                 case LyricsDatabase.Utanet:
                     url = "https://www.uta-net.com/search/?Aselect=2&Keyword=" + title.Replace(" ", "+");
@@ -1224,7 +1248,7 @@ namespace LyricParser
                         StatusTxt.Text = LocaleResources.Searching;
                         break;
                     case Status.Parsing:
-                        StatusTxt.Text = LocaleResources.Parsing; ;
+                        StatusTxt.Text = LocaleResources.Parsing;
                         break;
                     case Status.Failed:
                         StatusTxt.Text = LocaleResources.Failed;
@@ -1294,6 +1318,11 @@ namespace LyricParser
                         bShowOrig = Properties.UserSettings.Default.OrigJP;
                         bShowRom = Properties.UserSettings.Default.RomajiJP;
                         bShowEng = Properties.UserSettings.Default.EngJP;
+                        break;
+                    case Category.Other:
+                        bShowOrig = Properties.UserSettings.Default.OrigOther;
+                        bShowRom = Properties.UserSettings.Default.RomajiOther;
+                        bShowEng = Properties.UserSettings.Default.EngOther;
                         break;
                 }
 
@@ -1412,14 +1441,19 @@ namespace LyricParser
             SetCategory(Category.Touhou);
         }
 
+        private void WestRad_Checked(object sender, RoutedEventArgs e)
+        {
+            SetCategory(Category.Western);
+        }
+
         private void JpRad_Checked(object sender, RoutedEventArgs e)
         {
             SetCategory(Category.JP);
         }
 
-        private void WestRad_Checked(object sender, RoutedEventArgs e)
+        private void OtherRad_Checked(object sender, RoutedEventArgs e)
         {
-            SetCategory(Category.Western);
+            SetCategory(Category.Other);
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

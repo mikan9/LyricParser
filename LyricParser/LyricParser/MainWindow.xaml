@@ -27,7 +27,7 @@
         <StackPanel Grid.Row="0" Background="{DynamicResource TopBackgroundBrush}" Grid.ColumnSpan="2">
             <Grid Height="30">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="730"/>
+                    <ColumnDefinition Width="830"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <DockPanel Margin="5,5,0,5" Grid.Column="0">
@@ -45,7 +45,7 @@
                             </ContextMenu>
                         </ComboBox.ContextMenu>
                     </ComboBox>
-                    <Button  Name="GetLyricsBtn" Margin="5, 0, 0, 0" Click="GetLyricsBtn_Click" IsDefault="True" Height="20" VerticalAlignment="Center">
+                    <Button  Name="GetLyricsBtn" Margin="5, 0, 0, 0" Click="GetLyricsBtn_Click" Height="20" VerticalAlignment="Center">
                         <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.SearchButton}}"/>
                     </Button>
                     <Button Name="EditLyricsBtn" Click="EditLyricsBtn_Click" IsEnabled="True" Visibility="Visible">
@@ -53,9 +53,10 @@
                     </Button>
                     <CheckBox Content="{Binding Source={x:Static w:LocaleResources.AutoSearchCheck}}" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.AutoSearch}" Name="autoSearchBox" Checked="AutoSearchBox_Checked" VerticalAlignment="Center" Margin="5, 0, 0, 0" Unchecked="AutoSearchBox_Unchecked"/>
                     <RadioButton Name="AnimeRad" Content="{Binding Source={x:Static w:LocaleResources.AnimeRadio}}" IsChecked="False" Margin="5, 0, 0, 0" VerticalAlignment="Center" Checked="AnimeRad_Checked" Click="CatRad_Click"/>
-                    <RadioButton Name="TouhouRad" Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}" IsChecked="True" Margin="5, 0, 0, 0" VerticalAlignment="Center"  Checked="TouhouRad_Checked" Click="CatRad_Click"/>
-                    <RadioButton Name="WestRad" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}" IsChecked="False" Margin="5, 0, -10, 0" VerticalAlignment="Center" Checked="WestRad_Checked" Click="CatRad_Click"/>
+                    <RadioButton Name="TouhouRad" Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}" IsChecked="False" Margin="5, 0, 0, 0" VerticalAlignment="Center"  Checked="TouhouRad_Checked" Click="CatRad_Click"/>
+                    <RadioButton Name="WestRad" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}" IsChecked="True" Margin="5, 0, -10, 0" VerticalAlignment="Center" Checked="WestRad_Checked" Click="CatRad_Click"/>
                     <RadioButton Name="JpRad" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}" IsChecked="False" Margin="15, 0, -10, 0" VerticalAlignment="Center" Checked="JpRad_Checked" Click="CatRad_Click"/>
+                    <RadioButton Name="OtherRad" Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}" IsChecked="False" Margin="15, 0, -10, 0" VerticalAlignment="Center" Checked="OtherRad_Checked" Click="CatRad_Click"/>
                 </DockPanel>
                 <DockPanel Grid.Column="1" HorizontalAlignment="Right">
                     <ComboBox Name="PlayerBox" VerticalAlignment="Center" SelectedIndex="{Binding Source={StaticResource Settings}, Path=Default.LastPlayer}" SelectionChanged="PlayerBox_SelectionChanged" Margin="0, 0, 15, 0">

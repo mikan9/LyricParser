@@ -12,6 +12,7 @@ namespace LyricParser
         Anime = 0,
         Touhou = 1,
         Western = 2,
-        JP = 3
+        JP = 3,
+        Other = 4
     }
 }

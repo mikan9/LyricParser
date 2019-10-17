@@ -42,6 +42,7 @@
                         <ComboBoxItem Name="ThItem" Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}"/>
                         <ComboBoxItem Name="WeItem" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}"/>
                         <ComboBoxItem Name="JpItem" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}"/>
+                        <ComboBoxItem Name="OtItem" Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}"/>
                     </ComboBox>
                     <Button Name="SaveBtn" Content="{Binding Source={x:Static w:LocaleResources.SaveButton}}" Width="60" Height="23" VerticalAlignment="Center" Margin="0,0,5,0" Click="SaveBtn_Click"/>
                 </DockPanel>
@@ -80,9 +81,10 @@
             </Grid>
         </StackPanel>
         <DockPanel Grid.Row="2" VerticalAlignment="Stretch" Background="{DynamicResource BottomBackgroundBrush}">
-            <TextBox Name="ZoomTxt" Margin="5, 0, 5, 0" Text="100 %" Width="45" FontSize="11" VerticalAlignment="Center" LostFocus="ZoomTxt_LostFocus" KeyDown="ZoomTxt_KeyDown" PreviewMouseWheel="ZoomTxt_PreviewMouseWheel"></TextBox>
-            <Button Name="EnlargeBtn" Height="15" Width="15" Content="&#xE948;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="EnlargeBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="EnlargeBtn_PreviewMouseLeftButtonUp"/>
-            <Button HorizontalAlignment="Left" Name="ShrinkBtn" Height="15" Width="15" Content="&#xE949;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="ShrinkBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="ShrinkBtn_PreviewMouseLeftButtonUp" />
+            <TextBox DockPanel.Dock="Left" Name="ZoomTxt" Margin="5, 0, 5, 0" Text="100 %" Width="45" FontSize="11" VerticalAlignment="Center" LostFocus="ZoomTxt_LostFocus" KeyDown="ZoomTxt_KeyDown" PreviewMouseWheel="ZoomTxt_PreviewMouseWheel"></TextBox>
+            <Button DockPanel.Dock="Left" Name="EnlargeBtn" Height="15" Width="15" Content="&#xE948;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="EnlargeBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="EnlargeBtn_PreviewMouseLeftButtonUp"/>
+            <Button DockPanel.Dock="Left" Name="ShrinkBtn" Height="15" Width="15" Content="&#xE949;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" PreviewMouseLeftButtonDown="ShrinkBtn_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="ShrinkBtn_PreviewMouseLeftButtonUp" />
+            <TextBlock DockPanel.Dock="Right"  Padding="0, 4, 5, 0" Name="StatusTxt" Text="{Binding Source={x:Static w:LocaleResources.Empty}}" FontSize="11" Foreground="{DynamicResource ForegroundBrush}"  Margin="0 0 5 0" TextAlignment="Right" />
         </DockPanel>
     </Grid>
 </Window>

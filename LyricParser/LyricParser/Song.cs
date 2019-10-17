@@ -242,7 +242,9 @@ namespace LyricParser
             data = data.Replace(": ", " : ");
             data = data.Replace("\"", "");
             data = data.Replace("Official Music Video", "");
+            data = data.Replace("Music Video", "");
             data = data.Replace("Official Video", "");
+            data = data.Replace("Dance Video", "");
 
             string[] separators = new string[] { " - ", " – ", " : " };
             string[] jpSeparators = new string[] { "「", "『" };
@@ -299,7 +301,7 @@ namespace LyricParser
                     Trace.WriteLine(e.Message);
                 }
             }
-            if (song.title.Contains(" - ")) song.title = song.title.Split(new string[] { " - " }, StringSplitOptions.None)[0];
+            if (song.title != null && song.title.Contains(" - ")) song.title = song.title.Split(new string[] { " - " }, StringSplitOptions.None)[0];
 
             return song;
         }

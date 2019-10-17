@@ -180,4 +180,19 @@
   <data name="ClearSearchHistory" xml:space="preserve">
     <value>Rensa Sökhistorik</value>
   </data>
+  <data name="Empty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OtherRadio" xml:space="preserve">
+    <value>Annat</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Sparning Lyckades!</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>Sparning Misslyckades!</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Sparar...</value>
+  </data>
 </root>

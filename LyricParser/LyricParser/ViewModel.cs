@@ -9,10 +9,11 @@ namespace LyricParser
     {
         public ViewModel()
         {
+            if (Properties.Settings.Default.SearchHistory == null)
+                Properties.Settings.Default.SearchHistory = new ObservableCollection<HistoryEntry>();
             SearchHistory = Properties.Settings.Default.SearchHistory;
         }
 
-        private ObservableCollection<HistoryEntry> searchHistory;
         public ObservableCollection<HistoryEntry> SearchHistory
         {
             get

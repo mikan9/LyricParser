@@ -64,7 +64,6 @@ namespace LyricParser
             {
                 SavedLyricsBox.Items.Add(l.artist + " - " + l.title);
             }
-            //if (SavedLyricsBox.Items.Count > 0) SavedLyricsBox.SelectedIndex = 0;
 
             LoadTheme();
 
@@ -151,9 +150,6 @@ namespace LyricParser
                 }
             }
 
-            //artistBox.Text = currentLyric.artist;
-            //titleBox.Text = currentLyric.title;
-            //genreBox.SelectedIndex = (int)currentLyric.genre;
             OriginalTxt.Text = currentLyric.original;
             RomajiTxt.Text = currentLyric.romaji;
             EnglishTxt.Text = currentLyric.translation;
@@ -174,7 +170,10 @@ namespace LyricParser
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            main.EditLyrics(TitleBox.Text, "", ArtistBox.Text, OriginalTxt.Text, RomajiTxt.Text, EnglishTxt.Text, (Category)GenreBox.SelectedIndex);
+            StatusTxt.Text = LocaleResources.Saving;
+            bool success = main.EditLyrics(TitleBox.Text, "", ArtistBox.Text, OriginalTxt.Text, RomajiTxt.Text, EnglishTxt.Text, (Category)GenreBox.SelectedIndex);
+            if (success) StatusTxt.Text = LocaleResources.SaveSuccessful;
+            else StatusTxt.Text = LocaleResources.SaveFailed;
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
