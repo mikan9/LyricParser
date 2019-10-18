@@ -12,7 +12,7 @@
       <Value Profile="(Default)">eng</Value>
     </Setting>
     <Setting Name="LastCategory" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="LastPlayer" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
@@ -46,9 +46,6 @@
     </Setting>
     <Setting Name="EditEnglish" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="SearchHistory" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

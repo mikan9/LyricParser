@@ -61,7 +61,7 @@ namespace LyricParser.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int LastCategory {
             get {
                 return ((int)(this["LastCategory"]));
@@ -200,17 +200,6 @@ namespace LyricParser.Properties {
             }
             set {
                 this["EditEnglish"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection SearchHistory {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["SearchHistory"]));
-            }
-            set {
-                this["SearchHistory"] = value;
             }
         }
     }
