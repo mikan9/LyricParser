@@ -19,57 +19,33 @@ namespace LyricParser
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern bool PostMessage(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam);
 
-        private const uint WA_WM_COMMAND_PreviousTrack = 40044;
-        private const uint WA_WM_COMMAND_Play = 40045;
-        private const uint WA_WM_COMMAND_Pause = 40046;
-        private const uint WA_WM_COMMAND_Stop = 40047;
-        private const uint WA_WM_COMMAND_NextTrack = 40048;
-
         const string lpClassName = "Winamp v1.x";
         const string strTtlEnd = " - Winamp";
 
-        public string Title
-        {
-            get { return title; }
-            set { title = value; }
-        }
-        private string title;
+        public string Title { get; set; }
 
-        public string Title_EN
-        {
-            get { return title_en; }
-            set { title_en = value; }
-        }
-        private string title_en;
+        public string Title_EN { get; set; }
 
-        public string Artist
-        {
-            get { return artist; }
-            set { artist = value; }
-        }
-        private string artist;
+        public string Artist { get; set; }
 
-        public Category Genre
-        {
-            get { return genre; }
-            set { genre = value; }
-        }
-        private Category genre;
+        public Category Genre { get; set; }
 
         public Song(string title, string title_en, string artist, Category genre)
         {
-            this.title = title;
-            this.title_en = title_en;
-            this.artist = artist;
-            this.genre = genre;
+            Title = title;
+            Title_EN = title_en;
+            Artist = artist;
+            Genre = genre;
         }
 
         public static Song Empty()
         {
-            Song dummy = new Song();
-            dummy.Genre = Category.None;
-            dummy.Artist = "Null";
-            dummy.Title = "Null";
+            Song dummy = new Song
+            {
+                Genre = Category.None,
+                Artist = "Null",
+                Title = "Null"
+            };
             return dummy;
         }
 
@@ -77,34 +53,42 @@ namespace LyricParser
         {
             if (MainWindow.debug_mode == Category.Touhou)
             {
-                Song dummy = new Song();
-                dummy.Genre = Category.Touhou;
-                dummy.Artist = "柿チョコ";
-                dummy.Title = "CONFINED INNOCENT";
+                Song dummy = new Song
+                {
+                    Genre = Category.Touhou,
+                    Artist = "柿チョコ",
+                    Title = "CONFINED INNOCENT"
+                };
                 return dummy;
             }
             else if (MainWindow.debug_mode == Category.Anime)
             {
-                Song dummy = new Song();
-                dummy.Genre = Category.Anime;
-                dummy.Artist = "Supercell";
-                dummy.Title = "Kimi no Shiranai Monogatari";
+                Song dummy = new Song
+                {
+                    Genre = Category.Anime,
+                    Artist = "Supercell",
+                    Title = "Kimi no Shiranai Monogatari"
+                };
                 return dummy;
             }
             else if(MainWindow.debug_mode == Category.Western)
             {
-                Song dummy = new Song();
-                dummy.Genre = Category.Western;
-                dummy.Artist = "Paramore";
-                dummy.Title = "Decode";
+                Song dummy = new Song
+                {
+                    Genre = Category.Western,
+                    Artist = "Paramore",
+                    Title = "Decode"
+                };
                 return dummy;
             }
             else if (MainWindow.debug_mode == Category.JP)
             {
-                Song dummy = new Song();
-                dummy.Genre = Category.JP;
-                dummy.Artist = "黒石ひとみ";
-                dummy.Title = "Continued Story";
+                Song dummy = new Song
+                {
+                    Genre = Category.JP,
+                    Artist = "高橋優",
+                    Title = "福笑い"
+                };
                 return dummy;
             }
 
@@ -120,20 +104,25 @@ namespace LyricParser
                     return GetGooglePlayMusicInfo();
             }
 
-            Song song = new Song();
-            song.Genre = Category.Anime;
+            Song song = new Song
+            {
+                Genre = Category.Western
+            };
             return song;
         }
 
         public override string ToString()
         {
-            return String.Format("Artist: {0}" + " Title: {1}", artist, title);
+            return String.Format("Artist: {0}" + " Title: {1}", Artist, Title);
         }
 
+        // Get winamp info from the window handle using P/Invoke
         public static Song GetWinampInfo()
         {
-            Song song = new Song();
-            song.Genre = Category.Anime;
+            Song song = new Song
+            {
+                Genre = Category.Western
+            };
 
             IntPtr hwnd = FindWindow(lpClassName, null);
             if (hwnd.Equals(IntPtr.Zero))
@@ -162,10 +151,13 @@ namespace LyricParser
             return song;
         }
 
+        // Get spotify info from the main window corresponding to the spotify process
         public static Song GetSpotifyInfo()
         {
-            Song song = new Song();
-            song.Genre = Category.Anime;
+            Song song = new Song
+            {
+                Genre = Category.Western
+            };
 
             string spotifyName = "";
             Process[] spotify = Process.GetProcessesByName("spotify");
@@ -183,11 +175,14 @@ namespace LyricParser
 
             return song;
         }
+
+        // Get youtube info from the main window corresponding to the chrome process (Youtube must be the current tab)
         public static Song GetYoutubeInfo()
         {
-            //Trace.WriteLine("Retrieving song info from Youtube");
-            Song song = new Song();
-            song.Genre = Category.Anime;
+            Song song = new Song
+            {
+                Genre = Category.Western
+            };
 
             string tabName = "";
             Process[] procs = Process.GetProcessesByName("chrome");
@@ -206,10 +201,14 @@ namespace LyricParser
 
             return song;
         }
+
+        // Get Google Play Music info from the main window corresponding to the chrome process (Google Play Music must be the current tab)
         public static Song GetGooglePlayMusicInfo()
         {
-            Song song = new Song();
-            song.Genre = Category.Anime;
+            Song song = new Song
+            {
+                Genre = Category.Western
+            };
 
             string tabName = "";
             Process[] procs = Process.GetProcessesByName("chrome");
@@ -229,10 +228,13 @@ namespace LyricParser
             return song;
         }
 
+        // Cleanup song info by removing unnecessary information
         private static Song CleanUpInfo(string data)
         {
-            Song song = new Song();
-            song.genre = Category.Anime;
+            Song song = new Song
+            {
+                Genre = Category.Western
+            };
 
             data = data.Split(new string[] { " / " }, StringSplitOptions.None)[0];
             data = data.RemoveBracket('[');
@@ -248,9 +250,11 @@ namespace LyricParser
 
             string[] separators = new string[] { " - ", " – ", " : " };
             string[] jpSeparators = new string[] { "「", "『" };
-            Dictionary<string, string> jpDict = new Dictionary<string, string>();
-            jpDict.Add("「", "」");
-            jpDict.Add("『", "』");
+            Dictionary<string, string> jpDict = new Dictionary<string, string>
+            {
+                { "「", "」" },
+                { "『", "』" }
+            };
 
             if (data != "")
             {
@@ -292,8 +296,8 @@ namespace LyricParser
                         int endOfTitle = data.IndexOf(jpDict[match]);
 
                         if (match.Any(m => data.Contains(m)))
-                            song.artist = data.Split(new string[] { match }, StringSplitOptions.None)[0].Trim();
-                        song.title = data.Substring(index + 1, endOfTitle - index - 1).Trim();
+                            song.Artist = data.Split(new string[] { match }, StringSplitOptions.None)[0].Trim();
+                        song.Title = data.Substring(index + 1, endOfTitle - index - 1).Trim();
                     }
                 }
                 catch(Exception e)
@@ -301,7 +305,7 @@ namespace LyricParser
                     Trace.WriteLine(e.Message);
                 }
             }
-            if (song.title != null && song.title.Contains(" - ")) song.title = song.title.Split(new string[] { " - " }, StringSplitOptions.None)[0];
+            if (song.Title != null && song.Title.Contains(" - ")) song.Title = song.Title.Split(new string[] { " - " }, StringSplitOptions.None)[0];
 
             return song;
         }

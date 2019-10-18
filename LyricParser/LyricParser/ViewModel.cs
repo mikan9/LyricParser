@@ -10,25 +10,23 @@ namespace LyricParser
 {
     public class ViewModel : INotifyPropertyChanged
     {
-        private string dbFile = @"data.db";
-        private ObservableCollection<HistoryEntry> searchHistory = new ObservableCollection<HistoryEntry>();
-        public ICollectionView SearchHistoryView { get; private set; }
+        private readonly string dbFile = @"data.db";
+        public ObservableCollection<HistoryEntry> SearchHistory { get; private set; } = new ObservableCollection<HistoryEntry>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ViewModel()
         {
-
             DatabaseHandler.database = string.Format(@"Data Source={0}; Pooling=false; FailIfMissing=false;", dbFile);
 
             if (!File.Exists(dbFile))
             {
-                DatabaseHandler.CreateDB(dbFile);
+                DatabaseHandler.CreateDB();
             }
 
             SearchHistory = DatabaseHandler.GetSearchHistory();
         }
 
-
+        // Insert a new HistoryEntry at the start of the collection then update the corresponding table in the database
         public void AddHistoryEntry(HistoryEntry data)
         {
             SearchHistory.Insert(0, data);
@@ -38,6 +36,7 @@ namespace LyricParser
             NotifyPropertyChanged("SearchHistoryView");
         }
 
+        // Update the positions of the HistoryEntry elements
         public void UpdatePosition()
         {
             foreach(HistoryEntry data in SearchHistory)
@@ -45,17 +44,7 @@ namespace LyricParser
                 data.Position = SearchHistory.IndexOf(data);
             }
         }
-        public ObservableCollection<HistoryEntry> SearchHistory
-        {
-            get
-            {
-                return searchHistory;
-            }
-            private set
-            {
-                searchHistory = value;
-            }
-        }
+        
 
         private void NotifyPropertyChanged(string propertyName)
         {

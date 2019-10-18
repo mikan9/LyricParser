@@ -8,8 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System.Collections.ObjectModel;
-
 namespace LyricParser.Properties {
     
     
@@ -23,7 +21,19 @@ namespace LyricParser.Properties {
             get {
                 return defaultInstance;
             }
-        } 
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastSong {
+            get {
+                return ((string)(this["LastSong"]));
+            }
+            set {
+                this["LastSong"] = value;
+            }
+        }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -195,13 +205,12 @@ namespace LyricParser.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Lyrics {
+        public global::System.Collections.Specialized.StringCollection SearchHistory {
             get {
-                return ((string)(this["Lyrics"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["SearchHistory"]));
             }
             set {
-                this["Lyrics"] = value;
+                this["SearchHistory"] = value;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -21,6 +22,7 @@ namespace LyricParser
 
     public static class LyricHandler
     {
+        private static List<Lyric> SavedLyrics = new List<Lyric>();
         public static Lyric CreateLyric(string artist, string title, Category genre, string original, string romaji, string translation)
         {
             return new Lyric()
@@ -36,25 +38,12 @@ namespace LyricParser
 
         public static void SaveLyrics(List<Lyric> lyrics)
         {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(ms, lyrics);
-                ms.Position = 0;
-                byte[] buffer = new byte[(int)ms.Length];
-                ms.Read(buffer, 0, buffer.Length);
-                Properties.Settings.Default.Lyrics = Convert.ToBase64String(buffer);
-                Properties.Settings.Default.Save();
-            }
+            SavedLyrics = lyrics;
         }
 
-        public static List<Lyric> LoadLyrics()
+        public static List<Lyric> GetLyrics()
         {
-            using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(Properties.Settings.Default.Lyrics)))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                return (List<Lyric>)bf.Deserialize(ms);
-            }
+            return SavedLyrics;
         }
     }
 }

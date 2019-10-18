@@ -18,7 +18,7 @@ namespace LyricParser
             _lyrics = new ArrayList();
         }
 
-        public System.Collections.IEnumerator Lyrics
+        public IEnumerator Lyrics
         {
             get
             {
@@ -33,8 +33,6 @@ namespace LyricParser
 
         public void AddLyric(int id, Lyric _lyric)
         {
-            //int id = 0;
-            //if (LyricsCount > 0) id = (int)((DictionaryEntry)_lyrics[LyricsCount - 1]).Key + 1;
             _lyrics.Add(new DictionaryEntry(id, _lyric));
         }
 

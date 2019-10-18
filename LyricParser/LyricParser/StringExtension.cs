@@ -83,18 +83,7 @@ namespace LyricParser
             if (str.Contains(chr))
             {
                 string tmp = str;
-                //if(exept != null)
-                //{
-                //    if (exept.Any(e => str.Contains(e))) return str;
-                //}
 
-                //char[] special = new char[] { '[', '{' };
-                //int offset = 1;
-                //int start = str.IndexOf(chr);
-                //if (special.Any(s => chr.Equals(s))) offset = 2;
-                //int end = str.IndexOf((char)((int)chr + offset));
-
-                //return str.Remove(start, end - start + 1);
                 char[] special = new char[] { '[', '{' };
 
                 for (int i = 0; i < str.Count(c => c == chr); ++i)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LyricParser
 {
+    // Enum for the different lyrics databases
     public enum LyricsDatabase
     {
         Gendou,

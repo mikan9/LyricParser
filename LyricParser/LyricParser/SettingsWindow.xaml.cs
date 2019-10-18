@@ -51,7 +51,7 @@ namespace LyricParser
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             Save();
-            this.Close();
+            Close();
         }
 
         private void Save()

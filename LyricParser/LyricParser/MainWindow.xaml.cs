@@ -39,40 +39,39 @@ namespace LyricParser
         private int MAX_RETRIES = 6;
         private static int retries = 6;
         private static bool paused = false;
-        double heightDiff = 100 + 23;
+        private readonly double heightDiff = 100 + 23;
 
         private double zoomValue = 100.0;
-        private double defFontSize = 12.0;
-        private double zoomStep = 5.0;
-        DispatcherTimer zoomTimer;
+        private readonly double defFontSize = 12.0;
+        private readonly double zoomStep = 5.0;
+        private DispatcherTimer zoomTimer;
         int zoomMode = 0;
 
         private bool? autoSearch = true;
         private bool initComplete = false;
 
         WebResponse response = null;
-
-        List<string> rows = new List<string>();
-        List<string> english = new List<string>();
-        List<string> romaji = new List<string>();
-        List<string> original = new List<string>();
-
-        DispatcherTimer timer = new DispatcherTimer();
+        private List<string> rows = new List<string>();
+        private List<string> english = new List<string>();
+        private List<string> romaji = new List<string>();
+        private List<string> original = new List<string>();
+        private DispatcherTimer timer = new DispatcherTimer();
         Thread lyricsThread;
 
         public Status currentStatus = Status.Standby;
         public Song currentSong;
         public string currentUrl = "";
-        string currentSongID = "";
         public static Player currentPlayer = Player.Winamp;
-        static Category cat = Category.Western;
         public static Category debug_mode = Category.None;
+        static Category cat = Category.Western;
+        
         int anime_retry = 0;
         int western_retry = 0;
 
+        private ViewModel viewModel = new ViewModel();
+        private List<Key> keysDown = new List<Key>();
 
-        List<Key> keysDown = new List<Key>();
-
+        // Load settings
         public void LoadSettings()
         {
             MAX_RETRIES = Properties.UserSettings.Default.MaxRetries;
@@ -107,6 +106,7 @@ namespace LyricParser
 
         }
 
+        // Load themes into dictionaries
         public void LoadTheme()
         {
             Uri resUri = new Uri("/Resources.xaml", UriKind.Relative);
@@ -125,30 +125,6 @@ namespace LyricParser
             resource.Add(resDic);
         }
 
-        //public StringCollection SearchHistory
-        //{
-        //    get
-        //    {
-        //        return Properties.Settings.Default.SearchHistory;
-        //    }
-        //    set
-        //    {
-        //        Properties.Settings.Default.SearchHistory = value;
-        //        Properties.Settings.Default.Save();
-        //        NotifyPropertyChanged("SearchHistory");
-        //    }
-        //}
-
-        //public event PropertyChangedEventHandler PropertyChanged;
-        //public void NotifyPropertyChanged(string name)
-        //{
-        //    if(PropertyChanged != null)
-        //    {
-        //        PropertyChanged(this, new PropertyChangedEventArgs(name));
-        //    }
-        //}
-
-        private ViewModel viewModel = new ViewModel();
 
         public MainWindow()
         {
@@ -212,21 +188,26 @@ namespace LyricParser
             initComplete = true;
         }
 
+        // Send the editied lyrics to the database to be processed
         public bool EditLyrics(string title, string title_en, string artist, string original, string romaji, string english, Category genre)
         {
-            List<string> lyrics = new List<string>();
-            lyrics.Add(original);
-            lyrics.Add(romaji);
-            lyrics.Add(english);
+            List<string> lyrics = new List<string>
+            {
+                original,
+                romaji,
+                english
+            };
 
-            bool success = DatabaseHandler.AddSong(artist, title, title_en, genre, lyrics, DatabaseHandler.LyricsExist(currentSong, false, this), currentSongID);
+            bool success = DatabaseHandler.AddSong(artist, title, title_en, genre, lyrics, DatabaseHandler.LyricsExist(currentSong, false, this));
 
-            SetLyrics(original, romaji, english, genre);
+            if(currentSong.Artist == artist && currentSong.Title == title)
+                SetLyrics(original, romaji, english);
 
             return success;
         }
 
-        public void SetLyrics(string orig = "", string rom = "", string eng = "", Category cat = Category.Anime)
+        // Show the edited lyrics in the main window
+        public void SetLyrics(string orig = "", string rom = "", string eng = "")
         {
             original.Clear();
             romaji.Clear();
@@ -238,6 +219,7 @@ namespace LyricParser
             SetUpTables(true);
         }
 
+        // Timer to check for song info changes
         private void Timer_Tick(object sender, EventArgs e)
         {
             autoSearch = autoSearchBox.IsChecked;
@@ -255,6 +237,7 @@ namespace LyricParser
             }
         }
 
+        // Add a new HistoryEntry to the collection, remove last item if count exeeds 20 and remove duplicate if exists
         private void AddHistoryEntry(string data)
         {
             if (data == " - ") return;
@@ -272,6 +255,7 @@ namespace LyricParser
             SongNameTxt.SelectedItem = viewModel.SearchHistory.ElementAt(0);
         }
         
+        // Update last song and search history then begin fetching lyrics for the current song
         private void GetLyricsBtn_Click(object sender, RoutedEventArgs e)
         {
 
@@ -304,6 +288,7 @@ namespace LyricParser
             }
         }
 
+        // Begin fetching lyrics on a separate thread
         private void GetLyricsHTML(string name)
         {
             SetStatus(Status.Searching);
@@ -354,10 +339,9 @@ namespace LyricParser
                 lyricsThread = new Thread(() => GetLyrics(cat));
                 lyricsThread.Start();
             }
-
-
         }
 
+        // Fetch the correct url for the song based on category
         private void GetLyrics(Category category)
         {
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -382,6 +366,7 @@ namespace LyricParser
             return;
         }
 
+        // Retry fetching lyrics if none were found
         private void RetryGettingLyrics(Category category, string name)
         {
 
@@ -432,6 +417,7 @@ namespace LyricParser
             }
         }
 
+        // Begin parsing fetched lyrics
         private void ParseLyrics(LyricsDatabase src, WebResponse resp)
         {
             SetStatus(Status.Parsing);
@@ -459,6 +445,7 @@ namespace LyricParser
             }
         }
 
+        // Fetch anime lyrics
         private void GetAnimeLyricUrl(string name)
         {
             if (name == null) return;
@@ -522,6 +509,7 @@ namespace LyricParser
             return;
         }
 
+        // Fetch touhou lyrics
         private void GetTouhouLyricUrl(string name)
         {
             Trace.WriteLine("Searching for Touhou Lyrics with Title: " + name);
@@ -560,6 +548,7 @@ namespace LyricParser
             }
         }
 
+        // Fetch western lyrics
         private void GetWesternLyricUrl(string name = "")
         {
             Trace.WriteLine("Searching for Western Lyrics with Title: " + name + " Artist: " + currentSong.Artist);
@@ -671,6 +660,7 @@ namespace LyricParser
             }
         }
 
+        // Fetch JP lyrics using JLyric's search engine
         private void SearchJLyric()
         {
             if (currentSong.Title == null) return;
@@ -740,6 +730,8 @@ namespace LyricParser
                 //}
             }
         }
+
+        // Fetch JP lyrics using Utanet's search engine
         private void SearchUtanet()
         {
             string name = currentSong.Title;
@@ -800,6 +792,7 @@ namespace LyricParser
             }
         }
 
+        // Search vocaloid lyrics using Atwiki's search engine
         private void SearchAtwiki()
         {
             string name = currentSong.Title.Replace("-", "");
@@ -867,6 +860,7 @@ namespace LyricParser
             SearchJLyric();
         }
 
+        // Parse anime lyrics from fetched web response
         private void ParseAnimeLyrics(WebResponse resp)
         {
             if (resp == null)
@@ -908,6 +902,7 @@ namespace LyricParser
             }
         }
 
+        // Parse touhou lyrics from fetched web response
         private void ParseTouhouLyrics(WebResponse resp)
         {
             if (resp == null)
@@ -973,6 +968,7 @@ namespace LyricParser
             }
         }
 
+        // Parse western lyrics from fetched web response
         private void ParseWestern(WebResponse resp)
         {
             try
@@ -1015,6 +1011,7 @@ namespace LyricParser
             }
         }
 
+        // Parse JP lyrics from fetched web response from JLyrics
         private void ParseJLyric(WebResponse resp)
         {
             try
@@ -1039,6 +1036,7 @@ namespace LyricParser
             }
         }
 
+        // Parse JP lyrics from fetched web response from Utanet
         private void ParseUtanet(WebResponse resp)
         {
             try
@@ -1063,6 +1061,7 @@ namespace LyricParser
             }
         }
 
+        // Parse vocaloid lyrics from fetched web response
         private void ParseAtwiki(WebResponse resp)
         {
             try
@@ -1121,6 +1120,7 @@ namespace LyricParser
             ParseJLyric(resp);
         }
 
+        // Update window title to the current song
         private void SetCurrentSong(string value)
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -1131,6 +1131,7 @@ namespace LyricParser
             ));
         }
 
+        // Get the corresponding URL based on the category
         private string GetURL(string artist, string title, LyricsDatabase database, string optional = "")
         {
             string url = "";
@@ -1161,6 +1162,7 @@ namespace LyricParser
             return url;
         }
 
+        // Cleanup lyrics view
         private void CleanUp()
         {
             Application.Current.Dispatcher.Invoke(new Action(() => {
@@ -1177,6 +1179,7 @@ namespace LyricParser
 
         }
 
+        // Set status of the search
         public void SetStatus(Status status)
         { 
             Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -1203,6 +1206,7 @@ namespace LyricParser
             }));
         }
 
+        // Set category
         private void SetCategory(Category id)
         {
             if (!initComplete) return;
@@ -1210,6 +1214,7 @@ namespace LyricParser
             GetLyricsHTML(Song.GetSongInfo().Title);
         }
 
+        // Setup grid that will contain the lyrics
         private void SetUpTables(bool cleanUp)
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -1315,6 +1320,7 @@ namespace LyricParser
             return;
         }
 
+        // Cleanup fetched lyrics
         private void CleanUpLyrics()
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -1343,6 +1349,7 @@ namespace LyricParser
             }));
         }
 
+        // Change zoom level ie. change font size
         private void Zoom(double d)
         {
             zoomValue = d > 5 ? d : 5;
@@ -1355,6 +1362,7 @@ namespace LyricParser
             OriginalTxt.FontSize = RomajiTxt.FontSize;
         }
 
+        // Change zoom on mouse scroll
         private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (keysDown.Contains(Key.LeftCtrl))
@@ -1399,6 +1407,7 @@ namespace LyricParser
             SetCategory(Category.Other);
         }
 
+        // Update grid height relative to window height
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double newHeight = this.ActualHeight - heightDiff;
@@ -1433,16 +1442,20 @@ namespace LyricParser
         private void Btn_MouseEnter(object sender, MouseEventArgs e)
         {
             Image img = (Image)sender;
-            BitmapImage bmp = new BitmapImage(new Uri("/LyricParser;component/Images/" + img.Name + "Hover.png", UriKind.Relative));
-            bmp.CacheOption = BitmapCacheOption.OnLoad;
+            BitmapImage bmp = new BitmapImage(new Uri("/LyricParser;component/Images/" + img.Name + "Hover.png", UriKind.Relative))
+            {
+                CacheOption = BitmapCacheOption.OnLoad
+            };
             img.Source = bmp;
         }
 
         private void Btn_MouseLeave(object sender, MouseEventArgs e)
         {
             Image img = (Image)sender;
-            BitmapImage bmp = new BitmapImage(new Uri("/LyricParser;component/Images/" + img.Name + ".png", UriKind.Relative));
-            bmp.CacheOption = BitmapCacheOption.OnLoad;
+            BitmapImage bmp = new BitmapImage(new Uri("/LyricParser;component/Images/" + img.Name + ".png", UriKind.Relative))
+            {
+                CacheOption = BitmapCacheOption.OnLoad
+            };
             img.Source = bmp;
         }
 
@@ -1584,11 +1597,6 @@ namespace LyricParser
         private void CatRad_Click(object sender, RoutedEventArgs e)
         {
             retries = MAX_RETRIES;
-        }
-
-        private void SongNameTxt_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //SongNameTxt.Text = ((HistoryEntry)SongNameTxt.SelectedItem).Data;
         }
 
         private void ClearSearchHistory_Executed(object sender, ExecutedRoutedEventArgs e)

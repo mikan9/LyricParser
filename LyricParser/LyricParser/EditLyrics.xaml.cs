@@ -22,20 +22,19 @@ namespace LyricParser
     public partial class EditLyrics : Window
     {
         private MainWindow main;
-
-        double heightDiff = 100 + 20;
-
-        List<Key> keysDown = new List<Key>();
+        private readonly double heightDiff = 100 + 20;
+        private List<Key> keysDown = new List<Key>();
         private double zoomValue = 100.0;
-        private double defFontSize = 12.0;
-        private double zoomStep = 5.0;
-        DispatcherTimer zoomTimer;
+        private readonly double defFontSize = 12.0;
+        private readonly double zoomStep = 5.0;
+        private DispatcherTimer zoomTimer;
         int zoomMode = 0;
 
         bool initComplete = false;
 
         Lyric currentLyric;
 
+        // Load theme into dictionaries
         public void LoadTheme()
         {
             Uri resUri = new Uri("/Resources.xaml", UriKind.Relative);
@@ -58,7 +57,7 @@ namespace LyricParser
         {
             InitializeComponent();
             this.main = main;
-            this.Title = LocaleResources.EditWindowTitle + " | " + main.currentSong.Artist + " - " + main.currentSong.Title;
+            Title = LocaleResources.EditWindowTitle + " | " + main.currentSong.Artist + " - " + main.currentSong.Title;
             LoadLyrics();
             LoadTheme();
 
@@ -71,17 +70,20 @@ namespace LyricParser
 
             SetUpTables();
 
-            zoomTimer = new DispatcherTimer();
-            zoomTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            zoomTimer.IsEnabled = false;
+            zoomTimer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0, 0, 0, 0, 100),
+                IsEnabled = false
+            };
             zoomTimer.Tick += ZoomTimer_Tick;  
         }
 
+        // Load lyrics from database
         private void LoadLyrics()
         {
             DatabaseHandler.LoadLyrics();
             SavedLyricsBox.Items.Clear();
-            foreach (Lyric l in LyricHandler.LoadLyrics())
+            foreach (Lyric l in LyricHandler.GetLyrics())
             {
                 SavedLyricsBox.Items.Add(l.artist + " - " + l.title);
             }
@@ -96,6 +98,7 @@ namespace LyricParser
             SetUpTables();
         }
 
+        // Setup grid that will contain the lyrics
         private void SetUpTables()
         {
             Properties.Settings.Default.Save();
@@ -109,13 +112,9 @@ namespace LyricParser
             ContentGrid.ColumnDefinitions.Clear();
             HeaderGrid.ColumnDefinitions.Clear();
 
-            bool bShowOrig = false;
-            bool bShowRom = false;
-            bool bShowEng = false;
-
-            bShowOrig = Properties.Settings.Default.EditOriginal;
-            bShowRom = Properties.Settings.Default.EditRomaji;
-            bShowEng = Properties.Settings.Default.EditEnglish;
+            bool bShowOrig = Properties.Settings.Default.EditOriginal;
+            bool bShowRom = Properties.Settings.Default.EditRomaji;
+            bool bShowEng = Properties.Settings.Default.EditEnglish;
 
             if (bShowOrig)
             {
@@ -162,6 +161,7 @@ namespace LyricParser
             return;
         }
 
+        // Change grid height relative to window height
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double newHeight = this.ActualHeight - heightDiff;
@@ -173,6 +173,7 @@ namespace LyricParser
             }
         }
 
+        // Save edited lyrics to the database, if successful load the lyrics
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
             StatusTxt.Text = LocaleResources.Saving;
@@ -343,8 +344,15 @@ namespace LyricParser
 
         private void SavedLyricsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            currentLyric = LyricHandler.LoadLyrics().ElementAt(SavedLyricsBox.SelectedIndex);
-            SetUpTables();
+            if (e.AddedItems.Count > 0)
+            {
+                Trace.WriteLine(SavedLyricsBox.SelectedIndex + " - Count: " + LyricHandler.GetLyrics().Count);
+                if (SavedLyricsBox.SelectedIndex < 0) return;
+                currentLyric = LyricHandler.GetLyrics().ElementAt(SavedLyricsBox.SelectedIndex);
+                ArtistBox.Text = currentLyric.artist;
+                TitleBox.Text = currentLyric.title;
+                SetUpTables();
+            }
         }
     }
 }

@@ -14,7 +14,8 @@ namespace LyricParser
     {
         public static string database = "";
 
-        public static void CreateDB(string path)
+        // Create a new database and fill it with tables
+        public static void CreateDB()
         {
             using (var dbConn = CreateConnection(database))
             {
@@ -34,7 +35,7 @@ namespace LyricParser
                         }
                         catch(SQLiteException e)
                         {
-                            Trace.WriteLine(e.Message);
+                            Trace.WriteLine(e.ToString());
                         }
                     }
 
@@ -45,10 +46,14 @@ namespace LyricParser
                 }
             }
         }
+
+        // Create and return a SQLite connection
         public static SQLiteConnection CreateConnection(string db)
         {
             return new SQLiteConnection(db);
         }
+
+        // Update table containing last song (Temporary solution)
         public static bool UpdateLastSong(string artist, string title)
         {
             bool success = true;
@@ -68,7 +73,7 @@ namespace LyricParser
                     }
                     catch (SQLiteException e)
                     {
-                        Trace.WriteLine(e.Message);
+                        Trace.WriteLine(e.ToString());
                         success = false;
                     }
                 }
@@ -80,6 +85,8 @@ namespace LyricParser
             }
             return success;
         }
+
+        // Get last song from the corresponding table
         public static HistoryEntry GetLastSong()
         {
             HistoryEntry lastSong = new HistoryEntry();
@@ -107,6 +114,8 @@ namespace LyricParser
             return lastSong;
 
         }
+
+        // Update search history by inserting a new record if possible else update corresponding record (Temporary "upsert"-like solution)
         public static bool UpdateSearchHistory(ObservableCollection<HistoryEntry> searchHistory)
         {
             bool success = true;
@@ -136,7 +145,7 @@ namespace LyricParser
                         }
                         catch (SQLiteException e)
                         {
-                            Trace.WriteLine(e.Message);
+                            Trace.WriteLine(e.ToString());
                             success = false;
                         }
                     }
@@ -158,7 +167,7 @@ namespace LyricParser
                         }
                         catch (SQLiteException e)
                         {
-                            Trace.WriteLine(e.Message);
+                            Trace.WriteLine(e.ToString());
                             success = false;
                         }
                     }
@@ -170,6 +179,8 @@ namespace LyricParser
             }
             return success;
         }
+
+        // Get search history from corresponding table
         public static ObservableCollection<HistoryEntry> GetSearchHistory()
         {
             ObservableCollection<HistoryEntry> searchHistory = new ObservableCollection<HistoryEntry>();
@@ -196,7 +207,9 @@ namespace LyricParser
 
             return searchHistory;
         }
-        public static bool AddSong(string artist, string title, string title_en, Category genre, List<string> lyrics, bool exist, string id)
+
+        // Insert lyrics and song info if not exists else update
+        public static bool AddSong(string artist, string title, string title_en, Category genre, List<string> lyrics, bool exist)
         {
             bool success = true;
 
@@ -212,12 +225,12 @@ namespace LyricParser
                     {
                         cmd.CommandText =
                             "INSERT INTO Song (Artist, Title, Title_EN, Genre, Lyrics_Kanji, Lyrics_Romaji, Lyrics_English) " +
-                            "VALUES ('" + artist + "', '" + title + "', '" + title_en + "', " + genre + ", '" + lyrics[0] + "', '" + lyrics[1] + "', '" + lyrics[2] + "');";
+                            "VALUES ('" + artist.Replace("'", "''") + "', '" + title.Replace("'", "''") + "', '" + title_en.Replace("'", "''") + "', " + (int)genre + ", '" + lyrics[0].Replace("'", "''") + "', '" + lyrics[1].Replace("'", "''") + "', '" + lyrics[2].Replace("'", "''") + "');";
                     }
                     else
                     {
                         cmd.CommandText =
-                            "UPDATE Song SET Lyrics_Kanji = '" + lyrics[0] + "', Lyrics_Romaji = '" + lyrics[1] + "', Lyrics_English = '" + lyrics[2] + "' WHERE Artist = '" + artist + "' AND Title = '" + title + "';";
+                            "UPDATE Song SET Lyrics_Kanji = '" + lyrics[0].Replace("'", "''") + "', Lyrics_Romaji = '" + lyrics[1].Replace("'", "''") + "', Lyrics_English = '" + lyrics[2].Replace("'", "''") + "' WHERE Artist = '" + artist + "' AND Title = '" + title + "';";
                     }
                     try
                     {
@@ -225,7 +238,7 @@ namespace LyricParser
                     }
                     catch(SQLiteException e)
                     {
-                        Trace.WriteLine(e.Message);
+                        Trace.WriteLine(e.ToString());
                         success = false;
                     }
                 }
@@ -238,6 +251,7 @@ namespace LyricParser
             return success;
         }
 
+        // Get english title of song if exists (Used for Japanese songs)
         public static void GetEnglishTitle(Song song)
         {
             if (!Properties.Settings.Default.UseDatabase) return;
@@ -268,6 +282,7 @@ namespace LyricParser
             }
         }
 
+        // Load stored lyrics and song info
         public static void LoadLyrics()
         {
             using (var dbConn = CreateConnection(database))
@@ -305,6 +320,7 @@ namespace LyricParser
             }
         }
 
+        // Check table if lyrics already exists
         public static bool LyricsExist(Song song, bool showLyrics, MainWindow main)
         {
             if (!Properties.Settings.Default.UseDatabase) return false;
@@ -328,7 +344,7 @@ namespace LyricParser
                         {
                             if (showLyrics)
                             {
-                                main.SetLyrics(dr["Lyrics_Kanji"].ToString(), dr["Lyrics_Romaji"].ToString(), dr["Lyrics_English"].ToString(), (Category)int.Parse(dr["Genre"].ToString()));
+                                main.SetLyrics(dr["Lyrics_Kanji"].ToString(), dr["Lyrics_Romaji"].ToString(), dr["Lyrics_English"].ToString());
                             }
                             foundLyrics = true;
                         }

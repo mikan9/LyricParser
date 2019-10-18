@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LyricParser
 {
+    // Enum for the supported media players
     public enum Player
     {
         Winamp = 0,
