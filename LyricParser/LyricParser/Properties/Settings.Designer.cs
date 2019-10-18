@@ -23,25 +23,11 @@ namespace LyricParser.Properties {
             get {
                 return defaultInstance;
             }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public HistoryEntry LastSong
-        {
-            get
-            {
-                return (HistoryEntry)(this["LastSong"]);
-            }
-            set
-            {
-                this["LastSong"] = value;
-            }
-        }
+        } 
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool AutoSearch {
             get {
                 return ((bool)(this["AutoSearch"]));
@@ -216,19 +202,6 @@ namespace LyricParser.Properties {
             }
             set {
                 this["Lyrics"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SettingsSerializeAs(System.Configuration.SettingsSerializeAs.Binary)]
-        [global::System.Configuration.DefaultSettingValueAttribute(null)]
-        public ObservableCollection<HistoryEntry> SearchHistory {
-            get {
-                return (ObservableCollection<HistoryEntry>)(this["SearchHistory"]);
-            }
-            set {
-                this["SearchHistory"] = value;
             }
         }
     }

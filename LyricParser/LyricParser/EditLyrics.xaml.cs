@@ -59,12 +59,7 @@ namespace LyricParser
             InitializeComponent();
             this.main = main;
             this.Title = LocaleResources.EditWindowTitle + " | " + main.currentSong.Artist + " - " + main.currentSong.Title;
-            DatabaseHandler.LoadLyrics();
-            foreach (Lyric l in LyricHandler.LoadLyrics())
-            {
-                SavedLyricsBox.Items.Add(l.artist + " - " + l.title);
-            }
-
+            LoadLyrics();
             LoadTheme();
 
             currentLyric = LyricHandler.CreateLyric(main.currentSong.Artist, main.currentSong.Title, main.currentSong.Genre,
@@ -80,6 +75,16 @@ namespace LyricParser
             zoomTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             zoomTimer.IsEnabled = false;
             zoomTimer.Tick += ZoomTimer_Tick;  
+        }
+
+        private void LoadLyrics()
+        {
+            DatabaseHandler.LoadLyrics();
+            SavedLyricsBox.Items.Clear();
+            foreach (Lyric l in LyricHandler.LoadLyrics())
+            {
+                SavedLyricsBox.Items.Add(l.artist + " - " + l.title);
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -172,7 +177,11 @@ namespace LyricParser
         {
             StatusTxt.Text = LocaleResources.Saving;
             bool success = main.EditLyrics(TitleBox.Text, "", ArtistBox.Text, OriginalTxt.Text, RomajiTxt.Text, EnglishTxt.Text, (Category)GenreBox.SelectedIndex);
-            if (success) StatusTxt.Text = LocaleResources.SaveSuccessful;
+            if (success)
+            {
+                LoadLyrics();
+                StatusTxt.Text = LocaleResources.SaveSuccessful;
+            }
             else StatusTxt.Text = LocaleResources.SaveFailed;
         }
 

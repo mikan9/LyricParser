@@ -70,8 +70,6 @@ namespace LyricParser
         int anime_retry = 0;
         int western_retry = 0;
 
-        public string dbFile = @"lyrics.db";
-        public string connectionString = "";
 
         List<Key> keysDown = new List<Key>();
 
@@ -154,30 +152,22 @@ namespace LyricParser
 
         public MainWindow()
         {
-            this.DataContext = viewModel;
+            DataContext = viewModel;
             InitializeComponent();
 
-            this.Top = Properties.Settings.Default.Top >= 0 ? Properties.Settings.Default.Top : 0;
-            this.Left = Properties.Settings.Default.Left >= 0 ? Properties.Settings.Default.Left : 0;
-            this.Height = Properties.Settings.Default.Height;
-            this.Width = Properties.Settings.Default.Width;
+            Top = Properties.Settings.Default.Top >= 0 ? Properties.Settings.Default.Top : 0;
+            Left = Properties.Settings.Default.Left >= 0 ? Properties.Settings.Default.Left : 0;
+            Height = Properties.Settings.Default.Height;
+            Width = Properties.Settings.Default.Width;
             if (Properties.Settings.Default.Maximized) WindowState = WindowState.Maximized;
 
-            if (Properties.Settings.Default.LastSong != null && Properties.Settings.Default.LastSong.Data.Length > 0)
-                SongNameTxt.SelectedItem = Properties.Settings.Default.LastSong;
-       
+            HistoryEntry LastSong = DatabaseHandler.GetLastSong();
 
+            SongNameTxt.SelectedItem = LastSong;
+       
             LoadTheme();
             currentSong = Song.Empty();
-
-            DatabaseHandler.database = string.Format(@"Data Source={0}; Pooling=false; FailIfMissing=false;", dbFile);
-
-            if (!File.Exists(dbFile))
-            {
-                DatabaseHandler.CreateDB();
-            }
-
-
+   
             var themes = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory + @"Themes\", "*", SearchOption.TopDirectoryOnly)
                                   .Select(System.IO.Path.GetFileNameWithoutExtension);
 
@@ -208,9 +198,11 @@ namespace LyricParser
                     break;
             }
 
-            zoomTimer = new DispatcherTimer();
-            zoomTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            zoomTimer.IsEnabled = false;
+            zoomTimer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0, 0, 0, 0, 100),
+                IsEnabled = false
+            };
             zoomTimer.Tick += ZoomTimer_Tick;
 
             SetStatus(Status.Standby);
@@ -222,14 +214,12 @@ namespace LyricParser
 
         public bool EditLyrics(string title, string title_en, string artist, string original, string romaji, string english, Category genre)
         {
-            bool success = true;
-
             List<string> lyrics = new List<string>();
             lyrics.Add(original);
             lyrics.Add(romaji);
             lyrics.Add(english);
 
-            success = DatabaseHandler.AddSong(artist, title, title_en, genre, lyrics, DatabaseHandler.lyricsExist(currentSong, false, this), currentSongID);
+            bool success = DatabaseHandler.AddSong(artist, title, title_en, genre, lyrics, DatabaseHandler.LyricsExist(currentSong, false, this), currentSongID);
 
             SetLyrics(original, romaji, english, genre);
 
@@ -256,7 +246,7 @@ namespace LyricParser
                 if ((Song.GetSongInfo().Title != currentSong.Title && !paused))
                 {
                     currentSong = Song.GetSongInfo();
-                    if (!DatabaseHandler.lyricsExist(currentSong, true, this))
+                    if (!DatabaseHandler.LyricsExist(currentSong, true, this))
                     {
                         retries = MAX_RETRIES;
                         GetLyricsHTML(Song.GetSongInfo().Title);
@@ -274,15 +264,17 @@ namespace LyricParser
                 {
                     viewModel.SearchHistory.RemoveAt(19);
                 }
-                if (viewModel.SearchHistory.Any(s => s.Data == data)) viewModel.SearchHistory.Remove(viewModel.SearchHistory.Single(s => s.Data == data));
+                if (viewModel.SearchHistory.Any(s => s.Data == data))
+                    viewModel.SearchHistory.Remove(viewModel.SearchHistory.Single(s => s.Data == data));
             }
-            viewModel.SearchHistory.Insert(0, new HistoryEntry { Data = data });
+
+            viewModel.AddHistoryEntry(new HistoryEntry { Data = data });
             SongNameTxt.SelectedItem = viewModel.SearchHistory.ElementAt(0);
         }
         
         private void GetLyricsBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
             if (!string.IsNullOrWhiteSpace(SongNameTxt.Text) && autoSearchBox.IsChecked == false)
             {
 
@@ -298,8 +290,7 @@ namespace LyricParser
                 currentSong.Artist = data.Trim().Substring(0, index);
                 currentSong.Title = data.Trim().Substring(index + 3);
 
-                Properties.Settings.Default.LastSong = new HistoryEntry { Data = data };
-                Properties.Settings.Default.Save();
+                DatabaseHandler.UpdateLastSong(currentSong.Artist, currentSong.Title);
                 retries = MAX_RETRIES;
 
                 GetLyricsHTML(currentSong.Title);
@@ -396,7 +387,6 @@ namespace LyricParser
 
             if (retries > 0)
             {
-                Trace.WriteLine("Retrying with " + retries + " left");
                 SetStatus(Status.Searching);
                 cat = category;
                 Interlocked.Decrement(ref retries);
@@ -476,14 +466,11 @@ namespace LyricParser
             CleanUp();
 
             string url = "";
-            //string _url = "http://gendou.com/amusic/?filter=" + currentSong.Artist.Replace(" ", "+") + "+" + name.Replace(" ", "+");
             string _url = GetURL(currentSong.Artist, name, LyricsDatabase.Gendou);
             if (anime_retry > 0)
             {
                 _url = GetURL(currentSong.Artist, name, LyricsDatabase.Gendou, "&page=" + anime_retry);
             }
-
-            Trace.WriteLine(_url);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
             request.Method = "GET";
@@ -520,10 +507,8 @@ namespace LyricParser
                     }
                 }
                 catch {
-                    Trace.WriteLine("failed");
                     if (anime_retry < -1)
                     {
-                        Trace.WriteLine("Retry");
                         anime_retry++;
                         GetAnimeLyricUrl(name);
                     }
@@ -544,22 +529,17 @@ namespace LyricParser
             Application.Current.Dispatcher.Invoke(new Action(() => { TouhouRad.IsChecked = true; }));
 
             string url = "";
-            //string _url = "https://en.touhouwiki.net/index.php?search=" + name + "+" + currentSong.Artist;
             string _url = GetURL(currentSong.Artist, name, LyricsDatabase.Touhouwiki);
 
             url = GetURL(currentSong.Artist, name, LyricsDatabase.Touhouwiki);
             if (url != "")
-            {
-                Trace.WriteLine(url);
-               
+            {     
                 HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
                 req.KeepAlive = false;
                 req.ProtocolVersion = HttpVersion.Version10;
                 req.ServicePoint.ConnectionLimit = 1;
                 if ((int)((HttpWebResponse)req.GetResponseWithoutException()).StatusCode == 200)
                 {
-                    Trace.WriteLine("Have Response!");
-
                     response = req.GetResponse();
                     ParseLyrics(LyricsDatabase.Touhouwiki, response);
                 }
@@ -587,7 +567,6 @@ namespace LyricParser
             Application.Current.Dispatcher.Invoke(new Action(() => { WestRad.IsChecked = true; }));
 
             if (name == "") name = currentSong.Title;
-            //“ ”
             try
             {
                 string artist = currentSong.Artist;
@@ -602,19 +581,8 @@ namespace LyricParser
                     artist = artist.Remove(index, 1).Insert(index, "”");
                 }
 
-                //string url = "https://www.musixmatch.com/lyrics/" + artist.Replace(' ', '-').Replace("!", "") + "/" + name.Replace(' ', '-').Replace(" '", "").Replace("'", "-").Replace("'", "");
                 string url = "";
-                //string _url = "https://www.musixmatch.com/search/" + artist.Replace(" ", "%20") + "-" + name.Replace(" ", "%20");
                 string _url = GetURL(artist, name, LyricsDatabase.Musicxmatch);
-
-                //Trace.WriteLine(url);
-                //ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                //HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
-                //req.KeepAlive = false;
-                //req.ProtocolVersion = HttpVersion.Version10;
-                //req.ServicePoint.ConnectionLimit = 1;
-                //response = req.GetResponse();
-                //ParseLyrics(LyricsDatabase.Musicxmatch, response);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
                 request.Method = "GET";
@@ -642,10 +610,8 @@ namespace LyricParser
                                 artists[j] = artists[j].ToLower().TrimStart().TrimEnd();
                             }
 
-                            Trace.WriteLine(_title.RemoveBracket('(').Trim() + " - " + currentSong.Title.ToLower());
                             if (_title.RemoveBracket('(').Trim().Replace('’', '\'').Contains(currentSong.Title.ToLower()) && artists.Any(a => _artist.Contains(a.ToLower())))
                             {
-                                //url = "https://www.musixmatch.com" + titleWrapper.GetAttributeValue("href", "/null"); // Not working for some unknown reason...
                                 url = "https://www.musixmatch.com" + titleWrapper.InnerHtml.Split(new string[] { "href=\"" }, StringSplitOptions.None)[1].Split('"')[0];
                                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
                                 req.Method = "GET";
@@ -712,7 +678,6 @@ namespace LyricParser
             string name = currentSong.Title;
             string url = "";
             string _url = GetURL(currentSong.Artist, name, LyricsDatabase.JLyric);
-            Trace.WriteLine(_url);
             bool foundMatch = false;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
@@ -768,7 +733,7 @@ namespace LyricParser
             if (!foundMatch)
             {
                 SearchAtwiki();
-                // SearchUtanet(); Usage is blocked in EU due to GDPR.
+                // SearchUtanet(); Usage is blocked in EU due to GDPR. Disabled for now.
                 //if (autoSearch == true)
                 //{
                 //    RetryGettingLyrics(Category.JP, name);
@@ -778,10 +743,8 @@ namespace LyricParser
         private void SearchUtanet()
         {
             string name = currentSong.Title;
-            string url = "";
-            //string _url = "https://www.uta-net.com/search/?Aselect=2&Keyword=" + name.Replace(" ", "+");
+            string url;
             string _url = GetURL(currentSong.Artist, name, LyricsDatabase.Utanet);
-            Trace.WriteLine(_url);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
             request.Method = "GET";
@@ -840,9 +803,8 @@ namespace LyricParser
         private void SearchAtwiki()
         {
             string name = currentSong.Title.Replace("-", "");
-            string url = "";
+            string url;
             string _url = GetURL(currentSong.Artist, name, LyricsDatabase.Atwiki);
-            Trace.WriteLine(_url);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
             request.Method = "GET";
@@ -909,12 +871,10 @@ namespace LyricParser
         {
             if (resp == null)
             {
-                Trace.WriteLine("Empty Response. Category: Anime.");
                 return;
             }
             try
             {
-                Trace.WriteLine("Parsing anime");
                 currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
                 DatabaseHandler.GetEnglishTitle(currentSong);
@@ -931,7 +891,6 @@ namespace LyricParser
 
                     var doc = new HtmlDocument();
                     doc.LoadHtml(sr.ReadToEnd());
-                    Trace.WriteLine(resp.ResponseUri);
                     _original = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'content_1')]").InnerHtml.Replace("<br>", "");
                     _romaji = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'content_0')]").InnerHtml.Replace("<br>", "");
                     _english = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'content_2')]").InnerHtml.Replace("<br>", "");
@@ -954,7 +913,6 @@ namespace LyricParser
         {
             if (resp == null)
             {
-                Trace.WriteLine("Empty Response. Category: Touhou.");
                 return;
             }
             try
@@ -1013,7 +971,6 @@ namespace LyricParser
             }
             catch (Exception e)
             {
-                Trace.WriteLine("Failed parsing touhou...");
                 Trace.WriteLine(e.ToString());
             }
         }
@@ -1022,7 +979,6 @@ namespace LyricParser
         {
             try
             {
-                Trace.WriteLine("Parsing western");
                 currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
@@ -1066,7 +1022,6 @@ namespace LyricParser
         {
             try
             {
-                Trace.WriteLine("Parsing jlyric");
                 currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
@@ -1092,7 +1047,6 @@ namespace LyricParser
         {
             try
             {
-                Trace.WriteLine("Parsing utanet");
                 currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
@@ -1118,8 +1072,6 @@ namespace LyricParser
         {
             try
             {
-                Trace.WriteLine("Parsing atwiki");
-
                 currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
@@ -1170,7 +1122,6 @@ namespace LyricParser
         {
             if (resp == null)
             {
-                Trace.WriteLine("Empty Response. Category: JP.");
                 return;
             }
             ParseJLyric(resp);
@@ -1196,7 +1147,6 @@ namespace LyricParser
                     url = "http://gendou.com/amusic/?filter=" + artist.Replace(" ", "+") + "+" + title.Replace(" ", "+") + optional;
                     break;
                 case LyricsDatabase.Touhouwiki:
-                    //return "https://en.touhouwiki.net/index.php?search=" + title + "+" + artist;
                     url = "https://en.touhouwiki.net/wiki/Lyrics:_" + title.Replace(" ", "_").Replace("[", "(").Replace("]", ")");
                     break;
                 case LyricsDatabase.Musicxmatch:
@@ -1209,7 +1159,6 @@ namespace LyricParser
                     url = "https://www.uta-net.com/search/?Aselect=2&Keyword=" + title.Replace(" ", "+");
                     break;
                 case LyricsDatabase.Atwiki:
-                    //url = "https://www5.atwiki.jp/hmiku/?cmd=wikisearch&keyword=" + artist + "++" + title.Replace(" ", "+");
                     url = "https://www5.atwiki.jp/hmiku/?cmd=wikisearch&keyword=" + title.Replace(" ", "+");
                     break;
             }
@@ -1472,7 +1421,6 @@ namespace LyricParser
         }
         private void AutoSearchBox_Checked(object sender, RoutedEventArgs e)
         {
-            //getLyricsBtn.IsEnabled = false;
             SongNameTxt.IsEnabled = false;
             autoSearch = true;
             Properties.Settings.Default.AutoSearch = true;
@@ -1481,7 +1429,6 @@ namespace LyricParser
 
         private void AutoSearchBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            Trace.WriteLine("Unchecked");
             GetLyricsBtn.IsEnabled = true;
             SongNameTxt.IsEnabled = true;
             autoSearch = false;

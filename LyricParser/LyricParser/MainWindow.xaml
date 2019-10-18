@@ -31,7 +31,10 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <DockPanel Margin="5,5,0,5" Grid.Column="0">
-                    <ComboBox Name="SongNameTxt" Width="338" Height="20" VerticalAlignment="Top" IsEditable="True" ItemsSource="{Binding SearchHistory}" DisplayMemberPath="Data" SelectedValuePath="Data" SelectionChanged="SongNameTxt_SelectionChanged">
+                    <ComboBox Name="SongNameTxt" Width="338" Height="20" VerticalAlignment="Top" IsEditable="True" ItemsSource="{Binding}" DisplayMemberPath="Data" SelectedValuePath="Data" SelectionChanged="SongNameTxt_SelectionChanged">
+                        <ComboBox.DataContext>
+                            <CollectionViewSource Source="{Binding Path=SearchHistory}"></CollectionViewSource>
+                        </ComboBox.DataContext>
                         <ComboBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="ApplicationCommands.Cut" />
