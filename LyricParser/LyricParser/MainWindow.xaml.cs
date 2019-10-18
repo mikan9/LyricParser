@@ -875,7 +875,6 @@ namespace LyricParser
             }
             try
             {
-                currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
                 DatabaseHandler.GetEnglishTitle(currentSong);
 
@@ -918,7 +917,6 @@ namespace LyricParser
             try
             {
                 Trace.WriteLine("Parsing touhou with url: " + resp.ResponseUri);
-                currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
                 using (StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
@@ -979,7 +977,6 @@ namespace LyricParser
         {
             try
             {
-                currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
                 using (StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
@@ -1022,7 +1019,6 @@ namespace LyricParser
         {
             try
             {
-                currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
                 using (StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
@@ -1047,7 +1043,6 @@ namespace LyricParser
         {
             try
             {
-                currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
                 using (StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
@@ -1072,7 +1067,6 @@ namespace LyricParser
         {
             try
             {
-                currentSong = Song.GetSongInfo();
                 currentSong.Genre = cat;
 
                 using (StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
