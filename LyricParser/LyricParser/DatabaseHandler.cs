@@ -34,7 +34,7 @@ namespace LyricParser
                         }
                         catch(SQLiteException e)
                         {
-                            transaction.Rollback();
+                            Trace.WriteLine(e.Message);
                         }
                     }
 
