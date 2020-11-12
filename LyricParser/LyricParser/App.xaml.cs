@@ -35,9 +35,9 @@ namespace LyricParser
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
-            var oldWindow = Application.Current.MainWindow;
-            Application.Current.MainWindow = new MainWindowView();
-            Application.Current.MainWindow.Show();
+            //var oldWindow = Application.Current.MainWindow;
+            //Application.Current.MainWindow = new MainWindowView();
+            //Application.Current.MainWindow.Show();
 
             //oldWindow.Close();
         }
