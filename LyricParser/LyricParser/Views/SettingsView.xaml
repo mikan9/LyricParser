@@ -8,7 +8,7 @@
         xmlns:w="clr-namespace:LyricParser"
         xmlns:properties="clr-namespace:LyricParser.Properties"
         mc:Ignorable="d"
-        Height="388.524" Width="500"
+        Height="280" Width="500"
         >
     <UserControl.Resources>
         <ResourceDictionary>
@@ -49,7 +49,6 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Label Content="Show Lyrics For" Grid.Column="0" Grid.Row="0"/>
                         <CheckBox Content="Anime" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchAnime}" />
@@ -57,32 +56,14 @@
                         <CheckBox Content="Western" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchWest}"/>
                         <CheckBox Content="JP" Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchJP}"/>
                         <CheckBox Content="Other" Grid.Column="5" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchOther}"/>
-                        <Label Content="Original" Grid.Column="0" Grid.Row="1"/>
-                        <CheckBox Name="OrigAnimeBox" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.OrigAnime}" IsEnabled="{Binding Source={StaticResource UserSettings}, Path=Default.SearchAnime}"/>
-                        <CheckBox Name="OrigTouhouBox" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.OrigTouhou}" IsEnabled="{Binding Source={StaticResource UserSettings}, Path=Default.SearchTouhou}" />
-                        <CheckBox Name="OrigWestBox" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.OrigWest}"  IsEnabled="{Binding Source={StaticResource UserSettings}, Path=Default.SearchWest}"/>
-                        <CheckBox Name="OrigJPBox" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.OrigJP}" IsEnabled="{Binding Source={StaticResource UserSettings}, Path=Default.SearchJP}"/>
-                        <CheckBox Name="OrigOtherBox" Grid.Column="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.OrigOther}" IsEnabled="{Binding Source={StaticResource UserSettings}, Path=Default.SearchOther}"/>
-                        <Label Content="Romaji" Grid.Column="0" Grid.Row="2"/>
-                        <CheckBox Name="RomajiAnimeBox" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.RomajiAnime}"  IsEnabled="{Binding Source={StaticResource UserSettings}, Path=Default.SearchAnime}"/>
-                        <CheckBox Name="RomajiTouhouBox" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.RomajiTouhou}"  IsEnabled="{Binding Source={StaticResource UserSettings}, Path=Default.SearchTouhou}"/>
-                        <CheckBox IsEnabled="False" Name="romajiWestBox" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.RomajiWest}"/>
-                        <CheckBox IsEnabled="False" Name="romajiJPBox" Grid.Column="4" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.RomajiJP}"/>
-                        <CheckBox IsEnabled="False" Name="romajiOtherBox" Grid.Column="5" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.RomajiOther}"/>
-                        <Label Content="English (Translation)" Grid.Column="0" Grid.Row="3"/>
-                        <CheckBox Name="EngAnimeBox" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.EngAnime}"  IsEnabled="{Binding Source={StaticResource UserSettings}, Path=Default.SearchAnime}"/>
-                        <CheckBox Name="EngTouhouBox" Grid.Column="2" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.EngTouhou}" IsEnabled="{Binding Source={StaticResource UserSettings}, Path=Default.SearchTouhou}"/>
-                        <CheckBox IsEnabled="False" Name="engWestBox" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.EngWest}"/>
-                        <CheckBox IsEnabled="False" Name="engJPBox" Grid.Column="4" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.EngJP}" />
-                        <CheckBox IsEnabled="False" Name="engOtherBox" Grid.Column="5" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.EngOther}" />
                     </Grid>
                     <DockPanel>
                         <Label Content="Color Theme:"/>
-                        <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Themes}" Name="themeBox" SelectedItem="{Binding SelectedTheme}" Width="100"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Themes}" Name="themeBox" SelectedItem="{Binding SelectedTheme}" Width="100" HorizontalAlignment="Right"/>
                     </DockPanel>
                     <DockPanel Margin="0 5 0 0">
                         <Label Content="Language:"/>
-                        <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Locales}" Name="langBox" SelectedItem="{Binding Source={StaticResource UserSettings}, Path=Default.Locale}" Width="100"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Locales}" Name="langBox" SelectedItem="{Binding Source={StaticResource UserSettings}, Path=Default.Locale}" Width="100" HorizontalAlignment="Right"/>
                     </DockPanel>
                 </StackPanel>
             </GroupBox>
@@ -91,7 +72,7 @@
                     <CheckBox Name="debugFlag" Content="Debug Mode" IsChecked="{Binding DebugChecked}"></CheckBox>
                     <DockPanel>
                         <Label Content="Debug Category"></Label>
-                        <ComboBox Name="DebugCategories" Width="100" SelectedIndex="{Binding SelectedDebugCategory}">
+                        <ComboBox Name="DebugCategories" Width="100" SelectedIndex="{Binding SelectedDebugCategory}" HorizontalAlignment="Right">
                             <ComboBoxItem>Anime</ComboBoxItem>
                             <ComboBoxItem>Touhou</ComboBoxItem>
                             <ComboBoxItem>Western</ComboBoxItem>
@@ -102,7 +83,7 @@
             </GroupBox>
         </StackPanel>
         <DockPanel VerticalAlignment="Bottom">
-            <Button Name="saveBtn" Padding="0, 15, 0, 0" Margin="0, 5, 0, 5" HorizontalAlignment="Right" Content="Save" Width="50" Command="{Binding SaveCommand}"></Button>
+            <Button Name="saveBtn" Padding="0, 15, 0, 0" Margin="0, 5, 5, 5" HorizontalAlignment="Right" Content="Save" Width="50" Command="{Binding SaveCommand}"></Button>
         </DockPanel>
     </Grid>
 </UserControl>

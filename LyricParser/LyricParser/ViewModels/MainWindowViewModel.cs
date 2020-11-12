@@ -363,9 +363,9 @@ namespace LyricParser.ViewModels
             OpenEditLyricsCommand = new DelegateCommand(OpenEditLyrics); // <------- Make async?
             OpenSettingsCommand = new DelegateCommand(OpenSettings); // <------- Make async?
 
-            HistoryEntry LastSong = DatabaseHandler.GetLastSong();
+            //HistoryEntry LastSong = DatabaseHandler.GetLastSong();
 
-            SongEntry = LastSong;
+            //SongEntry = LastSong;
 
             LoadTheme();
             currentSong = Song.Empty();
