@@ -21,6 +21,7 @@ namespace LyricParser
 
         const string lpClassName = "Winamp v1.x";
         const string strTtlEnd = " - Winamp";
+        const Category DEBUG_MODE = Category.None;
 
         public string Title { get; set; }
 
@@ -51,7 +52,7 @@ namespace LyricParser
 
         public static Song GetSongInfo()
         {
-            if (MainWindow.debug_mode == Category.Touhou)
+            if (DEBUG_MODE == Category.Touhou)
             {
                 Song dummy = new Song
                 {
@@ -61,7 +62,7 @@ namespace LyricParser
                 };
                 return dummy;
             }
-            else if (MainWindow.debug_mode == Category.Anime)
+            else if (DEBUG_MODE == Category.Anime)
             {
                 Song dummy = new Song
                 {
@@ -71,7 +72,7 @@ namespace LyricParser
                 };
                 return dummy;
             }
-            else if(MainWindow.debug_mode == Category.Western)
+            else if(DEBUG_MODE == Category.Western)
             {
                 Song dummy = new Song
                 {
@@ -81,7 +82,7 @@ namespace LyricParser
                 };
                 return dummy;
             }
-            else if (MainWindow.debug_mode == Category.JP)
+            else if (DEBUG_MODE == Category.JP)
             {
                 Song dummy = new Song
                 {
@@ -92,7 +93,7 @@ namespace LyricParser
                 return dummy;
             }
 
-            switch (MainWindow.currentPlayer)
+            switch (Player.Winamp)
             {
                 case Player.Winamp:
                     return GetWinampInfo();

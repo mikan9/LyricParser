@@ -1,4 +1,7 @@
-﻿using System;
+﻿using LyricParser.ViewModels;
+using Prism.Ioc;
+using Prism.Unity;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,7 +16,7 @@ namespace LyricParser
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
         public App()
         {
@@ -33,10 +36,26 @@ namespace LyricParser
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
             var oldWindow = Application.Current.MainWindow;
-            Application.Current.MainWindow = new MainWindow();
+            Application.Current.MainWindow = new MainWindowView();
             Application.Current.MainWindow.Show();
 
-            oldWindow.Close();
+            //oldWindow.Close();
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterForNavigation<MainWindowView, MainWindowViewModel>();
+            containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
+            containerRegistry.RegisterForNavigation<EditLyricsView, EditLyricsViewModel>();
+
+            containerRegistry.RegisterDialog<SettingsView>();
+            containerRegistry.RegisterDialog<EditLyricsView>();
+        }
+
+        protected override Window CreateShell()
+        {
+            var w = Container.Resolve<MainWindowView>();
+            return w;
         }
     }
 }

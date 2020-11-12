@@ -321,7 +321,7 @@ namespace LyricParser
         }
 
         // Check table if lyrics already exists
-        public static bool LyricsExist(Song song, bool showLyrics, MainWindow main)
+        public static bool LyricsExist(Song song, bool showLyrics, MainWindowView main)
         {
             if (!Properties.Settings.Default.UseDatabase) return false;
             bool foundLyrics = false;
@@ -344,7 +344,7 @@ namespace LyricParser
                         {
                             if (showLyrics)
                             {
-                                main.SetLyrics(dr["Lyrics_Kanji"].ToString(), dr["Lyrics_Romaji"].ToString(), dr["Lyrics_English"].ToString());
+                                //main.SetLyrics(dr["Lyrics_Kanji"].ToString(), dr["Lyrics_Romaji"].ToString(), dr["Lyrics_English"].ToString());
                             }
                             foundLyrics = true;
                         }
