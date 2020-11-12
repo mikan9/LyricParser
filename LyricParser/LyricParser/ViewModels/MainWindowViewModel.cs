@@ -25,7 +25,6 @@ namespace LyricParser.ViewModels
         private int MAX_RETRIES = 6;
         private static int retries = 6;
         private static bool paused = false;
-        private readonly double heightDiff = -210; // Default: 100 + 23
 
         private double zoomValue = 100.0;
         private readonly double defFontSize = 12.0;
@@ -310,6 +309,8 @@ namespace LyricParser.ViewModels
             else debug_mode = Category.None;
 
             if (debug_mode == Category.None) cat = (Category)Properties.Settings.Default.LastCategory;
+
+            AutoSearchChecked = Properties.Settings.Default.AutoSearch;
 
         }
 
@@ -1642,6 +1643,7 @@ namespace LyricParser.ViewModels
             Properties.Settings.Default.LastCategory = (int)cat;
             Properties.Settings.Default.LastPlayer = SelectedPlayer;
             Properties.Settings.Default.ZoomLevel = zoomValue;
+            Properties.Settings.Default.AutoSearch = AutoSearchChecked;
 
             //if (WindowState == WindowState.Maximized)                      <---------- TO BE IMPLEMENTED
             //{
