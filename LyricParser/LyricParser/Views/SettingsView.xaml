@@ -22,7 +22,8 @@
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
             <Setter Property="ResizeMode" Value="CanMinimize" />
             <Setter Property="ShowInTaskbar" Value="False"/>
-            <Setter Property="WindowState" Value="Maximized"/>
+            <Setter Property="WindowState" Value="Normal"/>
+            <Setter Property="SizeToContent" Value="WidthAndHeight"/>
         </Style>
     </prism:Dialog.WindowStyle>
     <Grid Background="{DynamicResource TopBackgroundBrush}">

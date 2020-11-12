@@ -23,6 +23,12 @@ namespace LyricParser
         public SettingsView()
         {
             InitializeComponent();
+            Loaded += SettingsView_Loaded;
+        }
+
+        private void SettingsView_Loaded(object sender, RoutedEventArgs e)
+        {
+            Trace.WriteLine(this.RenderSize);
         }
     }
 }
