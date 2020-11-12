@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using LyricParser.Resources;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 using System;
@@ -321,7 +322,7 @@ namespace LyricParser.ViewModels
         // Load themes into dictionaries
         public void LoadTheme()
         {
-            Uri resUri = new Uri("/Resources.xaml", UriKind.Relative);
+            Uri resUri = new Uri("/Resources/Resources.xaml", UriKind.Relative);
             Uri themeUri = new Uri(AppDomain.CurrentDomain.BaseDirectory + @"Themes\" + Properties.UserSettings.Default.ThemePath);
 
             var resource = Application.Current.MainWindow.Resources.MergedDictionaries;

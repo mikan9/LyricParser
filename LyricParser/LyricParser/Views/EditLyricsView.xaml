@@ -1,7 +1,7 @@
 ﻿<Window x:Class="LyricParser.EditLyricsView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:w="clr-namespace:LyricParser"
+        xmlns:w="clr-namespace:LyricParser.Resources"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:properties="clr-namespace:LyricParser.Properties"
@@ -11,7 +11,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Resources.xaml"/>
+                <ResourceDictionary Source="../Resources/Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

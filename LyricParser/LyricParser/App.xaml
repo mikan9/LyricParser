@@ -4,6 +4,6 @@
              StartupUri="Views/MainWindowView.xaml"
              xmlns:prism="http://prismlibrary.com/">
     <Application.Resources>
-        <ResourceDictionary Source="WindowStyle.xaml" />
+        <ResourceDictionary Source="Resources/WindowStyle.xaml" />
     </Application.Resources>
 </prism:PrismApplication>

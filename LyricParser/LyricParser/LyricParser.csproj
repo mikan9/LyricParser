@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -121,7 +121,7 @@
     </ApplicationDefinition>
     <Compile Include="Category.cs" />
     <Compile Include="Command.cs" />
-    <Compile Include="LocaleResources.sv-SE.Designer.cs">
+    <Compile Include="Resources\LocaleResources.sv-SE.Designer.cs">
       <DependentUpon>LocaleResources.sv-SE.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -135,7 +135,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Locale.settings</DependentUpon>
     </Compile>
-    <Compile Include="LocaleResources.ja-JP.Designer.cs">
+    <Compile Include="Resources\LocaleResources.ja-JP.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LocaleResources.ja-JP.resx</DependentUpon>
@@ -146,7 +146,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>UserSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="LocaleResources.en-US.Designer.cs">
+    <Compile Include="Resources\LocaleResources.en-US.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LocaleResources.en-US.resx</DependentUpon>
@@ -165,7 +165,7 @@
     <Compile Include="StringExtension.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="WebRequestExtension.cs" />
-    <Compile Include="WindowStyle.xaml.cs">
+    <Compile Include="Resources\WindowStyle.xaml.cs">
       <DependentUpon>WindowStyle.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\EditLyricsView.xaml">
@@ -188,7 +188,7 @@
       <DependentUpon>MainWindowView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Resources.xaml">
+    <Page Include="Resources\Resources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -204,7 +204,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Page Include="WindowStyle.xaml">
+    <Page Include="Resources\WindowStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -213,7 +213,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LocaleResources.Designer.cs">
+    <Compile Include="Resources\LocaleResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LocaleResources.resx</DependentUpon>
@@ -223,19 +223,19 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="LocaleResources.sv-SE.resx">
+    <EmbeddedResource Include="Resources\LocaleResources.sv-SE.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>LocaleResources.sv-SE.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="LocaleResources.resx">
+    <EmbeddedResource Include="Resources\LocaleResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>LocaleResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="LocaleResources.en-US.resx">
+    <EmbeddedResource Include="Resources\LocaleResources.en-US.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>LocaleResources.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="LocaleResources.ja-JP.resx">
+    <EmbeddedResource Include="Resources\LocaleResources.ja-JP.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>LocaleResources.ja-JP.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -258,7 +258,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icon.ico" />
+    <Resource Include="Resources\icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

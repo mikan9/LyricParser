@@ -66,7 +66,7 @@ namespace LyricParser.ViewModels
 
         public void LoadTheme()
         {
-            Uri resUri = new Uri("/Resources.xaml", UriKind.Relative);
+            Uri resUri = new Uri("/Resources/Resources.xaml", UriKind.Relative);
             Uri themeUri = new Uri(AppDomain.CurrentDomain.BaseDirectory + @"Themes\" + Properties.UserSettings.Default.ThemePath);
 
             var resource = Application.Current.Windows[1].Resources.MergedDictionaries;
