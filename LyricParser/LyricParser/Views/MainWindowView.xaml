@@ -10,9 +10,6 @@
         Style="{StaticResource CustomWindowStyle}"
         >
     <i:Interaction.Triggers>
-        <i:EventTrigger EventName="SizeChanged">
-            <prism:InvokeCommandAction Command="{Binding ViewSizeChangedCommand}"/>
-        </i:EventTrigger>
         <i:EventTrigger EventName="Loaded">
             <prism:InvokeCommandAction Command="{Binding ViewLoadedCommand}"/>
         </i:EventTrigger>
@@ -39,7 +36,7 @@
     <Grid Background="{DynamicResource BackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
-            <RowDefinition />
+            <RowDefinition Height="*" />
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Background="{DynamicResource TopBackgroundBrush}" Grid.ColumnSpan="2">
@@ -116,27 +113,25 @@
                     </Grid.Background>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <!--<ColumnDefinition/>
+                        <ColumnDefinition/>-->
                     </Grid.ColumnDefinitions>
                     <TextBlock TextAlignment="Center" Name="OriginalLbl" Visibility="{Binding OriginalLyricsVisibility}" Foreground="{DynamicResource ForegroundBrush}" Padding="0 3 0 0" Text="{Binding Source={x:Static w:LocaleResources.OriginalLabel}}" HorizontalAlignment="Center" Grid.Column="0"/>
-                    <TextBlock TextAlignment="Center" Name="RomajiLbl" Visibility="{Binding RomajiLyricsVisibility}" Foreground="{DynamicResource ForegroundBrush}" Padding="0 3 0 0" Text="{Binding Source={x:Static w:LocaleResources.RomajiLabel}}" HorizontalAlignment="Center" Grid.Column="1"/>
-                    <TextBlock TextAlignment="Center" Name="EnglishLbl" Visibility="{Binding EnglishLyricsVisibility}" Foreground="{DynamicResource ForegroundBrush}" Padding="0 3 0 0" Text="{Binding Source={x:Static w:LocaleResources.TranslationLabel}}" HorizontalAlignment="Center" Grid.Column="2"/>
+                    <!--<TextBlock TextAlignment="Center" Name="RomajiLbl" Visibility="{Binding RomajiLyricsVisibility}" Foreground="{DynamicResource ForegroundBrush}" Padding="0 3 0 0" Text="{Binding Source={x:Static w:LocaleResources.RomajiLabel}}" HorizontalAlignment="Center" Grid.Column="1"/>
+                    <TextBlock TextAlignment="Center" Name="EnglishLbl" Visibility="{Binding EnglishLyricsVisibility}" Foreground="{DynamicResource ForegroundBrush}" Padding="0 3 0 0" Text="{Binding Source={x:Static w:LocaleResources.TranslationLabel}}" HorizontalAlignment="Center" Grid.Column="2"/>-->
                 </Grid>
             </Border>
         </StackPanel>
-        <StackPanel Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <Grid Name="ContentGrid"  Margin="5,0,5,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="3*"/>
-                </Grid.ColumnDefinitions>
-                <TextBox Name="OriginalTxt" Text="{Binding OriginalLyrics}" Visibility="{Binding OriginalLyricsVisibility}" FontSize="{Binding LyricsFontSize}" Height="{Binding LyricsHeight}" Padding="0, 15, 0, 15" Style="{x:Null}" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0"  BorderThickness="0" TextAlignment="Center" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}"/>
-                <TextBox Name="RomajiTxt" Text="{Binding RomajiLyrics}" Visibility="{Binding RomajilLyricsVisibility}" FontSize="{Binding LyricsFontSize}" Height="{Binding LyricsHeight}" Padding="0, 15, 0, 15" Style="{x:Null}" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="1"  BorderThickness="0" TextAlignment="Center" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}"/>
-                <TextBox Name="EnglishTxt" Text="{Binding EnglishLyrics}" Visibility="{Binding EnglishLyricsVisibility}" FontSize="{Binding LyricsFontSize}" Height="{Binding LyricsHeight}" Padding="0, 15, 0, 15" Style="{x:Null}" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="2"  BorderThickness="0" TextAlignment="Center" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}"/>
-            </Grid>
-        </StackPanel>
+        <Grid Grid.Row="1" Name="ContentGrid"  Margin="5,0,5,0" VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <!--<ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="3*"/>-->
+            </Grid.ColumnDefinitions>
+            <TextBox Name="OriginalTxt" Text="{Binding OriginalLyrics}" Visibility="{Binding OriginalLyricsVisibility}" FontSize="{Binding LyricsFontSize}" VerticalContentAlignment="Stretch" Padding="0, 15, 0, 15" Style="{x:Null}" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0"  BorderThickness="0" TextAlignment="Center" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}"/>
+            <!--<TextBox Name="RomajiTxt" Text="{Binding RomajiLyrics}" Visibility="{Binding RomajilLyricsVisibility}" FontSize="{Binding LyricsFontSize}" Height="{Binding LyricsHeight}" Padding="0, 15, 0, 15" Style="{x:Null}" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="1"  BorderThickness="0" TextAlignment="Center" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}"/>
+                <TextBox Name="EnglishTxt" Text="{Binding EnglishLyrics}" Visibility="{Binding EnglishLyricsVisibility}" FontSize="{Binding LyricsFontSize}" Height="{Binding LyricsHeight}" Padding="0, 15, 0, 15" Style="{x:Null}" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="2"  BorderThickness="0" TextAlignment="Center" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}"/>-->
+        </Grid>
         <DockPanel Grid.Row="2" VerticalAlignment="Stretch" Background="{DynamicResource BottomBackgroundBrush}">
             <TextBox DockPanel.Dock="Left" Name="ZoomTxt" Margin="5, 0, 5, 0" Text="{Binding ZoomText}" Width="45" FontSize="11" VerticalAlignment="Center">
                 <i:Interaction.Triggers>

@@ -25,7 +25,7 @@ namespace LyricParser.ViewModels
         private int MAX_RETRIES = 6;
         private static int retries = 6;
         private static bool paused = false;
-        private readonly double heightDiff = 100 + 23;
+        private readonly double heightDiff = -210; // Default: 100 + 23
 
         private double zoomValue = 100.0;
         private readonly double defFontSize = 12.0;
@@ -67,7 +67,7 @@ namespace LyricParser.ViewModels
 
         private int _selectedPlayer = 0;
 
-        private bool _autoSearchChecked = false;
+        private bool _autoSearchChecked = true;
         private bool _songEnabled = false;
         private bool _getLyricsEnabled = true;
         private bool _animeRadChecked = false;
@@ -77,7 +77,6 @@ namespace LyricParser.ViewModels
         private bool _otherRadChecked = false;
 
         private double _viewHeight = 691;
-        private double _lyricsHeight = 0;
         private double _lyricsFontSize = 14;
 
         private HistoryEntry _songEntry = new HistoryEntry();
@@ -87,7 +86,7 @@ namespace LyricParser.ViewModels
         private Visibility _westRadVisibility = Visibility.Collapsed;
         private Visibility _jpRadVisibility = Visibility.Collapsed;
         private Visibility _otherRadVisibility = Visibility.Collapsed;
-        private Visibility _originalLyricsVisibility = Visibility.Collapsed;
+        private Visibility _originalLyricsVisibility = Visibility.Visible;
         private Visibility _romajiLyricsVisibility = Visibility.Collapsed;
         private Visibility _englishLyricsVisibility = Visibility.Collapsed;
 
@@ -184,11 +183,6 @@ namespace LyricParser.ViewModels
         {
             get => _viewHeight;
             set => SetProperty(ref _viewHeight, value);
-        }
-        public double LyricsHeight
-        {
-            get => _lyricsHeight;
-            set => SetProperty(ref _lyricsHeight, value);
         }
         public double LyricsFontSize
         {
@@ -344,7 +338,6 @@ namespace LyricParser.ViewModels
 
             GetLyricsCommand = new DelegateCommand(GetLyrics);
 
-            ViewSizeChangedCommand = new DelegateCommand(OnViewSizeChanged);
             ViewLoadedCommand = new DelegateCommand(OnViewLoaded);
             ViewClosingCommand = new DelegateCommand(OnViewClosing);
             ViewMouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(OnViewMouseWheel);
@@ -369,7 +362,6 @@ namespace LyricParser.ViewModels
 
             OpenEditLyricsCommand = new DelegateCommand(OpenEditLyrics); // <------- Make async?
             OpenSettingsCommand = new DelegateCommand(OpenSettings); // <------- Make async?
-
 
             HistoryEntry LastSong = DatabaseHandler.GetLastSong();
 
@@ -604,7 +596,6 @@ namespace LyricParser.ViewModels
         // Retry fetching lyrics if none were found
         private void RetryGettingLyrics(Category category, string name)
         {
-
             if (retries > 0)
             {
                 SetStatus(Status.Searching);
@@ -1466,11 +1457,11 @@ namespace LyricParser.ViewModels
                 //RomajiLyricsVisibility = Visibility.Collapsed;
                 //EnglishLyricsVisibility = Visibility.Collapsed;
 
-                //if (english.Count > 0 && original.Count == 0)
-                //{
-                //    original.AddRange(english);
-                //    english.Clear();
-                //}
+                if (english.Count > 0 && original.Count == 0)
+                {
+                    original.AddRange(english);
+                    english.Clear();
+                }
 
                 //ContentGrid.ColumnDefinitions.Clear();
                 //HeaderGrid.ColumnDefinitions.Clear();
@@ -1614,16 +1605,6 @@ namespace LyricParser.ViewModels
             retries = MAX_RETRIES;
         }
 
-        // Update grid height relative to window height
-        private void OnViewSizeChanged()
-        {
-            double newHeight = ViewHeight - heightDiff;
-            if (newHeight > 0)
-            {
-                LyricsHeight = newHeight;
-            }
-        }
-
         private void OnViewLoaded()
         {
         }
@@ -1643,13 +1624,6 @@ namespace LyricParser.ViewModels
             Properties.Settings.Default.AutoSearch = false;
             Properties.Settings.Default.Save();
         }
-
-        private void OpenEditLyrics()
-        {
-            //EditLyricsView el = new EditLyricsView(this);
-            //el.ShowDialog();
-        }
-
         private void OnViewKeyDown(KeyEventArgs e)
         {
             if (!keysDown.Contains(e.Key))
@@ -1704,7 +1678,11 @@ namespace LyricParser.ViewModels
         {
             viewModel.SearchHistory.Clear();
         }
-
+        private void OpenEditLyrics()
+        {
+            //EditLyricsView el = new EditLyricsView(this);
+            //el.ShowDialog();
+        }
         private void OpenSettings()
         {
             _dialogService.ShowDialog(nameof(SettingsView), new DialogParameters(), r => 
