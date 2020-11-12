@@ -64,7 +64,7 @@
                         </Grid.RowDefinitions>
                         <Border Grid.Row="0" Panel.ZIndex="10"
                                 BorderThickness="0"
-                                BorderBrush="{DynamicResource ForegroundBrush}"
+                                BorderBrush="{DynamicResource BorderBrush}"
                                 Background="Transparent"
                                 HorizontalAlignment="Left">
                             <Label Foreground="{DynamicResource ForegroundBrush}"  Background="{DynamicResource TopBackgroundBrush}"  Margin="5, 1, 1, -10">
@@ -75,7 +75,7 @@
                         </Border>
                         <Border Grid.Row="1" Panel.ZIndex="1"
                                 BorderThickness="1,1,1,1"
-                                BorderBrush="{DynamicResource ForegroundBrush}">
+                                BorderBrush="{DynamicResource BorderBrush}">
                             <ContentPresenter Margin="5, 5, 5, 5"/>
                         </Border>
                     </Grid>
