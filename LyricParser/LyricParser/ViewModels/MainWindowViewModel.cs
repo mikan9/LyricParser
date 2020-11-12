@@ -53,7 +53,6 @@ namespace LyricParser.ViewModels
         int anime_retry = 0;
         int western_retry = 0;
 
-        private ViewModel viewModel = new ViewModel();
         private List<Key> keysDown = new List<Key>();
 
         private string _title = "LyricParser";
@@ -469,19 +468,19 @@ namespace LyricParser.ViewModels
         // Add a new HistoryEntry to the collection, remove last item if count exeeds 20 and remove duplicate if exists
         private void AddHistoryEntry(string data)
         {
-            if (data == " - ") return;
-            if (viewModel.SearchHistory != null && viewModel.SearchHistory.Count > 0)
-            {
-                if (viewModel.SearchHistory.Count == 20)
-                {
-                    viewModel.SearchHistory.RemoveAt(19);
-                }
-                if (viewModel.SearchHistory.Any(s => s.Data == data))
-                    viewModel.SearchHistory.Remove(viewModel.SearchHistory.Single(s => s.Data == data));
-            }
+            //if (data == " - ") return;
+            //if (viewModel.SearchHistory != null && viewModel.SearchHistory.Count > 0)                     <---------- TO BE IMPLEMENTED
+            //{
+            //    if (viewModel.SearchHistory.Count == 20)
+            //    {
+            //        viewModel.SearchHistory.RemoveAt(19);
+            //    }
+            //    if (viewModel.SearchHistory.Any(s => s.Data == data))
+            //        viewModel.SearchHistory.Remove(viewModel.SearchHistory.Single(s => s.Data == data));
+            //}
 
-            viewModel.AddHistoryEntry(new HistoryEntry { Data = data });
-            SongEntry = viewModel.SearchHistory.ElementAt(0);
+            //viewModel.AddHistoryEntry(new HistoryEntry { Data = data });
+            //SongEntry = viewModel.SearchHistory.ElementAt(0);
         }
 
         // Update last song and search history then begin fetching lyrics for the current song
@@ -491,10 +490,10 @@ namespace LyricParser.ViewModels
             {
 
                 string data;
-                if (viewModel.SearchHistory != null && viewModel.SearchHistory.Count > 0)
-                    data = SongName;
-                else
-                    data = new HistoryEntry { Data = SongName }.Data;
+                //if (viewModel.SearchHistory != null && viewModel.SearchHistory.Count > 0)                     <---------- TO BE IMPLEMENTED
+                //    data = SongName;
+                //else
+                data = new HistoryEntry { Data = SongName }.Data;
 
                 AddHistoryEntry(data);
 
@@ -559,8 +558,6 @@ namespace LyricParser.ViewModels
                 //OtherRad.Checked += OtherRad_Checked;
                 cat = Category.Other;
             }
-
-
 
             if (lyricsThread == null || lyricsThread.ThreadState == System.Threading.ThreadState.Stopped)
             {
@@ -1449,92 +1446,13 @@ namespace LyricParser.ViewModels
             {
                 SetStatus(Status.Done);
 
-                OriginalLyrics = "";  // Romaji and English-translated lyrics not yet implemented.
-
-                //RomajiLyrics = "";
-                //EnglishLyrics = "";
-
-                //OriginalLyricsVisibility = Visibility.Collapsed;
-                //RomajiLyricsVisibility = Visibility.Collapsed;
-                //EnglishLyricsVisibility = Visibility.Collapsed;
+                OriginalLyrics = "";  
 
                 if (english.Count > 0 && original.Count == 0)
                 {
                     original.AddRange(english);
                     english.Clear();
                 }
-
-                //ContentGrid.ColumnDefinitions.Clear();
-                //HeaderGrid.ColumnDefinitions.Clear();
-
-                //bool bShowOrig = false;
-                //bool bShowRom = false;
-                //bool bShowEng = false;
-
-                //switch (cat)
-                //{
-                //    case Category.Anime:
-                //        bShowOrig = Properties.UserSettings.Default.OrigAnime;
-                //        bShowRom = Properties.UserSettings.Default.RomajiAnime;
-                //        bShowEng = Properties.UserSettings.Default.EngAnime;
-                //        break;
-                //    case Category.Touhou:
-                //        bShowOrig = Properties.UserSettings.Default.OrigTouhou;
-                //        bShowRom = Properties.UserSettings.Default.RomajiTouhou;
-                //        bShowEng = Properties.UserSettings.Default.EngTouhou;
-                //        break;
-                //    case Category.Western:
-                //        bShowOrig = Properties.UserSettings.Default.OrigWest;
-                //        bShowRom = Properties.UserSettings.Default.RomajiWest;
-                //        bShowEng = Properties.UserSettings.Default.EngWest;
-                //        break;
-                //    case Category.JP:
-                //        bShowOrig = Properties.UserSettings.Default.OrigJP;
-                //        bShowRom = Properties.UserSettings.Default.RomajiJP;
-                //        bShowEng = Properties.UserSettings.Default.EngJP;
-                //        break;
-                //    case Category.Other:
-                //        bShowOrig = Properties.UserSettings.Default.OrigOther;
-                //        bShowRom = Properties.UserSettings.Default.RomajiOther;
-                //        bShowEng = Properties.UserSettings.Default.EngOther;
-                //        break;
-                //}
-
-                //if (bShowOrig && original.Count > 0)
-                //{
-                //    ContentGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                //    HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition());
-
-                //    Grid.SetColumn(OriginalTxt, 0);
-                //    Grid.SetColumn(OriginalLbl, 0);
-
-                //    OriginalTxt.Visibility = System.Windows.Visibility.Visible;
-                //    OriginalLbl.Visibility = OriginalTxt.Visibility;
-
-                //    if (bShowRom && romaji.Count > 0)
-                //    {
-                //        ContentGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                //        HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition());
-
-                //        Grid.SetColumn(RomajiLbl, 1);
-                //        Grid.SetColumn(RomajiTxt, 1);
-
-                //        RomajiLyricsVisibility = Visibility.Visible;
-                //    }
-                //    if (bShowEng && english.Count > 0)
-                //    {
-                //        ContentGrid.ColumnDefinitions.Add(new ColumnDefinition());
-                //        HeaderGrid.ColumnDefinitions.Add(new ColumnDefinition());
-
-                //        int col = 2;
-                //        if (!bShowRom) col = 1;
-
-                //        Grid.SetColumn(EnglishLbl, col);
-                //        Grid.SetColumn(EnglishTxt, col);
-
-                //        EnglishLyricsVisibility = Visibility.Visible;
-                //    }
-                //}
 
                 if (cleanUp)
                 {
@@ -1556,13 +1474,7 @@ namespace LyricParser.ViewModels
                         OriginalLyrics += HtmlEntity.DeEntitize(s);
                     }
                 }
-                if (romaji.Count > 0)
-                {
-                    foreach (string s in romaji)
-                    {
-                        RomajiLyrics += HtmlEntity.DeEntitize(s);
-                    }
-                }
+
                 if (english.Count > 0)
                 {
                     foreach (string s in english)
@@ -1678,7 +1590,7 @@ namespace LyricParser.ViewModels
 
         private void ClearSearchHistory()
         {
-            viewModel.SearchHistory.Clear();
+            //viewModel.SearchHistory.Clear();                     <---------- TO BE IMPLEMENTED
         }
         private void OpenEditLyrics()
         {
