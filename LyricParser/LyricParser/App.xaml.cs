@@ -1,14 +1,11 @@
-﻿using LyricParser.ViewModels;
+﻿using LyricParser.Repository;
+using LyricParser.Services;
+using LyricParser.Services.Interfaces;
+using LyricParser.ViewModels;
 using Prism.Ioc;
 using Prism.Unity;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace LyricParser
@@ -18,8 +15,22 @@ namespace LyricParser
     /// </summary>
     public partial class App : PrismApplication
     {
+        static LyricsDatabase database;
+
         public App()
         {
+        }
+
+        public static LyricsDatabase Database
+        {
+            get
+            {
+                if(database == null)
+                {
+                    database = new LyricsDatabase();
+                }
+                return database;
+            }
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -50,6 +61,8 @@ namespace LyricParser
 
             containerRegistry.RegisterDialog<SettingsView>();
             containerRegistry.RegisterDialog<EditLyricsView>();
+
+            containerRegistry.Register<IPollingService, PollingService>();
         }
 
         protected override Window CreateShell()
