@@ -25,6 +25,7 @@ namespace LyricParser.Utils.Parsers.JP
             var mnb = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'mnb')]");
             var bdy = mnb.SelectNodes(".//*[contains(@class, 'bdy')]");
 
+            if (doc.DocumentNode.SelectNodes("//*[contains(@class,'mid')]") == null) return null;
             for (int i = 0; i < bdy.ToArray().Length; ++i)
             {
                 string _title = "";

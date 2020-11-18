@@ -19,8 +19,27 @@ namespace LyricParser.Utils.Parsers.Vocaloid
 
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
+            bool foundMatch = false;
 
             var body = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'wikibody')]");
+            var ul = body.SelectSingleNode("ul");
+            foreach (var child in ul.SelectNodes("li"))
+            {
+                var a = child.SelectSingleNode("a");
+                if (a.InnerText.ToLower().TrimStart().TrimEnd() == title.ToLower().TrimStart().TrimEnd())
+                {
+                    foundMatch = true;
+                    html = await GetHtml("https:" + a.GetAttributeValue("href", "null").Replace(" ", "%20"));
+                    break;
+                }
+            }
+
+            if (!foundMatch) return null;
+
+            doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            body = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'wikibody')]");
             bool foundLyrics = false;
 
             List<string> verses = new List<string>();
@@ -41,13 +60,14 @@ namespace LyricParser.Utils.Parsers.Vocaloid
 
                     if (child.HasChildNodes)
                     {
-                        if (verses.Count > 0) verses.Add("\r\n\r\n");
                         verses.Add(child.InnerHtml.Replace("\n", "").Trim());
                     }
                 }
 
-                return CleanUp(verses);
+                
             }
+            if(foundLyrics)
+                return CleanUp(verses);
 
             return null;
         }
