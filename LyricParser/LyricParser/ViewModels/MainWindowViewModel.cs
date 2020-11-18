@@ -481,7 +481,7 @@ namespace LyricParser.ViewModels
         {
             CleanUp();
             SetStatus(Status.Searching);
-            bool success = false;
+            bool success = true;
 
             retries = MAX_RETRIES;
 
