@@ -23,9 +23,6 @@ namespace LyricParser.ViewModels
 
         bool initComplete = false;
 
-        Lyric currentLyric;
-
-
         private string _title = "Edit lyrics";
 
         public event Action<IDialogResult> RequestClose;
