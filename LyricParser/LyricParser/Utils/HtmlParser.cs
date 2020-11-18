@@ -42,7 +42,7 @@ namespace LyricParser.Utils
 
         protected virtual string CleanUp(string lyrics)
         {
-            return lyrics.Replace("<br>", Environment.NewLine).Trim() + Environment.NewLine + Environment.NewLine;
+            return lyrics.Replace("<br>", Environment.NewLine).Trim();
         }
 
         public abstract Task<string> ParseHtml(string artist, string title, string optional = "");
