@@ -22,12 +22,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Windows.Media.Control;
 
 namespace LyricParser.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        const int POLLING_SPAN = 1;
         private int MAX_RETRIES = 6;
         private static int retries = 6;
         private static bool paused = false;
@@ -57,6 +57,8 @@ namespace LyricParser.ViewModels
         int western_retry = 0;
 
         private List<Key> keysDown = new List<Key>();
+
+        private GlobalSystemMediaTransportControlsSessionManager sessionManager;
 
         private string _title = "LyricParser";
         private string _songName = " - ";
@@ -264,7 +266,6 @@ namespace LyricParser.ViewModels
         #region Services
 
         private IDialogService _dialogService { get; }
-        private IPollingService _pollingService { get; }
 
         #endregion
 
@@ -326,13 +327,10 @@ namespace LyricParser.ViewModels
             resource.Add(resDic);
         }
 
-        public MainWindowViewModel(IEventAggregator ea, IDialogService ds, IPollingService ps)
+        public MainWindowViewModel(IEventAggregator ea, IDialogService ds)
         {
             _eventAggregator = ea;
             _dialogService = ds;
-            _pollingService = ps;
-            _pollingService.Span = TimeSpan.FromSeconds(POLLING_SPAN);
-            _pollingService.Callback = GetSong;
 
             GetLyricsCommand = new DelegateCommand(async () => await ExecuteGetLyrics());
 
@@ -354,7 +352,7 @@ namespace LyricParser.ViewModels
             StartZoomOutCommand = new DelegateCommand(() => SetZoom(-1));
             StopZoomCommand = new DelegateCommand(() => SetZoom(0));
 
-            GetCurrentSongCommand = new DelegateCommand(GetSong);
+            //GetCurrentSongCommand = new DelegateCommand(GetSong);
             SearchInBrowserCommand = new DelegateCommand(SearchInBrowser);
             ClearSearchHistoryCommand = new DelegateCommand(ClearSearchHistory);
 
@@ -406,8 +404,43 @@ namespace LyricParser.ViewModels
             zoomTimer.Tick += ZoomTimer_Tick;
 
             SetStatus(Status.Standby);
-            _pollingService.Start();
             initComplete = true;
+
+            GetSessionManager();
+        }
+
+        private async void GetSessionManager()
+        {
+            sessionManager = await GlobalSystemMediaTransportControlsSessionManager.RequestAsync();
+            sessionManager.GetCurrentSession().MediaPropertiesChanged += CurrentlyPlayingUpdated;
+
+            await GetCurrentlyPlaying();
+        }
+
+        private async void CurrentlyPlayingUpdated(GlobalSystemMediaTransportControlsSession sender, MediaPropertiesChangedEventArgs args)
+        {
+            await GetCurrentlyPlaying();
+        }
+
+        private async Task GetCurrentlyPlaying()
+        {
+            var currentSession = sessionManager.GetCurrentSession();
+
+            if (currentSession != null)
+            {
+                Song currentlyPlaying = await GetSongFromSession(currentSession);
+
+                if (currentlyPlaying.Artist != null && autoSearch == true)
+                {
+                    if ((currentlyPlaying.Title != currentSong.Title && !paused))
+                    {
+                        SetCurrentSong(currentlyPlaying);
+                        retries = MAX_RETRIES;
+
+                        await GetLyrics(currentSong.Artist, currentSong.Title);
+                    }
+                }
+            }
         }
 
         // Send the editied lyrics to the database to be processed
@@ -455,20 +488,16 @@ namespace LyricParser.ViewModels
             //SongEntry = viewModel.SearchHistory.ElementAt(0);
         }
 
-        public async void GetSong()
+        public async Task<Song> GetSongFromSession(GlobalSystemMediaTransportControlsSession session)
         {
             autoSearch = AutoSearchChecked;
-            Song currentlyPlaying = Song.GetSongInfo(currentPlayer);
-            if (autoSearch == true && currentlyPlaying.Title != "Winamp 5.666 Build 3516")
-            {
-                if ((currentlyPlaying.Title != currentSong.Title && !paused))
-                {
-                    SetCurrentSong(currentlyPlaying);
-                    retries = MAX_RETRIES;
+            Song currentlyPlaying = Song.Empty();
+            var mediaProperties = await session.TryGetMediaPropertiesAsync();
 
-                    await GetLyrics(currentSong.Artist, currentSong.Title);
-                }
-            }
+            currentlyPlaying.Artist = mediaProperties.Artist;
+            currentlyPlaying.Title = mediaProperties.Title;
+
+            return currentlyPlaying;
         }
 
         async Task ExecuteGetLyrics()
@@ -484,7 +513,7 @@ namespace LyricParser.ViewModels
             bool success = true;
 
             retries = MAX_RETRIES;
-
+            Trace.WriteLine(artist + " - " + title);
             var lyrics = await App.Database.GetLyricsAsync(artist.ToLower(), title.ToLower());
             if(lyrics == null)
             {
