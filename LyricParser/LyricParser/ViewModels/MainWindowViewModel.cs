@@ -20,7 +20,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Windows.Media.Control;
 
@@ -62,6 +65,8 @@ namespace LyricParser.ViewModels
 
         private string _title = "LyricParser";
         private string _songName = " - ";
+        private string _songArtist = "";
+        private string _songTitle = "";
         private string _lyrics = "";
         private string _statusText = "Searching...";
         private string _zoomText = "100 %";
@@ -91,6 +96,8 @@ namespace LyricParser.ViewModels
         private Visibility _romajiLyricsVisibility = Visibility.Collapsed;
         private Visibility _englishLyricsVisibility = Visibility.Collapsed;
 
+        private ImageSource _thumbnail = null;
+
         #region Public Properties
 
         // String properties
@@ -103,6 +110,16 @@ namespace LyricParser.ViewModels
         {
             get => _songName;
             set => SetProperty(ref _songName, value);
+        }
+        public string SongArtist
+        {
+            get => _songArtist;
+            set => SetProperty(ref _songArtist, value);
+        }
+        public string SongTitle
+        {
+            get => _songTitle;
+            set => SetProperty(ref _songTitle, value);
         }
         public string OriginalLyrics
         {
@@ -230,6 +247,13 @@ namespace LyricParser.ViewModels
             set => SetProperty(ref _englishLyricsVisibility, value);
         }
 
+        // ImageSource properties
+        public ImageSource Thumbnail
+        {
+            get => _thumbnail;
+            set => SetProperty(ref _thumbnail, value);
+        }
+
         #endregion
 
         #region Commands
@@ -278,7 +302,7 @@ namespace LyricParser.ViewModels
             zoomValue = Properties.Settings.Default.ZoomLevel;
             Zoom(zoomValue);
             retries = MAX_RETRIES;
-
+    
             CultureInfo newCulture = new CultureInfo(Properties.UserSettings.Default.Locale);
             if (Thread.CurrentThread.CurrentCulture.Name != newCulture.Name) App.ChangeCulture(newCulture);
 
@@ -494,8 +518,32 @@ namespace LyricParser.ViewModels
             Song currentlyPlaying = Song.Empty();
             var mediaProperties = await session.TryGetMediaPropertiesAsync();
 
-            currentlyPlaying.Artist = mediaProperties.Artist;
-            currentlyPlaying.Title = mediaProperties.Title;
+            if (mediaProperties != null)
+            {
+                currentlyPlaying.Artist = mediaProperties.Artist;
+                currentlyPlaying.Title = mediaProperties.Title;
+                SongArtist = currentlyPlaying.Artist;
+                SongTitle = currentlyPlaying.Title;
+
+                var thumbnail = mediaProperties.Thumbnail;
+
+                if (thumbnail != null)
+                {
+                    var stream = await mediaProperties.Thumbnail.OpenReadAsync();
+
+                    using (StreamReader sr = new StreamReader(stream.AsStream()))
+                    {
+                        var bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.StreamSource = sr.BaseStream;
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.EndInit();
+                        bitmap.Freeze();
+
+                        Thumbnail = bitmap;
+                    }
+                }
+            }
 
             return currentlyPlaying;
         }
@@ -513,7 +561,6 @@ namespace LyricParser.ViewModels
             bool success = true;
 
             retries = MAX_RETRIES;
-            Trace.WriteLine(artist + " - " + title);
             var lyrics = await App.Database.GetLyricsAsync(artist.ToLower(), title.ToLower());
             if(lyrics == null)
             {
