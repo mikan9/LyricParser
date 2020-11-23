@@ -62,6 +62,7 @@ namespace LyricParser.ViewModels
         private List<Key> keysDown = new List<Key>();
 
         private GlobalSystemMediaTransportControlsSessionManager sessionManager;
+        private GlobalSystemMediaTransportControlsSession currentSession;
 
         private string _title = "LyricParser";
         private string _songName = " - ";
@@ -436,14 +437,28 @@ namespace LyricParser.ViewModels
         private async void GetSessionManager()
         {
             sessionManager = await GlobalSystemMediaTransportControlsSessionManager.RequestAsync();
-            sessionManager.GetCurrentSession().MediaPropertiesChanged += CurrentlyPlayingUpdated;
+            sessionManager.CurrentSessionChanged += SessionManager_CurrentSessionChanged;
+            SetCurrentSession();
 
             await GetCurrentlyPlaying();
+        }
+
+        private void SessionManager_CurrentSessionChanged(GlobalSystemMediaTransportControlsSessionManager sender, CurrentSessionChangedEventArgs args)
+        {
+            SetCurrentSession(); 
         }
 
         private async void CurrentlyPlayingUpdated(GlobalSystemMediaTransportControlsSession sender, MediaPropertiesChangedEventArgs args)
         {
             await GetCurrentlyPlaying();
+        }
+
+        private void SetCurrentSession()
+        {
+            currentSession = sessionManager.GetCurrentSession();
+
+            if (currentSession == null) return;
+            currentSession.MediaPropertiesChanged += CurrentlyPlayingUpdated;
         }
 
         private async Task GetCurrentlyPlaying()
@@ -454,7 +469,7 @@ namespace LyricParser.ViewModels
             {
                 Song currentlyPlaying = await GetSongFromSession(currentSession);
 
-                if (currentlyPlaying.Artist != null && autoSearch == true)
+                if (currentlyPlaying.Artist != null && currentlyPlaying.Artist.Length > 0 && autoSearch == true)
                 {
                     if ((currentlyPlaying.Title != currentSong.Title && !paused))
                     {
