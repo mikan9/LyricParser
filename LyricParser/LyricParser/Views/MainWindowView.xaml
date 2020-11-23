@@ -87,7 +87,7 @@
                     <RadioButton Name="OtherRad" Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}" Visibility="{Binding OtherRadVisibility}" IsChecked="{Binding OtherRadChecked}" Margin="15, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
                 </DockPanel>
                 <DockPanel Grid.Column="1" HorizontalAlignment="Right">
-                    <ComboBox Name="PlayerBox" VerticalAlignment="Center" SelectedIndex="{Binding SelectedPlayer}" Margin="0, 0, 15, 0">
+                    <ComboBox Name="PlayerBox" VerticalAlignment="Center" SelectedIndex="{Binding SelectedPlayer}" Margin="0, 0, 15, 0" Visibility="Collapsed">
                         <ComboBoxItem Content="Winamp"></ComboBoxItem>
                         <ComboBoxItem Content="Spotify"></ComboBoxItem>
                         <ComboBoxItem Content="Youtube"></ComboBoxItem>
