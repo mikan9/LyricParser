@@ -23,6 +23,8 @@ namespace LyricParser.Utils.Parsers.Vocaloid
 
             var body = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'wikibody')]");
             var ul = body.SelectSingleNode("ul");
+            if (ul == null) return null;
+
             foreach (var child in ul.SelectNodes("li"))
             {
                 var a = child.SelectSingleNode("a");
