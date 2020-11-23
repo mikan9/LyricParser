@@ -65,7 +65,7 @@
                         </Border>
                         <DockPanel x:Name="TitleBar" Margin="8, -2, 0, 8" Height="27" VerticalAlignment="Top" LastChildFill="False">
                             <TextBlock x:Name="IconTxt" Margin="5, 0, 0, 0" Padding="0, 5, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontFamily="Segoe MDL2 Assets" Foreground="White" Text="&#xE90B;" FontSize="16" />
-                            <TextBlock x:Name="TitleTxt" Margin="15, 0, 0, 0" Padding="0, 5, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="16" Foreground="White" Text="{TemplateBinding Title}"/>
+                            <!--<TextBlock x:Name="TitleTxt" Margin="15, 0, 0, 0" Padding="0, 5, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="16" Foreground="White" Text="{TemplateBinding Title}"/>-->
                             <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE711;" x:Name="CloseBtn" Click="CloseClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
                             <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE922;" x:Name="RestoreBtn" Click="MaximizeRestoreClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
                             <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE921;" x:Name="MinimizeBtn" Click="MinimizeClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
