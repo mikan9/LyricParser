@@ -35,71 +35,84 @@
     </Window.Resources>
     <Grid Background="{DynamicResource BackgroundBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="110"/>
             <RowDefinition Height="*" />
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Background="{DynamicResource TopBackgroundBrush}" Grid.ColumnSpan="2">
-            <Grid Height="30">
+            <Grid Height="80">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="830"/>
+                    <ColumnDefinition Width="400"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="32"/>
                 </Grid.ColumnDefinitions>
-                <DockPanel Margin="5,5,0,5" Grid.Column="0">
-                    <ComboBox Name="SongNameTxt" Text="{Binding SongName}" Width="338" Height="20" IsEnabled="{Binding SongEnabled}" VerticalAlignment="Top" IsEditable="True" ItemsSource="{Binding}" DisplayMemberPath="Data" SelectedItem="{Binding SongEntry}" SelectedValuePath="Data">
-                        <ComboBox.DataContext>
-                            <CollectionViewSource Source="{Binding Path=SearchHistory}"></CollectionViewSource>
-                        </ComboBox.DataContext>
-                        <ComboBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="ApplicationCommands.Cut" />
-                                <MenuItem Command="ApplicationCommands.Copy" />
-                                <MenuItem Command="ApplicationCommands.Paste" />
-                                <MenuItem Command="ApplicationCommands.SelectAll" />
-                                <Separator />
-                                <MenuItem Command="{Binding GetCurrentSongCommand}"/>
-                                <MenuItem Command="{Binding SearchInBrowserCommand}"/>
-                                <MenuItem Command="{Binding ClearSearchHistoryCommand}"/>
-                            </ContextMenu>
-                        </ComboBox.ContextMenu>
-                    </ComboBox>
-                    <Button  Name="GetLyricsBtn" Margin="5, 0, 0, 0" Command="{Binding GetLyricsCommand}" IsEnabled="{Binding GetLyricsEnabled}" Height="20" VerticalAlignment="Center">
-                        <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.SearchButton}}"/>
-                    </Button>
-                    <Button Name="EditLyricsBtn" Command="{Binding OpenEditLyricsCommand}" IsEnabled="True" Visibility="Visible">
-                        <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.EditWindowTitle}}"/>
-                    </Button>
-                    <CheckBox Content="{Binding Source={x:Static w:LocaleResources.AutoSearchCheck}}" IsChecked="{Binding AutoSearchChecked}" Name="autoSearchBox" VerticalAlignment="Center" Margin="5, 0, 0, 0">
-                        <!-- Refactoring possible? -->
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Checked">
-                                <prism:InvokeCommandAction Command="{Binding AutoSearchCheckedCommand}"/>
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="Unchecked">
-                                <prism:InvokeCommandAction Command="{Binding AutoSearchUnCheckedCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </CheckBox>
-                    <RadioButton Name="AnimeRad" Content="{Binding Source={x:Static w:LocaleResources.AnimeRadio}}" Visibility="{Binding AnimeRadVisibility}" IsChecked="{Binding AnimeRadChecked}" Margin="5, 0, 0, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
-                    <RadioButton Name="TouhouRad" Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}" Visibility="{Binding TouhouRadVisibility}" IsChecked="{Binding TouhouRadChecked}" Margin="5, 0, 0, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
-                    <RadioButton Name="WestRad" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}" Visibility="{Binding WestRadVisibility}" IsChecked="{Binding WestRadChecked}" Margin="5, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
-                    <RadioButton Name="JpRad" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}" Visibility="{Binding JpRadVisibility}" IsChecked="{Binding JpRadChecked}" Margin="15, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
-                    <RadioButton Name="OtherRad" Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}" Visibility="{Binding OtherRadVisibility}" IsChecked="{Binding OtherRadChecked}" Margin="15, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                <DockPanel Margin="5,5,0,5" Grid.Column="0" Grid.RowSpan="2">
+                    <Image Name="AlbumThumbnail" Height="80" Width="64" Source="{Binding Thumbnail}" HorizontalAlignment="Left"/>
+                    <StackPanel>
+                        <TextBlock Name="TitleText" Text="{Binding SongTitle}" FontSize="20"/>
+                        <TextBlock Name="ArtistText" Text="{Binding SongArtist}" FontSize="16"/>
+                    </StackPanel>
                 </DockPanel>
-                <DockPanel Grid.Column="1" HorizontalAlignment="Right">
-                    <ComboBox Name="PlayerBox" VerticalAlignment="Center" SelectedIndex="{Binding SelectedPlayer}" Margin="0, 0, 15, 0" Visibility="Collapsed">
-                        <ComboBoxItem Content="Winamp"></ComboBoxItem>
-                        <ComboBoxItem Content="Spotify"></ComboBoxItem>
-                        <ComboBoxItem Content="Youtube"></ComboBoxItem>
-                        <ComboBoxItem Content="Google Play Music"></ComboBoxItem>
-                    </ComboBox>
-                    <Button Margin="0 0 5 0" BorderThickness="0" Name="SettingsBtn" Command="{Binding OpenSettingsCommand}" Height="22" Width="22">
-                        <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="20" Height="20" Clip="F1 M 0,0L 24,0L 24,24L 0,24L 0,0">
-                            <Path Width="20" Height="20" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Data="F1 M 27.5314,21.8628L 33.0126,19.4224L 34.7616,23.3507C 36.6693,22.9269 38.6044,22.8903 40.4668,23.2026L 42.0083,19.1868L 47.6098,21.337L 46.0683,25.3528C 47.6612,26.3669 49.0747,27.6889 50.2088,29.2803L 54.1371,27.5313L 56.5776,33.0126L 52.6493,34.7616C 53.0731,36.6693 53.1097,38.6043 52.7974,40.4668L 56.8131,42.0083L 54.6629,47.6097L 50.6472,46.0683C 49.6331,47.6613 48.3111,49.0748 46.7197,50.2089L 48.4686,54.1372L 42.9874,56.5776L 41.2384,52.6493C 39.3307,53.0731 37.3957,53.1097 35.5333,52.7974L 33.9918,56.8131L 28.3903,54.6629L 29.9318,50.6472C 28.3388,49.6331 26.9252,48.3111 25.7911,46.7196L 21.8628,48.4686L 19.4224,42.9873L 23.3507,41.2383C 22.9269,39.3307 22.8903,37.3957 23.2026,35.5332L 19.1869,33.9918L 21.3371,28.3903L 25.3528,29.9318C 26.3669,28.3388 27.6889,26.9252 29.2804,25.7911L 27.5314,21.8628 Z M 34.3394,29.7781C 29.7985,31.7998 27.7564,37.1198 29.7781,41.6606C 31.7998,46.2015 37.1198,48.2436 41.6606,46.2219C 46.2015,44.2002 48.2436,38.8802 46.2219,34.3394C 44.2002,29.7985 38.8802,27.7564 34.3394,29.7781 Z "/>
-                        </Canvas>
-                    </Button>
-                    <TextBlock Name="SongInfoTxt" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0, 0, 5, 0" Foreground="{DynamicResource ForegroundBrush}"/>
-                </DockPanel>
+                <StackPanel Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Right">
+                    <DockPanel Margin="0, 5, 5, 5">
+                        <ComboBox Name="SongNameTxt" Text="{Binding SongName}" Width="338" Height="20" IsEnabled="{Binding SongEnabled}" VerticalAlignment="Center" IsEditable="True" ItemsSource="{Binding}" DisplayMemberPath="Data" SelectedItem="{Binding SongEntry}" SelectedValuePath="Data">
+                            <ComboBox.DataContext>
+                                <CollectionViewSource Source="{Binding Path=SearchHistory}"></CollectionViewSource>
+                            </ComboBox.DataContext>
+                            <ComboBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="ApplicationCommands.Cut" />
+                                    <MenuItem Command="ApplicationCommands.Copy" />
+                                    <MenuItem Command="ApplicationCommands.Paste" />
+                                    <MenuItem Command="ApplicationCommands.SelectAll" />
+                                    <Separator />
+                                    <MenuItem Command="{Binding GetCurrentSongCommand}"/>
+                                    <MenuItem Command="{Binding SearchInBrowserCommand}"/>
+                                    <MenuItem Command="{Binding ClearSearchHistoryCommand}"/>
+                                </ContextMenu>
+                            </ComboBox.ContextMenu>
+                        </ComboBox>
+                        <Button  Name="GetLyricsBtn" Margin="5, 0, 0, 0" Command="{Binding GetLyricsCommand}" IsEnabled="{Binding GetLyricsEnabled}" Height="20" VerticalAlignment="Center">
+                            <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.SearchButton}}"/>
+                        </Button>
+                    </DockPanel>
+                    <DockPanel>
+                        <Button Name="EditLyricsBtn" Command="{Binding OpenEditLyricsCommand}" IsEnabled="True" Visibility="Collapsed">
+                            <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.EditWindowTitle}}"/>
+                        </Button>
+                        <CheckBox Content="{Binding Source={x:Static w:LocaleResources.AutoSearchCheck}}" IsChecked="{Binding AutoSearchChecked}" Name="autoSearchBox" VerticalAlignment="Center" Margin="5, 0, 0, 0">
+                            <!-- Refactoring possible? -->
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <prism:InvokeCommandAction Command="{Binding AutoSearchCheckedCommand}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="Unchecked">
+                                    <prism:InvokeCommandAction Command="{Binding AutoSearchUnCheckedCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </CheckBox>
+                        <RadioButton Name="AnimeRad" Content="{Binding Source={x:Static w:LocaleResources.AnimeRadio}}" Visibility="{Binding AnimeRadVisibility}" IsChecked="{Binding AnimeRadChecked}" Margin="5, 0, 0, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                        <RadioButton Name="TouhouRad" Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}" Visibility="{Binding TouhouRadVisibility}" IsChecked="{Binding TouhouRadChecked}" Margin="5, 0, 0, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                        <RadioButton Name="WestRad" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}" Visibility="{Binding WestRadVisibility}" IsChecked="{Binding WestRadChecked}" Margin="5, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                        <RadioButton Name="JpRad" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}" Visibility="{Binding JpRadVisibility}" IsChecked="{Binding JpRadChecked}" Margin="15, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                        <RadioButton Name="OtherRad" Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}" Visibility="{Binding OtherRadVisibility}" IsChecked="{Binding OtherRadChecked}" Margin="15, 0, 15, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                        <ComboBox Name="PlayerBox" VerticalAlignment="Center" SelectedIndex="{Binding SelectedPlayer}" Margin="0, 0, 15, 0" Visibility="Collapsed">
+                            <ComboBoxItem Content="Winamp"></ComboBoxItem>
+                            <ComboBoxItem Content="Spotify"></ComboBoxItem>
+                            <ComboBoxItem Content="Youtube"></ComboBoxItem>
+                            <ComboBoxItem Content="Google Play Music"></ComboBoxItem>
+                        </ComboBox>
+                    </DockPanel>
+                </StackPanel>
+                <Button Grid.Column="2" Margin="0, 5, 0, 0" VerticalAlignment="Top" BorderThickness="0" Name="SettingsBtn" Command="{Binding OpenSettingsCommand}" Height="22" Width="22">
+                    <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="20" Height="20" Clip="F1 M 0,0L 24,0L 24,24L 0,24L 0,0">
+                        <Path Width="20" Height="20" Canvas.Left="0" Canvas.Top="0" Stretch="Fill" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Data="F1 M 27.5314,21.8628L 33.0126,19.4224L 34.7616,23.3507C 36.6693,22.9269 38.6044,22.8903 40.4668,23.2026L 42.0083,19.1868L 47.6098,21.337L 46.0683,25.3528C 47.6612,26.3669 49.0747,27.6889 50.2088,29.2803L 54.1371,27.5313L 56.5776,33.0126L 52.6493,34.7616C 53.0731,36.6693 53.1097,38.6043 52.7974,40.4668L 56.8131,42.0083L 54.6629,47.6097L 50.6472,46.0683C 49.6331,47.6613 48.3111,49.0748 46.7197,50.2089L 48.4686,54.1372L 42.9874,56.5776L 41.2384,52.6493C 39.3307,53.0731 37.3957,53.1097 35.5333,52.7974L 33.9918,56.8131L 28.3903,54.6629L 29.9318,50.6472C 28.3388,49.6331 26.9252,48.3111 25.7911,46.7196L 21.8628,48.4686L 19.4224,42.9873L 23.3507,41.2383C 22.9269,39.3307 22.8903,37.3957 23.2026,35.5332L 19.1869,33.9918L 21.3371,28.3903L 25.3528,29.9318C 26.3669,28.3388 27.6889,26.9252 29.2804,25.7911L 27.5314,21.8628 Z M 34.3394,29.7781C 29.7985,31.7998 27.7564,37.1198 29.7781,41.6606C 31.7998,46.2015 37.1198,48.2436 41.6606,46.2219C 46.2015,44.2002 48.2436,38.8802 46.2219,34.3394C 44.2002,29.7985 38.8802,27.7564 34.3394,29.7781 Z "/>
+                    </Canvas>
+                </Button>
             </Grid>
             <Border BorderBrush="{DynamicResource TopSeparatorBrush}" BorderThickness="0, 1, 0, 0">
                 <Grid Height="30" Name="HeaderGrid">
