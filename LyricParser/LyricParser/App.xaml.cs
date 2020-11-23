@@ -61,8 +61,6 @@ namespace LyricParser
 
             containerRegistry.RegisterDialog<SettingsView>();
             containerRegistry.RegisterDialog<EditLyricsView>();
-
-            containerRegistry.Register<IPollingService, PollingService>();
         }
 
         protected override Window CreateShell()
