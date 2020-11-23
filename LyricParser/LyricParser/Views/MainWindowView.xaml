@@ -51,7 +51,7 @@
                     <ColumnDefinition Width="32"/>
                 </Grid.ColumnDefinitions>
                 <DockPanel Margin="5,5,0,5" Grid.Column="0" Grid.RowSpan="2">
-                    <Image Name="AlbumThumbnail" Height="80" Width="64" Source="{Binding Thumbnail}" HorizontalAlignment="Left"/>
+                    <Image Name="AlbumThumbnail" Margin="5, 0, 5, 0" Height="80" Width="64" Source="{Binding Thumbnail}" HorizontalAlignment="Left"/>
                     <StackPanel>
                         <TextBlock Name="TitleText" Text="{Binding SongTitle}" FontSize="20"/>
                         <TextBlock Name="ArtistText" Text="{Binding SongArtist}" FontSize="16"/>
