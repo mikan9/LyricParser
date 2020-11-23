@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Windows.Media.Control;
 
 namespace LyricParser.Utils
 {
@@ -50,7 +52,7 @@ namespace LyricParser.Utils
             return dummy;
         }
 
-        public static Song GetSongInfo(Player player)
+        public async static Task<Song> GetSongInfo(Player player)
         {
             if (DEBUG_MODE == Category.Touhou)
             {
@@ -93,22 +95,23 @@ namespace LyricParser.Utils
                 return dummy;
             }
 
-            switch (player)
-            {
-                case Player.Winamp:
-                    return GetWinampInfo();
-                case Player.Spotify:
-                    return GetSpotifyInfo();
-                case Player.Youtube:
-                    return GetYoutubeInfo();
-                case Player.GooglePlayMusic:
-                    return GetGooglePlayMusicInfo();
-            }
-
             Song song = new Song
             {
                 Genre = Category.Western
             };
+
+            var sessionManager = await GlobalSystemMediaTransportControlsSessionManager.RequestAsync();
+            
+            var currentSession = sessionManager.GetCurrentSession();
+
+            if (currentSession != null)
+            {
+                var mediaProperties = await currentSession.TryGetMediaPropertiesAsync();
+
+                song.Artist = mediaProperties.Artist;
+                song.Title = mediaProperties.Title;
+            }
+
             return song;
         }
 
@@ -186,12 +189,13 @@ namespace LyricParser.Utils
             };
 
             string tabName = "";
-            Process[] procs = Process.GetProcessesByName("chrome");
-            foreach (Process p in procs)
+            List<string> tabs = null;
+            foreach (string str in tabs)
             {
-                if (p.MainWindowTitle.Length > 0 && p.MainWindowTitle.EndsWith(" - YouTube - Google Chrome"))
+                Trace.WriteLine(str);
+                if (str.Length > 0 && str.EndsWith(" - YouTube"))
                 {
-                    tabName = p.MainWindowTitle.Replace(" - YouTube - Google Chrome", "");
+                    tabName = str.Replace(" - YouTube", "");
                 }
             }
 
