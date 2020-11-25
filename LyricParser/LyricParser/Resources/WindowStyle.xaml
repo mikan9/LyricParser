@@ -1,6 +1,10 @@
 ﻿<ResourceDictionary x:Class="LyricParser.WindowStyle"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:LyricParser.Converters">
+    <!-- Converters -->
+    <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+
     <!-- Caption Button -->
     <Style x:Key="CaptionButtonStyle" TargetType="Button">
         <Setter Property="Template">
