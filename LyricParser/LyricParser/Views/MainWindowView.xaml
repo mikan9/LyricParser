@@ -46,7 +46,7 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="800"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="32"/>
                 </Grid.ColumnDefinitions>
@@ -59,7 +59,21 @@
                 </DockPanel>
                 <StackPanel Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Right">
                     <DockPanel Margin="0, 5, 5, 5">
-                        <ComboBox Name="SongNameTxt" Text="{Binding SongName}" Width="338" Height="20" IsEnabled="{Binding SongEnabled}" VerticalAlignment="Center" IsEditable="True" ItemsSource="{Binding}" DisplayMemberPath="Data" SelectedItem="{Binding SongEntry}" SelectedValuePath="Data">
+                        <TextBox Name="SongNameTxt" Text="{Binding SongEntry}" Width="338" Height="20" IsEnabled="{Binding AutoSearchChecked, Converter={StaticResource InverseBooleanConverter}}" VerticalAlignment="Center">
+                            <TextBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="ApplicationCommands.Cut" />
+                                    <MenuItem Command="ApplicationCommands.Copy" />
+                                    <MenuItem Command="ApplicationCommands.Paste" />
+                                    <MenuItem Command="ApplicationCommands.SelectAll" />
+                                    <Separator />
+                                    <MenuItem Header="Get Current Song" Command="{Binding GetCurrentSongCommand}"/>
+                                    <!--<MenuItem Header="Search In Browser" Command="{Binding SearchInBrowserCommand}"/>-->
+                                    <!--<MenuItem Header="Clear Search History" Command="{Binding ClearSearchHistoryCommand}"/>-->
+                                </ContextMenu>
+                            </TextBox.ContextMenu>
+                        </TextBox>
+                        <!--<ComboBox Name="SongNameTxt" Text="{Binding SongName}" Width="338" Height="20" IsEnabled="{Binding SongEnabled}" VerticalAlignment="Center" IsEditable="True" ItemsSource="{Binding}" DisplayMemberPath="Data" SelectedItem="{Binding SongEntry}" SelectedValuePath="Data">
                             <ComboBox.DataContext>
                                 <CollectionViewSource Source="{Binding Path=SearchHistory}"></CollectionViewSource>
                             </ComboBox.DataContext>
@@ -70,12 +84,12 @@
                                     <MenuItem Command="ApplicationCommands.Paste" />
                                     <MenuItem Command="ApplicationCommands.SelectAll" />
                                     <Separator />
-                                    <MenuItem Command="{Binding GetCurrentSongCommand}"/>
-                                    <MenuItem Command="{Binding SearchInBrowserCommand}"/>
-                                    <MenuItem Command="{Binding ClearSearchHistoryCommand}"/>
+                                    <MenuItem Header="Get Current Song" Command="{Binding GetCurrentSongCommand}"/>
+                                    --><!--<MenuItem Header="Search In Browser" Command="{Binding SearchInBrowserCommand}"/>-->
+                                    <!--<MenuItem Header="Clear Search History" Command="{Binding ClearSearchHistoryCommand}"/>--><!--
                                 </ContextMenu>
                             </ComboBox.ContextMenu>
-                        </ComboBox>
+                        </ComboBox>-->
                         <Button  Name="GetLyricsBtn" Margin="5, 0, 0, 0" Command="{Binding GetLyricsCommand}" IsEnabled="{Binding GetLyricsEnabled}" Height="20" VerticalAlignment="Center">
                             <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.SearchButton}}"/>
                         </Button>

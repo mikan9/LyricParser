@@ -75,7 +75,6 @@ namespace LyricParser.ViewModels
         private int _selectedPlayer = 0;
 
         private bool _autoSearchChecked = true;
-        private bool _songEnabled = false;
         private bool _getLyricsEnabled = true;
         private bool _animeRadChecked = false;
         private bool _touhouRadChecked = false;
@@ -86,6 +85,8 @@ namespace LyricParser.ViewModels
         private double _viewHeight = 691;
         private double _lyricsFontSize = 14;
 
+
+        private string _songEntry = " - ";
         //private HistoryEntry _songEntry = new HistoryEntry();
 
         private Visibility _animeRadVisibility = Visibility.Collapsed;
@@ -151,11 +152,6 @@ namespace LyricParser.ViewModels
             get => _autoSearchChecked;
             set => SetProperty(ref _autoSearchChecked, value);
         }
-        public bool SongEnabled
-        {
-            get => _songEnabled;
-            set => SetProperty(ref _songEnabled, value);
-        }
         public bool GetLyricsEnabled
         {
             get => _getLyricsEnabled;
@@ -200,11 +196,11 @@ namespace LyricParser.ViewModels
         }
 
         // HistoryEntry properties
-        //public HistoryEntry SongEntry
-        //{
-        //    get => _songEntry;
-        //    set => SetProperty(ref _songEntry, value);
-        //}
+        public string SongEntry
+        {
+            get => _songEntry;
+            set => SetProperty(ref _songEntry, value);
+        }
 
         // Visibility properties
         public Visibility AnimeRadVisibility
@@ -377,7 +373,7 @@ namespace LyricParser.ViewModels
             StartZoomOutCommand = new DelegateCommand(() => SetZoom(-1));
             StopZoomCommand = new DelegateCommand(() => SetZoom(0));
 
-            //GetCurrentSongCommand = new DelegateCommand(GetSong);
+            GetCurrentSongCommand = new DelegateCommand(GetCurrentSong);
             SearchInBrowserCommand = new DelegateCommand(SearchInBrowser);
             ClearSearchHistoryCommand = new DelegateCommand(ClearSearchHistory);
 
@@ -482,6 +478,11 @@ namespace LyricParser.ViewModels
             }
         }
 
+        public void GetCurrentSong()
+        {
+            SongEntry = SongName;
+        }
+
         // Send the editied lyrics to the database to be processed
         public bool EditLyrics(string title, string title_en, string artist, string original, Category genre)
         {
@@ -537,8 +538,6 @@ namespace LyricParser.ViewModels
             {
                 currentlyPlaying.Artist = mediaProperties.Artist;
                 currentlyPlaying.Title = mediaProperties.Title;
-                SongArtist = currentlyPlaying.Artist;
-                SongTitle = currentlyPlaying.Title;
 
                 var thumbnail = mediaProperties.Thumbnail;
 
@@ -555,7 +554,7 @@ namespace LyricParser.ViewModels
                         bitmap.EndInit();
                         bitmap.Freeze();
 
-                        Thumbnail = bitmap;
+                        currentlyPlaying.Thumbnail = bitmap;
                     }
                 }
             }
@@ -565,7 +564,13 @@ namespace LyricParser.ViewModels
 
         async Task ExecuteGetLyrics()
         {
-            await GetLyrics(currentSong.Artist, currentSong.Title);
+            if (AutoSearchChecked == true)
+                await GetLyrics(currentSong.Artist, currentSong.Title);
+            else
+            {
+                string[] artistTitle = Song.FromString(SongEntry);
+                await GetLyrics(artistTitle[0], artistTitle[1]);
+            }
         }
 
         // Update last song and search history then begin fetching lyrics for the current song
@@ -643,6 +648,9 @@ namespace LyricParser.ViewModels
             currentSong = song;
             SongName = song.Artist + " - " + song.Title;
             Title = SongName;
+            SongArtist = song.Artist;
+            SongTitle = song.Title;
+            Thumbnail = song.Thumbnail;
         }
 
         // Cleanup lyrics view
@@ -735,18 +743,17 @@ namespace LyricParser.ViewModels
         private void OnViewLoaded()
         {
         }
-        private void OnAutoSearchChecked()
+        private async void OnAutoSearchChecked()
         {
-            SongEnabled = false;
             autoSearch = true;
             Properties.Settings.Default.AutoSearch = true;
             Properties.Settings.Default.Save();
+            await ExecuteGetLyrics();
         }
 
         private void OnAutoSearchUnchecked()
         {
             GetLyricsEnabled = true;
-            SongEnabled = true;
             autoSearch = false;
             Properties.Settings.Default.AutoSearch = false;
             Properties.Settings.Default.Save();

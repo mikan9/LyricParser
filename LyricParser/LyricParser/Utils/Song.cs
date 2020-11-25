@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Windows.Media.Control;
 
 namespace LyricParser.Utils
@@ -33,12 +34,25 @@ namespace LyricParser.Utils
 
         public Category Genre { get; set; }
 
-        public Song(string title, string title_en, string artist, Category genre)
+        public BitmapImage Thumbnail { get; set; }
+
+        public Song(string title, string title_en, string artist, Category genre, BitmapImage thumbnail)
         {
             Title = title;
             Title_EN = title_en;
             Artist = artist;
             Genre = genre;
+            Thumbnail = thumbnail;
+        }
+
+        public Song(string info, string title_en, Category genre, BitmapImage thumbnail)
+        {
+            string[] artistTitle = info.Split('-');
+            Artist = artistTitle[0].Trim();
+            Title = artistTitle[1].Trim();
+            Title_EN = title_en;
+            Genre = genre;
+            Thumbnail = thumbnail;
         }
 
         public static Song Empty()
@@ -47,10 +61,17 @@ namespace LyricParser.Utils
             {
                 Genre = Category.None,
                 Artist = "Null",
-                Title = "Null"
+                Title = "Null",
+                Thumbnail = null
             };
             return dummy;
         }
+
+        public static string[] FromString(string data)
+        {
+            return data.Split('-');
+        }
+
 
         public async static Task<Song> GetSongInfo(Player player)
         {

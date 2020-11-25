@@ -34,10 +34,14 @@ namespace LyricParser.Utils.Parsers.JP
                 var mid = bdy.ElementAt(i).SelectSingleNode(".//*[contains(@class,'mid')]");
                 var sml = bdy.ElementAt(i).SelectSingleNode(".//*[contains(@class,'sml')]");
 
-                _title = mid.FirstChild.InnerText.ToLower().TrimStart().TrimEnd();
-                _artist = sml.ChildNodes.ElementAt(1).InnerText.ToLower().TrimStart().TrimEnd();
+                if (mid == null) continue;
+                
+                _title = mid.FirstChild.InnerText.RemoveDiacritics().ToLower().Trim();
+                _artist = sml.ChildNodes.ElementAt(1).InnerText.RemoveDiacritics().ToLower().Trim();
+                title = title.RemoveDiacritics().ToLower().Trim(); 
+                artist = artist.RemoveDiacritics().ToLower().Trim(); 
 
-                if (_title == title.ToLower() && _artist.Contains(artist.ToLower()))
+                if (_title == title && _artist.Contains(artist))
                 {
                     foundMatch = true;
                     html = await GetHtml(mid.FirstChild.GetAttributeValue("href", "null"));
