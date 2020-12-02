@@ -23,6 +23,7 @@ namespace LyricParser.Utils.Parsers.Anime
             bool foundMatch = false;
 
             var table = doc.DocumentNode.SelectSingleNode("//table");
+            if (table == null) return null;
             var tr = table.Elements("tr");
             var children = tr.ElementAt(2).ChildNodes;
 
