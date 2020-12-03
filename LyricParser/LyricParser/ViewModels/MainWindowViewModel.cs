@@ -534,7 +534,7 @@ namespace LyricParser.ViewModels
             Song currentlyPlaying = Song.Empty();
             var mediaProperties = await session.TryGetMediaPropertiesAsync();
 
-            if (mediaProperties != null)
+            if (mediaProperties != null && mediaProperties.Title.Length > 0)
             {
                 currentlyPlaying.Artist = mediaProperties.Artist;
                 currentlyPlaying.Title = mediaProperties.Title;
@@ -560,6 +560,18 @@ namespace LyricParser.ViewModels
             }
 
             return currentlyPlaying;
+        }
+
+        private void SetCurrentSong(Song song)
+        {
+            if (song.Title == "Null") return;
+
+            currentSong = song;
+            SongName = song.Artist + " - " + song.Title;
+            Title = SongName;
+            SongArtist = song.Artist;
+            SongTitle = song.Title;
+            Thumbnail = song.Thumbnail;
         }
 
         async Task ExecuteGetLyrics()
@@ -610,7 +622,7 @@ namespace LyricParser.ViewModels
             switch (songCategory)
             {
                 case Category.Anime:
-                    content = await new GendouParser().ParseHtml(artist, title, "& page = " + anime_retry);
+                    content = await new GendouParser().ParseHtml(artist, title, "&page=" + anime_retry);
                     break;
                 case Category.Touhou:
                     content = await new TouhouwikiParser().ParseHtml(artist, title);
@@ -641,16 +653,6 @@ namespace LyricParser.ViewModels
             isAddingLyrics = false;
 
             return true;
-        }
-
-        private void SetCurrentSong(Song song)
-        {
-            currentSong = song;
-            SongName = song.Artist + " - " + song.Title;
-            Title = SongName;
-            SongArtist = song.Artist;
-            SongTitle = song.Title;
-            Thumbnail = song.Thumbnail;
         }
 
         // Cleanup lyrics view
