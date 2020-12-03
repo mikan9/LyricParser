@@ -23,15 +23,15 @@ namespace LyricParser.Utils.Parsers.Anime
             bool foundMatch = false;
 
             var table = doc.DocumentNode.SelectSingleNode("//table");
+            
             if (table == null) return null;
             var tr = table.Elements("tr");
-            var children = tr.ElementAt(2).ChildNodes;
 
             // 1 = Title      5 = Artist       Url = 13
 
             for (int j = 2; j < tr.ToArray().Length; ++j)
             {
-                children = tr.ElementAt(j).ChildNodes;
+                var children = tr.ElementAt(j).ChildNodes;
 
                 string _title = children.ElementAt(1).FirstChild.InnerText.ToLower().TrimStart().TrimEnd();
                 string _artist = children.ElementAt(5).ChildNodes.ElementAt(1).InnerText.ToLower().TrimStart().TrimEnd();
