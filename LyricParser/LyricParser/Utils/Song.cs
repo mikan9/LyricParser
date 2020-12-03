@@ -3,6 +3,7 @@ using LyricParser.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -57,12 +58,16 @@ namespace LyricParser.Utils
 
         public static Song Empty()
         {
+            BitmapImage bitmap = new BitmapImage(new Uri("pack://application:,,,/LyricParser;component/Resources/icon.png"));
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.Freeze();
+
             Song dummy = new Song
             {
                 Genre = Category.None,
                 Artist = "Null",
                 Title = "Null",
-                Thumbnail = null
+                Thumbnail = bitmap
             };
             return dummy;
         }
