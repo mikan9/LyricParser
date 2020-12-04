@@ -750,7 +750,7 @@ namespace LyricParser.ViewModels
             autoSearch = true;
             Properties.Settings.Default.AutoSearch = true;
             Properties.Settings.Default.Save();
-            await ExecuteGetLyrics();
+            await GetCurrentlyPlaying();
         }
 
         private void OnAutoSearchUnchecked()
