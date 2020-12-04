@@ -15,6 +15,8 @@ namespace LyricParser.Utils.Parsers.Anime
 
         public override async Task<string> ParseHtml(string artist, string title, string optional = "")
         {
+            title = title.ToLower().Trim().Normalize();
+            artist = artist.ToLower().Trim().Normalize();
             string html = await GetHtml(BaseUrl + artist.Replace(" ", "+") + "+" + title.Replace(" ", "+") + optional);
             if (string.IsNullOrEmpty(html)) return null;
 
@@ -33,10 +35,13 @@ namespace LyricParser.Utils.Parsers.Anime
             {
                 var children = tr.ElementAt(j).ChildNodes;
 
-                string _title = children.ElementAt(1).FirstChild.InnerText.ToLower().TrimStart().TrimEnd();
-                string _artist = children.ElementAt(5).ChildNodes.ElementAt(1).InnerText.ToLower().TrimStart().TrimEnd();
+                string _title = children.ElementAt(1).FirstChild.InnerText.ToLower().Trim().Normalize();
+                string _artist = children.ElementAt(5).ChildNodes.ElementAt(1).InnerText.ToLower().Trim().Normalize();
 
-                if (_title == title.ToLower() && _artist == artist.ToLower())
+                //Trace.WriteLine(_title + "___" + title + ": " + _title.Equals(title) + " Length: " + _title.Length + ":" + title.Length);
+                //Trace.WriteLine(_artist + "___" + artist + ": " + _artist.Equals(artist) + " Length: " + _artist.Length + ":" + artist.Length);
+
+                if (_title.Equals(title.ToLower().Normalize()) && _artist.Equals(artist))
                 {
                     //anime_retry = 0;
                     foundMatch = true;
