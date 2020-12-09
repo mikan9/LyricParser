@@ -255,7 +255,7 @@ namespace LyricParser.ViewModels
 
         #region Commands
         public DelegateCommand GetLyricsCommand { get; }
-
+        public DelegateCommand OverwriteLyricsCommand { get; }
         public DelegateCommand ViewSizeChangedCommand { get; }
         public DelegateCommand ViewLoadedCommand { get; }
         public DelegateCommand ViewClosingCommand { get; }
@@ -354,6 +354,8 @@ namespace LyricParser.ViewModels
             _dialogService = ds;
 
             GetLyricsCommand = new DelegateCommand(async () => await ExecuteGetLyrics());
+
+            OverwriteLyricsCommand = new DelegateCommand(async () => await OverwriteLyrics());
 
             ViewLoadedCommand = new DelegateCommand(OnViewLoaded);
             ViewClosingCommand = new DelegateCommand(OnViewClosing);
@@ -644,15 +646,26 @@ namespace LyricParser.ViewModels
                 return false;
             }
 
+            await SaveLyrics(artist, title, content);
+            isAddingLyrics = false;
+
+            return true;
+        }
+
+        async Task SaveLyrics(string artist, string title, string content)
+        {
             await App.Database.SaveLyricsAsync(new Lyrics()
             {
                 Artist = artist.ToLower(),
                 Title = title.ToLower(),
                 Content = content
             });
-            isAddingLyrics = false;
+        }
 
-            return true;
+        async Task OverwriteLyrics()
+        {
+            await SaveLyrics(currentSong.Artist, currentSong.Title, OriginalLyrics);
+            SetStatus(Status.SaveSuccessFul);
         }
 
         // Cleanup lyrics view
@@ -683,6 +696,9 @@ namespace LyricParser.ViewModels
                     break;
                 case Status.Standby:
                     StatusText = LocaleResources.Standby;
+                    break;
+                case Status.SaveSuccessFul:
+                    StatusText = LocaleResources.SaveSuccessful;
                     break;
             }
         }
