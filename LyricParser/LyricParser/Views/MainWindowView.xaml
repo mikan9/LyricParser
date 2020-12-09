@@ -114,6 +114,9 @@
                         <RadioButton Name="WestRad" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}" Visibility="{Binding WestRadVisibility}" IsChecked="{Binding WestRadChecked}" Margin="5, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
                         <RadioButton Name="JpRad" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}" Visibility="{Binding JpRadVisibility}" IsChecked="{Binding JpRadChecked}" Margin="15, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
                         <RadioButton Name="OtherRad" Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}" Visibility="{Binding OtherRadVisibility}" IsChecked="{Binding OtherRadChecked}" Margin="15, 0, 15, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                        <Button  Name="SaveBtn" Command="{Binding OverwriteLyricsCommand}" Height="20" VerticalAlignment="Center">
+                            <TextBlock Padding="5, 0, 5, 0" Text="+"/>
+                        </Button>
                         <ComboBox Name="PlayerBox" VerticalAlignment="Center" SelectedIndex="{Binding SelectedPlayer}" Margin="0, 0, 15, 0" Visibility="Collapsed">
                             <ComboBoxItem Content="Winamp"></ComboBoxItem>
                             <ComboBoxItem Content="Spotify"></ComboBoxItem>
