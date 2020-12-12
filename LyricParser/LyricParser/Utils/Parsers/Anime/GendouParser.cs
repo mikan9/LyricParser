@@ -15,8 +15,6 @@ namespace LyricParser.Utils.Parsers.Anime
 
         public override async Task<string> ParseHtml(string artist, string title, string optional = "")
         {
-            title = title.ToLower().Trim().Normalize();
-            artist = artist.ToLower().Trim().Normalize();
             string html = await GetHtml(BaseUrl + artist.Replace(" ", "+") + "+" + title.Replace(" ", "+") + optional);
             if (string.IsNullOrEmpty(html)) return null;
 
