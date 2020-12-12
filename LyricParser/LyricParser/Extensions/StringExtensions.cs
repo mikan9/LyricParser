@@ -14,6 +14,7 @@ namespace LyricParser.Extensions
             return Regex.Replace(str, @"[^\w ]", "")
                 .Replace("  ", separator)
                 .Replace(" ", separator)
+                .Replace("'", "")
                 .ToLower()
                 .Trim();
         }
