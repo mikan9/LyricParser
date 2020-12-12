@@ -621,22 +621,25 @@ namespace LyricParser.ViewModels
 
             SetStatus(Status.Parsing);
 
+            string _title = title.ToLower().Trim().Normalize();
+            string _artist = artist.ToLower().Trim().Normalize();
+
             switch (songCategory)
             {
                 case Category.Anime:
-                    content = await new GendouParser().ParseHtml(artist, title, "&page=" + anime_retry);
+                    content = await new GendouParser().ParseHtml(_artist, _title, "&page=" + anime_retry);
                     break;
                 case Category.Touhou:
-                    content = await new TouhouwikiParser().ParseHtml(artist, title);
+                    content = await new TouhouwikiParser().ParseHtml(_artist, _title);
                     break;
                 case Category.JP:
-                    content = await new JlyricParser().ParseHtml(artist, title);
+                    content = await new JlyricParser().ParseHtml(_artist, _title);
                     break;
                 case Category.Western:
-                    content = await new MetrolyricsParser().ParseHtml(artist, title);
+                    content = await new MetrolyricsParser().ParseHtml(_artist, _title);
                     break;
                 case Category.Other:
-                    content = await new AtwikiParser().ParseHtml(artist, title);
+                    content = await new AtwikiParser().ParseHtml(_artist, _title);
                     break;
             }
 
