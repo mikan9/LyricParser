@@ -54,16 +54,20 @@ namespace LyricParser.Repository
             return Database.Table<Lyrics>().Where(i => i.Artist == artist && i.Title == title).FirstOrDefaultAsync();
         }
 
-        public async Task<int> SaveLyricsAsync(Lyrics entry)
+        public async Task SaveLyricsAsync(Lyrics entry)
         {
-            if (entry.ID != 0) return Database.UpdateAsync(entry).Result;
-            else
-            {
-                var lyrics = await GetLyricsAsync(entry.Artist, entry.Title);
-                if (lyrics == null)
-                    return Database.InsertAsync(entry).Result;
-                else return -1;
-            }
+            var lyrics = await GetLyricsAsync(entry.Artist, entry.Title);
+
+            if (lyrics == null)
+                await Database.InsertAsync(entry);
+            else 
+                await Database.UpdateAsync(new Lyrics()
+                {
+                    ID = lyrics.ID,
+                    Artist = lyrics.Artist,
+                    Title = lyrics.Title,
+                    Content = entry.Content
+                });
         }
 
         public Task<int> DeleteLyricsAsync(Lyrics entry)
