@@ -623,8 +623,8 @@ namespace LyricParser.ViewModels
 
             SetStatus(Status.Parsing);
 
-            string _title = title.ToLower().Trim().RemoveDiacritics().Normalize();
-            string _artist = artist.ToLower().Trim().RemoveDiacritics().Normalize();
+            string _title = title.ToLower().Trim().Normalize();
+            string _artist = artist.ToLower().Trim().Normalize();
 
             switch (songCategory)
             {
@@ -636,6 +636,7 @@ namespace LyricParser.ViewModels
                     break;
                 case Category.JP:
                     content = await new JlyricParser().ParseHtml(_artist, _title);
+                    if (content == null) content = await new JlyricParser().ParseHtml(_artist.RemoveDiacritics(), _title.RemoveDiacritics(), "-d");
                     break;
                 case Category.Western:
                     content = await new MetrolyricsParser().ParseHtml(_artist, _title);
