@@ -1,5 +1,4 @@
 ﻿using LyricParser.Common;
-using LyricParser.Extensions;
 using LyricParser.Models;
 using LyricParser.Resources;
 using LyricParser.Services.Interfaces;
@@ -584,10 +583,11 @@ namespace LyricParser.ViewModels
             else
             {
                 string[] artistTitle = Song.FromString(SongEntry);
-                await GetLyrics(artistTitle[0].Trim(), artistTitle[1].Trim());
+                await GetLyrics(artistTitle[0], artistTitle[1]);
             }
         }
 
+        // Update last song and search history then begin fetching lyrics for the current song
         async Task GetLyrics(string artist, string title)
         {
             CleanUp();
@@ -595,9 +595,7 @@ namespace LyricParser.ViewModels
             bool success = true;
 
             retries = MAX_RETRIES;
-
-            Lyrics lyrics = AutoSearchChecked ? await App.Database.GetLyricsAsync(artist.ToLower(), title.ToLower()) : null;
-
+            var lyrics = await App.Database.GetLyricsAsync(artist.ToLower(), title.ToLower());
             if(lyrics == null)
             {
                 success = await AddLyrics(artist, title);
@@ -623,8 +621,8 @@ namespace LyricParser.ViewModels
 
             SetStatus(Status.Parsing);
 
-            string _title = title.ToLower().Trim().RemoveDiacritics().Normalize();
-            string _artist = artist.ToLower().Trim().RemoveDiacritics().Normalize();
+            string _title = title.ToLower().Trim().Normalize();
+            string _artist = artist.ToLower().Trim().Normalize();
 
             switch (songCategory)
             {
@@ -639,7 +637,6 @@ namespace LyricParser.ViewModels
                     break;
                 case Category.Western:
                     content = await new MetrolyricsParser().ParseHtml(_artist, _title);
-                    if (content == null) content = await new MusixmatchParser().ParseHtml(_artist, _title);
                     break;
                 case Category.Other:
                     content = await new AtwikiParser().ParseHtml(_artist, _title);
@@ -662,8 +659,8 @@ namespace LyricParser.ViewModels
         {
             await App.Database.SaveLyricsAsync(new Lyrics()
             {
-                Artist = artist.ToLower().Trim(),
-                Title = title.ToLower().Trim(),
+                Artist = artist.ToLower(),
+                Title = title.ToLower(),
                 Content = content
             });
         }
