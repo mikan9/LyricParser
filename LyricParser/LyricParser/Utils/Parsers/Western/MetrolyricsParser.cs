@@ -28,6 +28,7 @@ namespace LyricParser.Utils.Parsers.Western
             foreach (HtmlNode node in nodes)
             {
                 string inner = node.InnerText.Trim();
+                if (inner.Contains("Unfortunately, we are not authorized to show these lyrics")) return null;
                 verses.Add(inner);
             }
 
