@@ -8,7 +8,7 @@ namespace LyricParser.Common
         public const string DatabaseFilename = "LyricsCache.db3";
 
         public const string GENDOU_URL = "http://gendou.com/amusic/?filter=";
-        public const string JLYRIC_URL = "http://search.j-lyric.net/index.php?kt=";
+        public const string JLYRIC_URL = "http://search2.j-lyric.net/index.php?kt=";
         public const string TOUHOUWIKI_URL = "https://en.touhouwiki.net/wiki/Lyrics:_";
         public const string METROLYRICS_URL = "https://www.metrolyrics.com/printlyric/";
         public const string MUSIXMATCH_URL = "https://www.musixmatch.com/search/";
