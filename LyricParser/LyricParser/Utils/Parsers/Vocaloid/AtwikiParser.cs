@@ -66,8 +66,6 @@ namespace LyricParser.Utils.Parsers.Vocaloid
                         verses.Add(child.InnerHtml.Replace("\n", "").Trim());
                     }
                 }
-
-                
             }
             if(foundLyrics)
                 return CleanUp(verses);
