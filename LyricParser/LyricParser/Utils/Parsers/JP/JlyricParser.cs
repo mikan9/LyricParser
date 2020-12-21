@@ -37,8 +37,14 @@ namespace LyricParser.Utils.Parsers.JP
 
                 if (mid == null) continue;
                 
-                _title = mid.FirstChild.InnerText.RemoveDiacritics().ToLower().Trim();
-                _artist = sml.ChildNodes.ElementAt(1).InnerText.RemoveDiacritics().ToLower().Trim();
+                _title = mid.FirstChild.InnerText.ToLower().Trim();
+                _artist = sml.ChildNodes.ElementAt(1).InnerText.ToLower().Trim();
+
+                if(optional == "-d")
+                {
+                    _title = _title.RemoveDiacritics();
+                    _artist = _artist.RemoveDiacritics();
+                }
 
                 if (_title == title && _artist.Contains(artist))
                 {
