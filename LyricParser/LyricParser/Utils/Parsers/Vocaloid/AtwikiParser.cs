@@ -3,6 +3,7 @@ using LyricParser.Extensions;
 using LyricParser.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace LyricParser.Utils.Parsers.Vocaloid
 {
@@ -14,7 +15,7 @@ namespace LyricParser.Utils.Parsers.Vocaloid
         }
         public override async Task<string> ParseHtml(string artist, string title, string optional = "")
         {
-            string html = await GetHtml(BaseUrl + title.ToUrlSafe("-") + title.Replace(" ", "+"));
+            string html = await GetHtml(BaseUrl + title.ToUrlSafe("-") + artist.Replace(" ", "+"));
             if (string.IsNullOrEmpty(html)) return null;
 
             HtmlDocument doc = new HtmlDocument();
@@ -28,7 +29,7 @@ namespace LyricParser.Utils.Parsers.Vocaloid
             foreach (var child in ul.SelectNodes("li"))
             {
                 var a = child.SelectSingleNode("a");
-                if (a.InnerText.ToLower().TrimStart().TrimEnd() == title.ToLower().TrimStart().TrimEnd())
+                if (a != null && a.InnerText.ToLower().TrimStart().TrimEnd() == title.ToLower().TrimStart().TrimEnd())
                 {
                     foundMatch = true;
                     html = await GetHtml("https:" + a.GetAttributeValue("href", "null").Replace(" ", "%20"));
