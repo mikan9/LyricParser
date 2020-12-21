@@ -20,9 +20,10 @@ namespace LyricParser.Utils.Parsers.JP
             string html = await GetHtml(BaseUrl + title.Replace(" ", "+") + "&ct=1&ka=" + artist);
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
-
             bool foundMatch = false;
             var mnb = doc.DocumentNode.SelectSingleNode("//*[contains(@id,'mnb')]");
+            if (mnb == null) return null;
+
             var bdy = mnb.SelectNodes(".//*[contains(@class, 'bdy')]");
 
             if (doc.DocumentNode.SelectNodes("//*[contains(@class,'mid')]") == null) return null;
@@ -38,8 +39,6 @@ namespace LyricParser.Utils.Parsers.JP
                 
                 _title = mid.FirstChild.InnerText.RemoveDiacritics().ToLower().Trim();
                 _artist = sml.ChildNodes.ElementAt(1).InnerText.RemoveDiacritics().ToLower().Trim();
-                title = title.RemoveDiacritics().ToLower().Trim(); 
-                artist = artist.RemoveDiacritics().ToLower().Trim(); 
 
                 if (_title == title && _artist.Contains(artist))
                 {
