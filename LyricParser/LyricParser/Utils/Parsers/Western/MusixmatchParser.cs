@@ -3,6 +3,7 @@ using LyricParser.Extensions;
 using LyricParser.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace LyricParser.Utils.Parsers.Western
 {
@@ -20,13 +21,38 @@ namespace LyricParser.Utils.Parsers.Western
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
 
+            bool foundMatch = false;
+
+            var results = doc.DocumentNode.SelectNodes("//div[contains(@class,'media-card-text')]");
+            if (results == null) return null;
+
+            foreach (var child in results)
+            {
+                var a = child.SelectSingleNode("//a[contains(@class, 'title')]");
+                string _title = a.FirstChild.InnerText.ToLower().Trim();
+                string _artist = child.SelectSingleNode("//a[contains(@class, 'artist')]").FirstChild.InnerText.ToLower().Trim();
+                if (_title == null || _artist == null) continue;
+
+                if (_title == title && _artist == artist)
+                {
+                    foundMatch = true;
+                    html = await GetHtml("https://www.musixmatch.com" + a.GetAttributeValue("href", "null").Replace(" ", "%20"));
+                    break;
+                }
+            }
+
+            if (!foundMatch) return null;
+
+            doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
             var _empty = doc.DocumentNode.SelectSingleNode("//*[contains(@class, 'mxm-lyrics-not-available')]");
             if (_empty != null)
             {
                 return null;
             }
 
-            HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes("//*[contains(@class,'mxm-lyrics__content ')]");
+            HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes("//*[contains(@class,'mxm-lyrics__content')]");
             if (nodes == null) return null;
 
             List<string> verses = new List<string>();
