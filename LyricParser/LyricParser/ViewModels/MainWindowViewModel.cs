@@ -72,6 +72,7 @@ namespace LyricParser.ViewModels
         private string _lyrics = "";
         private string _statusText = "Searching...";
         private string _zoomText = "100 %";
+        private string _showHideInfoRightText = "⏵";
 
         private int _selectedPlayer = 0;
 
@@ -98,6 +99,7 @@ namespace LyricParser.ViewModels
         private Visibility _originalLyricsVisibility = Visibility.Visible;
         private Visibility _romajiLyricsVisibility = Visibility.Collapsed;
         private Visibility _englishLyricsVisibility = Visibility.Collapsed;
+        private Visibility _infoRightVisibility = Visibility.Visible;
 
         private ImageSource _thumbnail = null;
 
@@ -138,6 +140,12 @@ namespace LyricParser.ViewModels
         {
             get => _zoomText;
             set => SetProperty(ref _zoomText, value);
+        }
+
+        public string ShowHideInfoRightText
+        {
+            get => _showHideInfoRightText;
+            set => SetProperty(ref _showHideInfoRightText, value);
         }
 
         // Int properties
@@ -244,6 +252,11 @@ namespace LyricParser.ViewModels
             get => _englishLyricsVisibility;
             set => SetProperty(ref _englishLyricsVisibility, value);
         }
+        public Visibility InfoRightVisibility
+        {
+            get => _infoRightVisibility;
+            set => SetProperty(ref _infoRightVisibility, value);
+        }
 
         // ImageSource properties
         public ImageSource Thumbnail
@@ -282,6 +295,7 @@ namespace LyricParser.ViewModels
 
         public DelegateCommand OpenEditLyricsCommand { get; }
         public DelegateCommand OpenSettingsCommand { get; }
+        public DelegateCommand ShowHideInfoRightCommand { get; }
 
         #endregion
 
@@ -382,6 +396,8 @@ namespace LyricParser.ViewModels
 
             OpenEditLyricsCommand = new DelegateCommand(OpenEditLyrics); // <------- Make async?
             OpenSettingsCommand = new DelegateCommand(OpenSettings); // <------- Make async?
+
+            ShowHideInfoRightCommand = new DelegateCommand(ShowHideInfoRight);
 
             //HistoryEntry LastSong = DatabaseHandler.GetLastSong();
 
@@ -729,6 +745,20 @@ namespace LyricParser.ViewModels
                 {
                     OriginalLyrics += str;
                 }
+            }
+        }
+
+        private void ShowHideInfoRight()
+        {
+            if (InfoRightVisibility == Visibility.Visible)
+            {
+                InfoRightVisibility = Visibility.Collapsed;
+                ShowHideInfoRightText = "⏴";
+            }
+            else
+            {
+                InfoRightVisibility = Visibility.Visible;
+                ShowHideInfoRightText = "⏵";
             }
         }
 
