@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using LyricParser.Extensions;
 
 namespace LyricParser.Utils
 {
@@ -58,9 +59,12 @@ namespace LyricParser.Utils
             string[] parts = str.Split('\n');
             for(int i = 0; i < parts.Length; ++i)
             {
-                newStr += parts[i];
-                if (i < parts.Length - 1 && !String.IsNullOrWhiteSpace(parts[i + 1]) && !String.IsNullOrWhiteSpace(parts[i]))
-                    newStr += Environment.NewLine;
+                if (i == 0) newStr += parts[i] + Environment.NewLine;
+                else if (i < parts.Length - 1)
+                {
+                    if (parts[i + 1].IsEmptyOrNewline() && parts[i].IsEmptyOrNewline()) continue;
+                    newStr += parts[i] + Environment.NewLine;
+                }
             }
             return newStr;
         }
