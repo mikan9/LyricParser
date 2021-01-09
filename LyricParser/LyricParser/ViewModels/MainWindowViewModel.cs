@@ -600,9 +600,7 @@ namespace LyricParser.ViewModels
 
             if(lyrics == null)
             {
-                success = await AddLyrics(artist, title);
-                if (success)
-                    lyrics = await App.Database.GetLyricsAsync(artist.ToLower(), title.ToLower()); // Get lyrics directly from AddLyrics instead?
+                (success, lyrics) = await AddLyrics(artist, title);
             }
 
             if (success)
@@ -614,9 +612,9 @@ namespace LyricParser.ViewModels
                 SetStatus(Status.Failed);
         }
 
-        async Task<bool> AddLyrics(string artist, string title)
+        async Task<(bool, Lyrics)> AddLyrics(string artist, string title)
         {
-            if (isAddingLyrics) return false;
+            if (isAddingLyrics) return (false, null);
 
             isAddingLyrics = true;
             string content = "";
@@ -650,13 +648,18 @@ namespace LyricParser.ViewModels
             if (string.IsNullOrWhiteSpace(content))
             {
                 isAddingLyrics = false;
-                return false;
+                return (false, null);
             }
 
             await SaveLyrics(artist, title, content);
             isAddingLyrics = false;
 
-            return true;
+            return (true, new Lyrics()
+            {
+                Artist = artist,
+                Title = title,
+                Content = content
+            });
         }
 
         async Task SaveLyrics(string artist, string title, string content)
