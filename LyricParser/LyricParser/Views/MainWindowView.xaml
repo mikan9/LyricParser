@@ -158,20 +158,22 @@
             <TextBox Name="OriginalTxt" Text="{Binding OriginalLyrics}" Visibility="{Binding OriginalLyricsVisibility}" FontSize="{Binding LyricsFontSize}" VerticalContentAlignment="Stretch" Padding="0, 15, 0, 15" Style="{x:Null}" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0"  BorderThickness="0" TextAlignment="Center" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}"/>
         </Grid>
         <DockPanel Grid.Row="2" VerticalAlignment="Stretch" Background="{DynamicResource BottomBackgroundBrush}">
-            <TextBox DockPanel.Dock="Left" Name="ZoomTxt" Margin="5, 0, 5, 0" Text="{Binding ZoomText}" Width="45" FontSize="11" VerticalAlignment="Center">
+            <ComboBox DockPanel.Dock="Left" Name="ZoomSelection" Margin="5, 0, 5, 0" Width="80" VerticalAlignment="Center" SelectedIndex="{Binding ZoomSelectionIndex}">
                 <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="LostFocus">
-                        <prism:InvokeCommandAction Command="{Binding ZoomLostFocusCommand}"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="KeyDown">
-                        <prism:InvokeCommandAction Command="{Binding ZoomKeyDownCommand}"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="PreviewMouseWheel">
-                        <prism:InvokeCommandAction Command="{Binding ZoomMouseWheelCommand}"/>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <prism:InvokeCommandAction Command="{Binding ZoomSelectionChangedCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-            </TextBox>
-            <Button DockPanel.Dock="Left" Name="EnlargeBtn" Height="15" Width="15" Content="&#xE948;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center">
+                <ComboBoxItem Content="25 %"></ComboBoxItem>
+                <ComboBoxItem Content="50 %"></ComboBoxItem>
+                <ComboBoxItem Content="75 %"></ComboBoxItem>
+                <ComboBoxItem Content="100 %"></ComboBoxItem>
+                <ComboBoxItem Content="125 %"></ComboBoxItem>
+                <ComboBoxItem Content="150 %"></ComboBoxItem>
+                <ComboBoxItem Content="175 %"></ComboBoxItem>
+                <ComboBoxItem Content="200 %"></ComboBoxItem>
+            </ComboBox>
+            <Button DockPanel.Dock="Left" Name="EnlargeBtn" Height="15" Width="15" Content="&#xE948;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Visibility="Collapsed">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
                         <prism:InvokeCommandAction Command="{Binding StartZoomInCommand}"/>
@@ -181,7 +183,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-            <Button DockPanel.Dock="Left" Name="ShrinkBtn" Height="15" Width="15" Content="&#xE949;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center">
+            <Button DockPanel.Dock="Left" Name="ShrinkBtn" Height="15" Width="15" Content="&#xE949;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Visibility="Collapsed">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
                         <prism:InvokeCommandAction Command="{Binding StartZoomOutCommand}"/>
