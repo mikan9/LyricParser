@@ -36,11 +36,10 @@ namespace LyricParser.ViewModels
         private static int retries = 6;
         private static bool paused = false;
 
-        private double zoomValue = 100.0;
-        private readonly double defFontSize = 12.0;
-        private readonly double zoomStep = 5.0;
-        private DispatcherTimer zoomTimer;
-        int zoomMode = 0;
+        private readonly double defFontSize = 16.0;
+        private readonly double zoomStep = 25.0;
+        private readonly int zoomLevels = 8;
+
 
         private bool? autoSearch = true;
         private bool initComplete = false;
@@ -71,10 +70,10 @@ namespace LyricParser.ViewModels
         private string _songTitle = "";
         private string _lyrics = "";
         private string _statusText = "Searching...";
-        private string _zoomText = "100 %";
         private string _showHideInfoRightText = "⏵";
 
         private int _selectedPlayer = 0;
+        private int _zoomSelectionIndex = 3;
 
         private bool _autoSearchChecked = true;
         private bool _getLyricsEnabled = true;
@@ -136,12 +135,6 @@ namespace LyricParser.ViewModels
             get => _statusText;
             set => SetProperty(ref _statusText, value);
         }
-        public string ZoomText
-        {
-            get => _zoomText;
-            set => SetProperty(ref _zoomText, value);
-        }
-
         public string ShowHideInfoRightText
         {
             get => _showHideInfoRightText;
@@ -153,6 +146,11 @@ namespace LyricParser.ViewModels
         {
             get => _selectedPlayer;
             set => SetProperty(ref _selectedPlayer, value);
+        }
+        public int ZoomSelectionIndex
+        {
+            get => _zoomSelectionIndex;
+            set => SetProperty(ref _zoomSelectionIndex, value);
         }
 
         // Bool properties
@@ -282,12 +280,7 @@ namespace LyricParser.ViewModels
 
         public DelegateCommand CategoryRadClickedCommand { get; }
 
-        public DelegateCommand <KeyEventArgs> ZoomKeyDownCommand { get; }
-        public DelegateCommand <MouseWheelEventArgs> ZoomMouseWheelCommand { get; }
-        public DelegateCommand ZoomLostFocusCommand { get; }
-        public DelegateCommand StartZoomInCommand { get; }
-        public DelegateCommand StartZoomOutCommand { get; }
-        public DelegateCommand StopZoomCommand { get; }
+        public DelegateCommand <SelectionChangedEventArgs> ZoomSelectionChangedCommand { get; }
 
         public DelegateCommand GetCurrentSongCommand { get; }
         public DelegateCommand SearchInBrowserCommand { get; }
@@ -311,8 +304,10 @@ namespace LyricParser.ViewModels
         public void LoadSettings()
         {
             MAX_RETRIES = Properties.UserSettings.Default.MaxRetries;
-            zoomValue = Properties.Settings.Default.ZoomLevel;
-            Zoom(zoomValue);
+            ZoomSelectionIndex = Properties.Settings.Default.ZoomIndex;
+            SetFontSize();
+            ShowInfoRight(Properties.Settings.Default.ShowInfoRight);
+
             retries = MAX_RETRIES;
     
             CultureInfo newCulture = new CultureInfo(Properties.UserSettings.Default.Locale);
@@ -383,12 +378,7 @@ namespace LyricParser.ViewModels
 
             CategoryRadClickedCommand = new DelegateCommand(OnCategoryRadClicked);
 
-            ZoomKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnZoomKeyDown);
-            ZoomMouseWheelCommand = new DelegateCommand<MouseWheelEventArgs>(OnZoomMouseWheel);
-            ZoomLostFocusCommand = new DelegateCommand(OnZoomLostFocus);
-            StartZoomInCommand = new DelegateCommand(() => SetZoom(1));
-            StartZoomOutCommand = new DelegateCommand(() => SetZoom(-1));
-            StopZoomCommand = new DelegateCommand(() => SetZoom(0));
+            ZoomSelectionChangedCommand = new DelegateCommand<SelectionChangedEventArgs>(ZoomSelectionChanged);
 
             GetCurrentSongCommand = new DelegateCommand(GetCurrentSong);
             SearchInBrowserCommand = new DelegateCommand(SearchInBrowser);
@@ -397,7 +387,7 @@ namespace LyricParser.ViewModels
             OpenEditLyricsCommand = new DelegateCommand(OpenEditLyrics); // <------- Make async?
             OpenSettingsCommand = new DelegateCommand(OpenSettings); // <------- Make async?
 
-            ShowHideInfoRightCommand = new DelegateCommand(ShowHideInfoRight);
+            ShowHideInfoRightCommand = new DelegateCommand(ToggleInfoRight);
 
             //HistoryEntry LastSong = DatabaseHandler.GetLastSong();
 
@@ -436,12 +426,6 @@ namespace LyricParser.ViewModels
                     break;
             }
 
-            zoomTimer = new DispatcherTimer
-            {
-                Interval = new TimeSpan(0, 0, 0, 0, 100),
-                IsEnabled = false
-            };
-            zoomTimer.Tick += ZoomTimer_Tick;
 
             SetStatus(Status.Standby);
             initComplete = true;
@@ -748,29 +732,23 @@ namespace LyricParser.ViewModels
             }
         }
 
-        private void ShowHideInfoRight()
+        private void ToggleInfoRight()
         {
-            if (InfoRightVisibility == Visibility.Visible)
-            {
-                InfoRightVisibility = Visibility.Collapsed;
-                ShowHideInfoRightText = "⏴";
-            }
-            else
+            ShowInfoRight(InfoRightVisibility == Visibility.Collapsed);
+        }
+
+        private void ShowInfoRight(bool flag)
+        {
+            if (flag)
             {
                 InfoRightVisibility = Visibility.Visible;
                 ShowHideInfoRightText = "⏵";
             }
-        }
-
-        // Change zoom level ie. change font size
-        private void Zoom(double d)
-        {
-            zoomValue = d > 5 ? d : 5;
-            ZoomText = zoomValue.ToString() + " %";
-
-            double newSize = defFontSize / 100 * zoomValue;
-
-            LyricsFontSize = newSize;
+            else
+            {
+                InfoRightVisibility = Visibility.Collapsed;
+                ShowHideInfoRightText = "⏴";
+            }
         }
 
         // Change zoom on mouse scroll
@@ -779,9 +757,19 @@ namespace LyricParser.ViewModels
             if (keysDown.Contains(Key.LeftCtrl))
             {
                 e.Handled = true;
-                double x = e.Delta > 0 ? zoomStep : -zoomStep;
-                Zoom(zoomValue + x);
+                int d = e.Delta > 0 ? 1 : -1;
+                ZoomSelectionIndex += ZoomSelectionIndex + d > zoomLevels || ZoomSelectionIndex + d < 0 ? 0: d;
             }
+        }
+
+        private void ZoomSelectionChanged(SelectionChangedEventArgs e)
+        {
+            SetFontSize();
+        }
+
+        private void SetFontSize()
+        {
+            LyricsFontSize = defFontSize / 100 * (ZoomSelectionIndex * zoomStep + zoomStep);
         }
 
         private void OnCategoryRadClicked()
@@ -830,8 +818,9 @@ namespace LyricParser.ViewModels
         {
             Properties.Settings.Default.LastCategory = (int)songCategory;
             Properties.Settings.Default.LastPlayer = SelectedPlayer;
-            Properties.Settings.Default.ZoomLevel = zoomValue;
+            Properties.Settings.Default.ZoomIndex = ZoomSelectionIndex;
             Properties.Settings.Default.AutoSearch = AutoSearchChecked;
+            Properties.Settings.Default.ShowInfoRight = InfoRightVisibility == Visibility.Visible;
 
             //if (WindowState == WindowState.Maximized)                      <---------- TO BE IMPLEMENTED
             //{
@@ -878,57 +867,6 @@ namespace LyricParser.ViewModels
         private void SettingsClosed()
         {
             LoadSettings();
-        }
-
-        private void OnZoomLostFocus()
-        {
-            Zoom(double.Parse(new string(ZoomText.TakeWhile(Char.IsDigit).ToArray())));
-        }
-
-        private void OnZoomKeyDown(KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                Zoom(double.Parse(new string(ZoomText.TakeWhile(Char.IsDigit).ToArray())));
-            }
-        }
-
-        private void OnZoomMouseWheel(MouseWheelEventArgs e)
-        {
-            //if (ZoomTxt.IsFocused)                      <---------- TO BE IMPLEMENTED
-            //{
-            //    bool inc = e.Delta > 0;
-            //    double step = 10;
-            //    if (inc) zoomValue += step;
-            //    else if (!inc && zoomValue - step >= 0) zoomValue -= step;
-            //    else zoomValue = 0;
-
-            //    ZoomTxt.Text = zoomValue.ToString();
-            //}
-        }
-
-        private void ZoomTimer_Tick(object sender, EventArgs e)
-        {
-            if (zoomMode != 0)
-            {
-                Zoom(zoomValue + zoomStep * zoomMode);
-            }
-        }
-
-        private void SetZoom(int mode)
-        {
-            if(mode == 0)
-            {
-                double targetZoom = zoomValue + zoomStep * zoomMode;
-                zoomMode = mode;
-                zoomTimer.Stop();
-                Zoom(targetZoom);
-            }
-            else
-            {
-                zoomMode = mode;
-                zoomTimer.Start();
-            }
         }
     }
 }
