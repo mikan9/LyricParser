@@ -53,7 +53,7 @@ namespace LyricParser.Utils.Parsers.Anime
             doc = new HtmlDocument();
             doc.LoadHtml(html);
 
-            return doc.DocumentNode.SelectSingleNode("//*[contains(@id,'content_1')]").InnerText;
+            return CleanUp(doc.DocumentNode.SelectSingleNode("//*[contains(@id,'content_1')]").InnerText);
         }
     }
 }
