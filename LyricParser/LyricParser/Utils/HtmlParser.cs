@@ -59,11 +59,21 @@ namespace LyricParser.Utils
             string[] parts = str.Split('\n');
             for(int i = 0; i < parts.Length; ++i)
             {
-                if (i == 0) newStr += parts[i] + Environment.NewLine;
+                if (i == 0)
+                {
+                    newStr += parts[i];
+                    if (!parts[i + 1].IsEmptyOrNewLine() && !parts[i].EndWithNewLine()) newStr += Environment.NewLine;
+                }
                 else if (i < parts.Length - 1)
                 {
-                    if (parts[i + 1].IsEmptyOrNewline() && parts[i].IsEmptyOrNewline()) continue;
-                    newStr += parts[i] + Environment.NewLine;
+                    if (parts[i + 1].IsEmptyOrNewLine() && parts[i].IsEmptyOrNewLine()) continue;
+                    newStr += parts[i];
+                    if (!parts[i].EndWithNewLine()) newStr += Environment.NewLine;
+                }
+                else
+                {
+                    if (parts[i - 1].IsEmptyOrNewLine() && parts[i].IsEmptyOrNewLine()) continue;
+                    newStr += parts[i];
                 }
             }
             return newStr;
