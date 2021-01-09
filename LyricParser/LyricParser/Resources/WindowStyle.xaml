@@ -10,19 +10,32 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid x:Name="LayoutRoot" Background="Transparent" Width="35" Height="25">
-                        <TextBlock x:Name="txt" Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" FontSize="10"
-                                   Foreground="#FFF0EFF1" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   RenderOptions.ClearTypeHint="Auto" TextOptions.TextRenderingMode="Aliased"  TextOptions.TextFormattingMode="Display"/>
+                    <Grid x:Name="LayoutRoot">
+                        <Grid Background="Transparent" Width="35" Height="25" Margin="5">
+                            <TextBlock x:Name="txt" Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" FontSize="10"
+                                       Foreground="#FFF0EFF1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       RenderOptions.ClearTypeHint="Auto" TextOptions.TextRenderingMode="Aliased"  TextOptions.TextFormattingMode="Display"/>
+                        </Grid>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="LayoutRoot" Property="Background" Value="#3E3E40"/>
                         </Trigger>
-                        <Trigger Property="Content" Value="&#xE711;">
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="Content" Value="&#xE894;"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="LayoutRoot" Property="Background" Value="#CB0D19"/>
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                        <!-- Close Button -->
+                        <Trigger Property="Content" Value="&#xE894;">
                             <Setter TargetName="txt" Property="FontWeight" Value="Bold" />
                         </Trigger>
-                        <Trigger Property="Content" Value="&#xE921;">
+                        <!-- Minimize Button -->
+                        <Trigger Property="Content" Value="&#xE738;">
                             <Setter TargetName="txt" Property="Padding" Value="0 7 0 0 " />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -67,12 +80,12 @@
                                 <ContentPresenter />
                             </AdornerDecorator>
                         </Border>
-                        <DockPanel x:Name="TitleBar" Margin="8, -2, 0, 8" Height="27" VerticalAlignment="Top" LastChildFill="False">
+                        <DockPanel x:Name="TitleBar" Margin="8, -2, 0, 8" Height="30" VerticalAlignment="Top" LastChildFill="False">
                             <TextBlock x:Name="IconTxt" Margin="5, 0, 0, 0" Padding="0, 5, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontFamily="Segoe MDL2 Assets" Foreground="White" Text="&#xE90B;" FontSize="16" />
                             <!--<TextBlock x:Name="TitleTxt" Margin="15, 0, 0, 0" Padding="0, 5, 0, 0" VerticalAlignment="Center" DockPanel.Dock="Left" FontSize="16" Foreground="White" Text="{TemplateBinding Title}"/>-->
-                            <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE711;" x:Name="CloseBtn" Click="CloseClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
-                            <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE922;" x:Name="RestoreBtn" Click="MaximizeRestoreClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
-                            <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE921;" x:Name="MinimizeBtn" Click="MinimizeClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                            <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE894;" x:Name="CloseBtn" Click="CloseClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                            <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE739;" x:Name="RestoreBtn" Click="MaximizeRestoreClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                            <Button Style="{StaticResource CaptionButtonStyle}" Content="&#xE738;" x:Name="MinimizeBtn" Click="MinimizeClick" DockPanel.Dock="Right" WindowChrome.IsHitTestVisibleInChrome="True"/>
                         </DockPanel>
                     </Grid>
                     <ControlTemplate.Triggers>
