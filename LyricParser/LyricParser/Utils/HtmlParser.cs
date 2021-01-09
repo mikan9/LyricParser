@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -38,17 +39,30 @@ namespace LyricParser.Utils
             {
                 cleanData.Append(HtmlDecode(str.Replace("<br>", Environment.NewLine).Trim() + Environment.NewLine + Environment.NewLine));
             }
-            return cleanData.ToString();
+            return RemoveExcessNewLines(cleanData.ToString());
         }
 
         protected virtual string CleanUp(string lyrics)
         {
-            return HtmlDecode(lyrics.Replace("<br>", Environment.NewLine).Trim());
+            return RemoveExcessNewLines(HtmlDecode(lyrics.Replace("<br>", Environment.NewLine).Trim()));
         }
 
         protected virtual string HtmlDecode(string str)
         {
             return HttpUtility.HtmlDecode(str);
+        }
+
+        protected virtual string RemoveExcessNewLines(string str)
+        {
+            string newStr = "";
+            string[] parts = str.Split('\n');
+            for(int i = 0; i < parts.Length; ++i)
+            {
+                newStr += parts[i];
+                if (i < parts.Length - 1 && !String.IsNullOrWhiteSpace(parts[i + 1]) && !String.IsNullOrWhiteSpace(parts[i]))
+                    newStr += Environment.NewLine;
+            }
+            return newStr;
         }
 
         public abstract Task<string> ParseHtml(string artist, string title, string optional = "");
