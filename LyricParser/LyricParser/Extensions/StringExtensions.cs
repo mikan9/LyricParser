@@ -19,6 +19,11 @@ namespace LyricParser.Extensions
                 .Trim();
         }
 
+        public static bool IsEmptyOrNewline(this string str)
+        {
+            return String.IsNullOrWhiteSpace(str) || str.Contains("\n") || str.Contains((char)13) || str.Contains(Environment.NewLine);
+        }
+
         public static string RemoveDiacritics(this string text)
         {
             StringBuilder sbReturn = new StringBuilder();
