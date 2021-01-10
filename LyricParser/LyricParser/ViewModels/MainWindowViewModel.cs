@@ -639,6 +639,7 @@ namespace LyricParser.ViewModels
                 case Category.Western:
                     content = await new MusixmatchParser().ParseHtml(_artist, _title);
                     if (content == null) content = await new MetrolyricsParser().ParseHtml(_artist, _title);
+                    if (content == null) content = await new LyricsfreakParser().ParseHtml(_artist, _title);
                     break;
                 case Category.Other:
                     content = await new AtwikiParser().ParseHtml(_artist, _title);
@@ -651,7 +652,7 @@ namespace LyricParser.ViewModels
                 return (false, null);
             }
 
-            await SaveLyrics(artist, title, content);
+            //await SaveLyrics(artist, title, content);
             isAddingLyrics = false;
 
             return (true, new Lyrics()
