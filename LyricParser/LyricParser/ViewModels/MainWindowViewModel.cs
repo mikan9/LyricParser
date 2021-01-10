@@ -637,8 +637,8 @@ namespace LyricParser.ViewModels
                     if (content == null) content = await new JlyricParser().ParseHtml(_artist.RemoveDiacritics(), _title.RemoveDiacritics(), "-d");
                     break;
                 case Category.Western:
-                    content = await new MetrolyricsParser().ParseHtml(_artist, _title);
-                    if (content == null) content = await new MusixmatchParser().ParseHtml(_artist, _title);
+                    content = await new MusixmatchParser().ParseHtml(_artist, _title);
+                    if (content == null) content = await new MetrolyricsParser().ParseHtml(_artist, _title);
                     break;
                 case Category.Other:
                     content = await new AtwikiParser().ParseHtml(_artist, _title);
