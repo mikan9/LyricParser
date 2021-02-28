@@ -202,6 +202,7 @@
     <Compile Include="Utils\Parsers\JP\JlyricParser.cs" />
     <Compile Include="Utils\Parsers\Touhou\TouhouwikiParser.cs" />
     <Compile Include="Utils\Parsers\Vocaloid\AtwikiParser.cs" />
+    <Compile Include="Utils\Parsers\Western\LyricsfreakParser.cs" />
     <Compile Include="Utils\Parsers\Western\MetrolyricsParser.cs" />
     <Compile Include="Utils\Parsers\Western\MusixmatchParser.cs" />
     <Compile Include="ViewModels\BindableBase.cs" />
