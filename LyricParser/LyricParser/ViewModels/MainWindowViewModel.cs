@@ -35,11 +35,13 @@ namespace LyricParser.ViewModels
         private int MAX_RETRIES = 6;
         private static int retries = 6;
         private static bool paused = false;
+        private int getLyricsDueTime = 1000;
+        private bool isGetLyricsTimerStarted = false;
+        private Timer getLyricsTimer;
 
         private readonly double defFontSize = 16.0;
         private readonly double zoomStep = 25.0;
         private readonly int zoomLevels = 8;
-
 
         private bool? autoSearch = true;
         private bool initComplete = false;
@@ -50,6 +52,7 @@ namespace LyricParser.ViewModels
 
         public Status currentStatus = Status.Standby;
         public Song currentSong;
+        public Lyrics currentLyrics = Lyrics.Empty();
         public string currentUrl = "";
         public static Player currentPlayer = Player.Winamp;
         public static Category debug_mode = Category.None;
@@ -57,7 +60,6 @@ namespace LyricParser.ViewModels
 
         const int MAX_ANIME_RETRIES = 10;
         int anime_retry = 0;
-        int western_retry = 0;
 
         private List<Key> keysDown = new List<Key>();
 
@@ -85,7 +87,6 @@ namespace LyricParser.ViewModels
 
         private double _viewHeight = 691;
         private double _lyricsFontSize = 14;
-
 
         private string _songEntry = " - ";
         //private HistoryEntry _songEntry = new HistoryEntry();
@@ -336,7 +337,6 @@ namespace LyricParser.ViewModels
             if (debug_mode == Category.None) songCategory = (Category)Properties.Settings.Default.LastCategory;
 
             AutoSearchChecked = Properties.Settings.Default.AutoSearch;
-
         }
 
         // Load themes into dictionaries
@@ -426,7 +426,6 @@ namespace LyricParser.ViewModels
                     break;
             }
 
-
             SetStatus(Status.Standby);
             initComplete = true;
 
@@ -462,7 +461,7 @@ namespace LyricParser.ViewModels
 
         private async Task GetCurrentlyPlaying()
         {
-            var currentSession = sessionManager.GetCurrentSession();
+            //Trace.WriteLine(currentSession.SourceAppUserModelId);
 
             if (currentSession != null)
             {
@@ -472,10 +471,12 @@ namespace LyricParser.ViewModels
                 {
                     if ((currentlyPlaying.Title != currentSong.Title && !paused))
                     {
-                        SetCurrentSong(currentlyPlaying);
-                        retries = MAX_RETRIES;
+                        // Make sure lyrics for the currently playing song is fetched
+                        if (isGetLyricsTimerStarted)
+                            getLyricsTimer.Dispose();
 
-                        await GetLyrics(currentSong.Artist, currentSong.Title);
+                        getLyricsTimer = new Timer(QueueGetLyrics, currentlyPlaying, getLyricsDueTime, Timeout.Infinite);
+                        isGetLyricsTimerStarted = true;
                     }
                 }
             }
@@ -484,6 +485,17 @@ namespace LyricParser.ViewModels
         public void GetCurrentSong()
         {
             SongEntry = SongName;
+        }
+
+        private async void QueueGetLyrics(object obj)
+        {
+            Song song = (Song)obj;
+
+            SetCurrentSong(song);
+            retries = MAX_RETRIES;
+
+            await GetLyrics(currentSong.Artist, currentSong.Title);
+            isGetLyricsTimerStarted = false;
         }
 
         // Send the editied lyrics to the database to be processed
@@ -550,7 +562,8 @@ namespace LyricParser.ViewModels
 
                     using (StreamReader sr = new StreamReader(stream.AsStream()))
                     {
-                        var bitmap = new BitmapImage();
+
+                        BitmapImage bitmap = new BitmapImage();
                         bitmap.BeginInit();
                         bitmap.StreamSource = sr.BaseStream;
                         bitmap.CacheOption = BitmapCacheOption.OnLoad;
@@ -561,7 +574,6 @@ namespace LyricParser.ViewModels
                     }
                 }
             }
-
             return currentlyPlaying;
         }
 
@@ -579,6 +591,7 @@ namespace LyricParser.ViewModels
 
         async Task ExecuteGetLyrics()
         {
+            //Trace.WriteLine(currentLyrics.Title);
             if (AutoSearchChecked == true)
                 await GetLyrics(currentSong.Artist, currentSong.Title);
             else
@@ -610,6 +623,8 @@ namespace LyricParser.ViewModels
             }
             else
                 SetStatus(Status.Failed);
+
+            currentLyrics = lyrics;
         }
 
         async Task<(bool, Lyrics)> AddLyrics(string artist, string title)
@@ -652,7 +667,7 @@ namespace LyricParser.ViewModels
                 return (false, null);
             }
 
-            //await SaveLyrics(artist, title, content);
+            await SaveLyrics(artist, title, content);
             isAddingLyrics = false;
 
             return (true, new Lyrics()
