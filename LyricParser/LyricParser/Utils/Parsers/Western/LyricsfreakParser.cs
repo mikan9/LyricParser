@@ -14,6 +14,7 @@ namespace LyricParser.Utils.Parsers.Western
         }
         public override async Task<string> ParseHtml(string artist, string title, string optional = "")
         {
+            Trace.WriteLine("LYRICSFREAK");
             string html = await GetHtml(BaseUrl + artist.Replace(" ", "+") + "+" + title.Replace(" ", "+"));
             if (string.IsNullOrEmpty(html)) return null;
 
@@ -28,8 +29,8 @@ namespace LyricParser.Utils.Parsers.Western
             foreach (var child in results)
             {
                 var a = child.SelectSingleNode("//a[contains(@class, 'song')]");
-                string _title = a.InnerText.ToLower().Trim();
-                string _artist = child.SelectSingleNode("//div[contains(@class, 'lf-list__title--secondary')]").SelectSingleNode("a").InnerText.Replace("&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "").ToLower().Trim();
+                string _title = HtmlDecode(a.InnerText).ToLower().Trim();
+                string _artist = HtmlDecode(child.SelectSingleNode("//div[contains(@class, 'lf-list__title--secondary')]").SelectSingleNode("a").InnerText.Replace("&middot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "")).ToLower().Trim();
                 if (_title == null || _artist == null) continue;
 
                 if (_title == title && _artist == artist)
