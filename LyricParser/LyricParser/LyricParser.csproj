@@ -164,6 +164,7 @@
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Events\CurrentlyPlayingUpdatedEvent.cs" />
+    <Compile Include="Extensions\CollectionsExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Models\Lyrics.cs" />
