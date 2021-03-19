@@ -35,7 +35,7 @@ namespace LyricParser.ViewModels
         private int MAX_RETRIES = 6;
         private static int retries = 6;
         private static bool paused = false;
-        private int getLyricsDueTime = 1000;
+        private int getLyricsDueTime = 3000;
         private bool isGetLyricsTimerStarted = false;
         private Timer getLyricsTimer;
 
@@ -269,6 +269,7 @@ namespace LyricParser.ViewModels
         #region Commands
         public DelegateCommand GetLyricsCommand { get; }
         public DelegateCommand OverwriteLyricsCommand { get; }
+        public DelegateCommand ChangeSessionCommand { get; }
         public DelegateCommand ViewSizeChangedCommand { get; }
         public DelegateCommand ViewLoadedCommand { get; }
         public DelegateCommand ViewClosingCommand { get; }
@@ -366,6 +367,7 @@ namespace LyricParser.ViewModels
             GetLyricsCommand = new DelegateCommand(async () => await ExecuteGetLyrics());
 
             OverwriteLyricsCommand = new DelegateCommand(async () => await OverwriteLyrics());
+            ChangeSessionCommand = new DelegateCommand(async () => await ChangeSession());
 
             ViewLoadedCommand = new DelegateCommand(OnViewLoaded);
             ViewClosingCommand = new DelegateCommand(OnViewClosing);
@@ -459,18 +461,33 @@ namespace LyricParser.ViewModels
             currentSession.MediaPropertiesChanged += CurrentlyPlayingUpdated;
         }
 
+        private async Task ChangeSession()
+        {
+            var sessions = sessionManager.GetSessions();
+            int currentIndex = sessions.IndexOf(currentSession);
+            int sessionCount = sessions.Count;
+            currentSession = sessions[currentIndex + 1 < sessionCount ? currentIndex + 1 : 0];
+
+            await GetCurrentlyPlaying();
+        }
+
         private async Task GetCurrentlyPlaying()
         {
-            //Trace.WriteLine(currentSession.SourceAppUserModelId);
+            Trace.WriteLine(currentSession.SourceAppUserModelId);
 
             if (currentSession != null)
             {
                 Song currentlyPlaying = await GetSongFromSession(currentSession);
 
-                if (currentlyPlaying.Artist != null && currentlyPlaying.Artist.Length > 0 && autoSearch == true)
+                if (!String.IsNullOrWhiteSpace(currentlyPlaying.Artist) && autoSearch == true)
                 {
                     if ((currentlyPlaying.Title != currentSong.Title && !paused))
                     {
+                        SetCurrentSong(currentlyPlaying);
+                        retries = MAX_RETRIES;
+
+                        await GetLyrics(currentSong.Artist, currentSong.Title);
+
                         // Make sure lyrics for the currently playing song is fetched
                         if (isGetLyricsTimerStarted)
                             getLyricsTimer.Dispose();
@@ -491,11 +508,13 @@ namespace LyricParser.ViewModels
         {
             Song song = (Song)obj;
 
-            SetCurrentSong(song);
-            retries = MAX_RETRIES;
+            if (song.Title != currentSong.Title)
+            {
+                retries = MAX_RETRIES;
 
-            await GetLyrics(currentSong.Artist, currentSong.Title);
-            isGetLyricsTimerStarted = false;
+                await GetLyrics(currentSong.Artist, currentSong.Title);
+                isGetLyricsTimerStarted = false;
+            }
         }
 
         // Send the editied lyrics to the database to be processed
