@@ -514,8 +514,6 @@ namespace LyricParser.ViewModels
 
         private async Task GetCurrentlyPlaying()
         {
-            Trace.WriteLine(currentSession.SourceAppUserModelId);
-
             if (currentSession != null)
             {
                 Song currentlyPlaying = await GetSongFromSession(currentSession);
