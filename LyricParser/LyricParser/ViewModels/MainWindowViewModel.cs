@@ -63,8 +63,10 @@ namespace LyricParser.ViewModels
 
         private List<Key> keysDown = new List<Key>();
 
+        private int currentSessionIndex = 0;
         private GlobalSystemMediaTransportControlsSessionManager sessionManager;
         private GlobalSystemMediaTransportControlsSession currentSession;
+        private List<GlobalSystemMediaTransportControlsSession> sessions;
 
         private string _title = "LyricParser";
         private string _songName = " - ";
@@ -100,6 +102,7 @@ namespace LyricParser.ViewModels
         private Visibility _romajiLyricsVisibility = Visibility.Collapsed;
         private Visibility _englishLyricsVisibility = Visibility.Collapsed;
         private Visibility _infoRightVisibility = Visibility.Visible;
+        private Visibility _changeSessionButtonVisibility = Visibility.Collapsed;
 
         private ImageSource _thumbnail = null;
 
@@ -255,6 +258,11 @@ namespace LyricParser.ViewModels
         {
             get => _infoRightVisibility;
             set => SetProperty(ref _infoRightVisibility, value);
+        }
+        public Visibility ChangeSessionButtonVisibility
+        {
+            get => _changeSessionButtonVisibility;
+            set => SetProperty(ref _changeSessionButtonVisibility, value);
         }
 
         // ImageSource properties
@@ -438,14 +446,19 @@ namespace LyricParser.ViewModels
         {
             sessionManager = await GlobalSystemMediaTransportControlsSessionManager.RequestAsync();
             sessionManager.CurrentSessionChanged += SessionManager_CurrentSessionChanged;
-            SetCurrentSession();
-
-            await GetCurrentlyPlaying();
+            sessionManager.SessionsChanged += SessionManager_SessionsChanged;
+            SetSessions();
+            await SetCurrentSession();
         }
 
-        private void SessionManager_CurrentSessionChanged(GlobalSystemMediaTransportControlsSessionManager sender, CurrentSessionChangedEventArgs args)
+        private void SessionManager_SessionsChanged(GlobalSystemMediaTransportControlsSessionManager sender, SessionsChangedEventArgs args)
         {
-            SetCurrentSession(); 
+            SetSessions();
+        }
+
+        private async void SessionManager_CurrentSessionChanged(GlobalSystemMediaTransportControlsSessionManager sender, CurrentSessionChangedEventArgs args)
+        {
+            await SetCurrentSession();
         }
 
         private async void CurrentlyPlayingUpdated(GlobalSystemMediaTransportControlsSession sender, MediaPropertiesChangedEventArgs args)
@@ -453,22 +466,50 @@ namespace LyricParser.ViewModels
             await GetCurrentlyPlaying();
         }
 
-        private void SetCurrentSession()
+        private async void SetSessions()
+        {
+            sessions = sessionManager.GetSessions().ToList();
+            if (currentSession != null && currentSession.SourceAppUserModelId != sessionManager.GetCurrentSession().SourceAppUserModelId)
+                await SetCurrentSession();
+            UpdateChangeSessionButtonVisiblity();
+        }
+
+        private int GetSessionIndex(GlobalSystemMediaTransportControlsSession session)
+        {
+            return sessions.FindIndex(x => x.SourceAppUserModelId == session.SourceAppUserModelId);
+        }
+
+        private async Task SetSession(int index)
+        {
+            currentSession = sessions[index];
+            currentSessionIndex = index;
+
+            await GetCurrentlyPlaying();
+        }
+
+        private void UpdateChangeSessionButtonVisiblity()
+        {
+            ChangeSessionButtonVisibility = sessions.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private async Task SetCurrentSession()
         {
             currentSession = sessionManager.GetCurrentSession();
+            currentSessionIndex = GetSessionIndex(currentSession);
 
             if (currentSession == null) return;
             currentSession.MediaPropertiesChanged += CurrentlyPlayingUpdated;
+
+            await GetCurrentlyPlaying();
         }
 
         private async Task ChangeSession()
         {
-            var sessions = sessionManager.GetSessions();
-            int currentIndex = sessions.IndexOf(currentSession);
+            currentSessionIndex = GetSessionIndex(currentSession);
             int sessionCount = sessions.Count;
-            currentSession = sessions[currentIndex + 1 < sessionCount ? currentIndex + 1 : 0];
+            int nextIndex = currentSessionIndex + 1 < sessionCount ? currentSessionIndex + 1 : 0;
 
-            await GetCurrentlyPlaying();
+            await SetSession(nextIndex);
         }
 
         private async Task GetCurrentlyPlaying()
@@ -608,7 +649,7 @@ namespace LyricParser.ViewModels
             Thumbnail = song.Thumbnail;
         }
 
-        async Task ExecuteGetLyrics()
+        private async Task ExecuteGetLyrics()
         {
             //Trace.WriteLine(currentLyrics.Title);
             if (AutoSearchChecked == true)
@@ -620,7 +661,7 @@ namespace LyricParser.ViewModels
             }
         }
 
-        async Task GetLyrics(string artist, string title)
+        private async Task GetLyrics(string artist, string title)
         {
             CleanUp();
             SetStatus(Status.Searching);
@@ -646,7 +687,7 @@ namespace LyricParser.ViewModels
             currentLyrics = lyrics;
         }
 
-        async Task<(bool, Lyrics)> AddLyrics(string artist, string title)
+        private async Task<(bool, Lyrics)> AddLyrics(string artist, string title)
         {
             if (isAddingLyrics) return (false, null);
 
@@ -697,7 +738,7 @@ namespace LyricParser.ViewModels
             });
         }
 
-        async Task SaveLyrics(string artist, string title, string content)
+        private async Task SaveLyrics(string artist, string title, string content)
         {
             await App.Database.SaveLyricsAsync(new Lyrics()
             {
@@ -707,7 +748,7 @@ namespace LyricParser.ViewModels
             });
         }
 
-        async Task OverwriteLyrics()
+        private async Task OverwriteLyrics()
         {
             await SaveLyrics(currentSong.Artist, currentSong.Title, OriginalLyrics);
             SetStatus(Status.SaveSuccessFul);
