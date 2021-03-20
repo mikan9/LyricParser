@@ -649,7 +649,6 @@ namespace LyricParser.ViewModels
 
         private async Task ExecuteGetLyrics()
         {
-            //Trace.WriteLine(currentLyrics.Title);
             if (AutoSearchChecked == true)
                 await GetLyrics(currentSong.Artist, currentSong.Title);
             else
