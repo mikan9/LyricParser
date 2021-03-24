@@ -16,6 +16,7 @@
     <!-- TextBox -->
     <Style TargetType="TextBox">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource CaretBrush}"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Background" Value="{DynamicResource TextBoxBackgroundBrush}"/>
         <Setter Property="SelectionBrush" Value="{DynamicResource TextBoxSelectionBrush}"/>
