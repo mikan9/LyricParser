@@ -69,29 +69,9 @@
                                 <Separator />
                                 <MenuItem Header="Get Current Song" Command="{Binding GetCurrentSongCommand}"/>
                                 <!--<MenuItem Header="Search In Browser" Command="{Binding SearchInBrowserCommand}"/>-->
-                                <!--<MenuItem Header="Clear Search History" Command="{Binding ClearSearchHistoryCommand}"/>-->
                             </ContextMenu>
                         </TextBox.ContextMenu>
                     </TextBox>
-                    <!--<ComboBox Name="SongNameTxt" Text="{Binding SongName}" Width="338" Height="20" IsEnabled="{Binding SongEnabled}" VerticalAlignment="Center" IsEditable="True" ItemsSource="{Binding}" DisplayMemberPath="Data" SelectedItem="{Binding SongEntry}" SelectedValuePath="Data">
-                            <ComboBox.DataContext>
-                                <CollectionViewSource Source="{Binding Path=SearchHistory}"></CollectionViewSource>
-                            </ComboBox.DataContext>
-                            <ComboBox.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="ApplicationCommands.Cut" />
-                                    <MenuItem Command="ApplicationCommands.Copy" />
-                                    <MenuItem Command="ApplicationCommands.Paste" />
-                                    <MenuItem Command="ApplicationCommands.SelectAll" />
-                                    <Separator />
-                                    <MenuItem Header="Get Current Song" Command="{Binding GetCurrentSongCommand}"/>
-                                    -->
-                    <!--<MenuItem Header="Search In Browser" Command="{Binding SearchInBrowserCommand}"/>-->
-                    <!--<MenuItem Header="Clear Search History" Command="{Binding ClearSearchHistoryCommand}"/>-->
-                    <!--
-                                </ContextMenu>
-                            </ComboBox.ContextMenu>
-                        </ComboBox>-->
                     <Button  Name="GetLyricsBtn" Margin="5, 0, 0, 0" Command="{Binding GetLyricsCommand}" IsEnabled="{Binding GetLyricsEnabled}" Height="20" VerticalAlignment="Center" IsDefault="True">
                         <TextBlock Padding="5, 0, 5, 0" Text="{Binding Source={x:Static w:LocaleResources.SearchButton}}"/>
                     </Button>
@@ -124,8 +104,11 @@
                     <RadioButton Name="WestRad" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}" Visibility="{Binding WestRadVisibility}" IsChecked="{Binding WestRadChecked}" Margin="5, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
                     <RadioButton Name="JpRad" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}" Visibility="{Binding JpRadVisibility}" IsChecked="{Binding JpRadChecked}" Margin="15, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
                     <RadioButton Name="OtherRad" Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}" Visibility="{Binding OtherRadVisibility}" IsChecked="{Binding OtherRadChecked}" Margin="15, 0, 15, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
-                    <Button  Name="SaveBtn" Command="{Binding OverwriteLyricsCommand}" Height="20" VerticalAlignment="Center">
-                        <TextBlock Padding="5, 0, 5, 0" Text="＋"/>
+                    <Button Name="EditBtn" Command="{Binding OpenEditorCommand}" Height="20">
+                        <TextBlock Padding="2, 0, 2, 0" Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button>
+                    <Button Name="SaveBtn" Command="{Binding OverwriteLyricsCommand}" Height="20" Margin="5, 0, 0, 0">
+                        <TextBlock Padding="2, 0, 2, 0" Text="&#xE74E;" FontFamily="Segoe MDL2 Assets"/>
                     </Button>
                     <ComboBox Name="PlayerBox" VerticalAlignment="Center" SelectedIndex="{Binding SelectedPlayer}" Margin="0, 0, 15, 0" Visibility="Collapsed">
                         <ComboBoxItem Content="Winamp"></ComboBoxItem>
@@ -174,26 +157,6 @@
                 <ComboBoxItem Content="175 %"></ComboBoxItem>
                 <ComboBoxItem Content="200 %"></ComboBoxItem>
             </ComboBox>
-            <Button DockPanel.Dock="Left" Name="EnlargeBtn" Height="15" Width="15" Content="&#xE948;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Visibility="Collapsed">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                        <prism:InvokeCommandAction Command="{Binding StartZoomInCommand}"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                        <prism:InvokeCommandAction Command="{Binding StopZoomCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-            <Button DockPanel.Dock="Left" Name="ShrinkBtn" Height="15" Width="15" Content="&#xE949;" Foreground="{DynamicResource ForegroundBrush}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Visibility="Collapsed">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                        <prism:InvokeCommandAction Command="{Binding StartZoomOutCommand}"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                        <prism:InvokeCommandAction Command="{Binding StopZoomCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
             <TextBlock DockPanel.Dock="Right" Padding="0, 4, 5, 0" Name="StatusTxt" Text="{Binding StatusText}" FontSize="11" Foreground="{DynamicResource ForegroundBrush}"  Margin="0 0 5 0" TextAlignment="Right" />
         </DockPanel>
     </Grid>
