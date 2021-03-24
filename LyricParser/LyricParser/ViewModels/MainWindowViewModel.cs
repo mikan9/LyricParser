@@ -92,7 +92,6 @@ namespace LyricParser.ViewModels
         private double _lyricsFontSize = 14;
 
         private string _songEntry = " - ";
-        //private HistoryEntry _songEntry = new HistoryEntry();
 
         private Visibility _animeRadVisibility = Visibility.Collapsed;
         private Visibility _touhouRadVisibility = Visibility.Collapsed;
@@ -129,6 +128,11 @@ namespace LyricParser.ViewModels
         {
             get => _songTitle;
             set => SetProperty(ref _songTitle, value);
+        }
+        public string SongEntry
+        {
+            get => _songEntry;
+            set => SetProperty(ref _songEntry, value);
         }
         public string OriginalLyrics
         {
@@ -205,13 +209,6 @@ namespace LyricParser.ViewModels
         {
             get => _lyricsFontSize;
             set => SetProperty(ref _lyricsFontSize, value);
-        }
-
-        // HistoryEntry properties
-        public string SongEntry
-        {
-            get => _songEntry;
-            set => SetProperty(ref _songEntry, value);
         }
 
         // Visibility properties
@@ -294,7 +291,6 @@ namespace LyricParser.ViewModels
 
         public DelegateCommand GetCurrentSongCommand { get; }
         public DelegateCommand SearchInBrowserCommand { get; }
-        public DelegateCommand ClearSearchHistoryCommand { get; }
 
         public DelegateCommand OpenEditorCommand { get; }
         public DelegateCommand OpenSettingsCommand { get; }
@@ -392,16 +388,11 @@ namespace LyricParser.ViewModels
 
             GetCurrentSongCommand = new DelegateCommand(GetCurrentSong);
             SearchInBrowserCommand = new DelegateCommand(SearchInBrowser);
-            ClearSearchHistoryCommand = new DelegateCommand(ClearSearchHistory);
 
             OpenEditorCommand = new DelegateCommand(OpenEditor); // <------- Make async?
             OpenSettingsCommand = new DelegateCommand(OpenSettings); // <------- Make async?
 
             ShowHideInfoRightCommand = new DelegateCommand(ToggleInfoRight);
-
-            //HistoryEntry LastSong = DatabaseHandler.GetLastSong();
-
-            //SongEntry = LastSong;
 
             LoadTheme();
             currentSong = Song.Empty();
@@ -556,51 +547,6 @@ namespace LyricParser.ViewModels
             }
         }
 
-        // Send the editied lyrics to the database to be processed
-        public bool EditLyrics(string title, string title_en, string artist, string original, Category genre)
-        {
-            bool success = false;
-
-            List<string> lyrics = new List<string>
-            {
-                original,
-            };
-
-            //success = DatabaseHandler.AddSong(artist, title, title_en, genre, lyrics, DatabaseHandler.LyricsExist(currentSong, false, this));                      <---------- TO BE IMPLEMENTED
-
-            if (currentSong.Artist == artist && currentSong.Title == title)
-                SetLyrics(original);
-
-            return success;
-        }
-
-        // Show the edited lyrics in the main window
-        public void SetLyrics(string content = "")
-        {
-            lyrics.Clear();
-            lyrics.Add(content);
-
-            SetUpTables();
-        }
-
-        // Add a new HistoryEntry to the collection, remove last item if count exeeds 20 and remove duplicate if exists
-        private void AddHistoryEntry(string data)
-        {
-            //if (data == " - ") return;
-            //if (viewModel.SearchHistory != null && viewModel.SearchHistory.Count > 0)                     <---------- TO BE IMPLEMENTED
-            //{
-            //    if (viewModel.SearchHistory.Count == 20)
-            //    {
-            //        viewModel.SearchHistory.RemoveAt(19);
-            //    }
-            //    if (viewModel.SearchHistory.Any(s => s.Data == data))
-            //        viewModel.SearchHistory.Remove(viewModel.SearchHistory.Single(s => s.Data == data));
-            //}
-
-            //viewModel.AddHistoryEntry(new HistoryEntry { Data = data });
-            //SongEntry = viewModel.SearchHistory.ElementAt(0);
-        }
-
         public async Task<Song> GetSongFromSession(GlobalSystemMediaTransportControlsSession session)
         {
             autoSearch = AutoSearchChecked;
@@ -675,7 +621,7 @@ namespace LyricParser.ViewModels
 
             if (success)
             {
-                SetLyrics(lyrics.Content);
+                OriginalLyrics = lyrics.Content;
                 SetStatus(Status.Done);
             }
             else
@@ -796,21 +742,6 @@ namespace LyricParser.ViewModels
             songCategory = id;
         }
 
-        // Setup grid that will contain the lyrics
-        private void SetUpTables()
-        {
-            SetStatus(Status.Done);
-
-            OriginalLyrics = "";
-            if (lyrics.Count > 0)
-            {
-                foreach (string str in lyrics)
-                {
-                    OriginalLyrics += str;
-                }
-            }
-        }
-
         private void ToggleInfoRight()
         {
             ShowInfoRight(InfoRightVisibility == Visibility.Collapsed);
@@ -925,10 +856,6 @@ namespace LyricParser.ViewModels
             if (currentUrl != "") Process.Start(currentUrl);
         }
 
-        private void ClearSearchHistory()
-        {
-            //viewModel.SearchHistory.Clear();                     <---------- TO BE IMPLEMENTED
-        }
         private void OpenEditor()
         {
 
