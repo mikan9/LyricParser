@@ -1,4 +1,5 @@
 ﻿using LyricParser.Common;
+using LyricParser.Events;
 using LyricParser.Extensions;
 using LyricParser.Models;
 using LyricParser.Resources;
@@ -278,7 +279,6 @@ namespace LyricParser.ViewModels
         public DelegateCommand GetLyricsCommand { get; }
         public DelegateCommand OverwriteLyricsCommand { get; }
         public DelegateCommand ChangeSessionCommand { get; }
-        public DelegateCommand ViewSizeChangedCommand { get; }
         public DelegateCommand ViewLoadedCommand { get; }
         public DelegateCommand ViewClosingCommand { get; }
         public DelegateCommand <MouseWheelEventArgs> ViewMouseWheelCommand { get; }
@@ -296,7 +296,7 @@ namespace LyricParser.ViewModels
         public DelegateCommand SearchInBrowserCommand { get; }
         public DelegateCommand ClearSearchHistoryCommand { get; }
 
-        public DelegateCommand OpenEditLyricsCommand { get; }
+        public DelegateCommand OpenEditorCommand { get; }
         public DelegateCommand OpenSettingsCommand { get; }
         public DelegateCommand ShowHideInfoRightCommand { get; }
 
@@ -394,7 +394,7 @@ namespace LyricParser.ViewModels
             SearchInBrowserCommand = new DelegateCommand(SearchInBrowser);
             ClearSearchHistoryCommand = new DelegateCommand(ClearSearchHistory);
 
-            OpenEditLyricsCommand = new DelegateCommand(OpenEditLyrics); // <------- Make async?
+            OpenEditorCommand = new DelegateCommand(OpenEditor); // <------- Make async?
             OpenSettingsCommand = new DelegateCommand(OpenSettings); // <------- Make async?
 
             ShowHideInfoRightCommand = new DelegateCommand(ToggleInfoRight);
@@ -681,7 +681,10 @@ namespace LyricParser.ViewModels
             else
                 SetStatus(Status.Failed);
 
-            currentLyrics = lyrics;
+            if (lyrics == null)
+                currentLyrics = new Lyrics() { Artist = artist, Title = title, Content = "" };
+            else 
+                currentLyrics = lyrics;
         }
 
         private async Task<(bool, Lyrics)> AddLyrics(string artist, string title)
@@ -926,10 +929,16 @@ namespace LyricParser.ViewModels
         {
             //viewModel.SearchHistory.Clear();                     <---------- TO BE IMPLEMENTED
         }
-        private void OpenEditLyrics()
+        private void OpenEditor()
         {
-            //EditLyricsView el = new EditLyricsView(this);
-            //el.ShowDialog();
+
+            _dialogService.ShowDialog(nameof(EditorView), new DialogParameters() {
+                { "data", currentLyrics}
+            }, r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                    EditorClosed(r.Parameters.GetValue<Lyrics>("data"));
+            });
         }
         private void OpenSettings()
         {
@@ -939,7 +948,18 @@ namespace LyricParser.ViewModels
                     SettingsClosed();
             });
         }
-
+        private async void EditorClosed(Lyrics data)
+        {
+            if (currentSong.Artist == data.Artist && currentSong.Title == data.Title)
+            {
+                OriginalLyrics = data.Content;
+                await OverwriteLyrics();
+            }
+            else
+            {
+                await SaveLyrics(data.Artist, data.Title, data.Content);
+            }
+        }
         private void SettingsClosed()
         {
             LoadSettings();
