@@ -57,10 +57,10 @@ namespace LyricParser
         {
             containerRegistry.RegisterForNavigation<MainWindowView, MainWindowViewModel>();
             containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
-            containerRegistry.RegisterForNavigation<EditLyricsView, EditLyricsViewModel>();
+            containerRegistry.RegisterForNavigation<EditorView, EditorViewModel>();
 
             containerRegistry.RegisterDialog<SettingsView>();
-            containerRegistry.RegisterDialog<EditLyricsView>();
+            containerRegistry.RegisterDialog<EditorView>();
         }
 
         protected override Window CreateShell()
