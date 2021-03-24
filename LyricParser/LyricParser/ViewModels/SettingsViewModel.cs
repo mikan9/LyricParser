@@ -21,10 +21,6 @@ namespace LyricParser.ViewModels
         #region Properties
 
         // String properties
-        public string Title {
-            get => _title;
-            set => SetProperty(ref _title, value);
-        }
         public string SelectedTheme
         {
             get => _selectedTheme;
