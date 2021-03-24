@@ -4,6 +4,7 @@
     <SolidColorBrush x:Key="BackgroundBrush" Color="#FF1D1D1D" />
 
     <SolidColorBrush x:Key="ForegroundBrush" Color="#FFF0EFF1" />
+    <SolidColorBrush x:Key="CaretBrush" Color="#CCC"/>
     <SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#535355" />
     <SolidColorBrush x:Key="BorderBrush" Color="#434346" />
 
