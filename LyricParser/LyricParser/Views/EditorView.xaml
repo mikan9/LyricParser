@@ -9,8 +9,15 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:properties="clr-namespace:LyricParser.Properties"
         mc:Ignorable="d"
-        Height="691" Width="1350" MinHeight="480" MinWidth="840"
+        MinHeight="480" MinWidth="840"
+        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
         >
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="Width" Value="1350"/>
+            <Setter Property="Height" Value="690"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <prism:InvokeCommandAction Command="{Binding ViewLoadedCommand}"/>
