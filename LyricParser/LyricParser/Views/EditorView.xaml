@@ -9,15 +9,13 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:properties="clr-namespace:LyricParser.Properties"
         mc:Ignorable="d"
-        MinHeight="480" MinWidth="840"
         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
         >
-    <prism:Dialog.WindowStyle>
-        <Style TargetType="Window">
-            <Setter Property="Width" Value="1350"/>
-            <Setter Property="Height" Value="690"/>
+    <UserControl.Style>
+        <Style TargetType="UserControl">
+            <Setter Property="prism:Dialog.WindowStyle" Value="{StaticResource EditorWindowStyle}"/>
         </Style>
-    </prism:Dialog.WindowStyle>
+    </UserControl.Style>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <prism:InvokeCommandAction Command="{Binding ViewLoadedCommand}"/>
