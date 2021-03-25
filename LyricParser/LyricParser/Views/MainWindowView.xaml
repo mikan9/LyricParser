@@ -7,7 +7,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:properties="clr-namespace:LyricParser.Properties"
         Title="{Binding Title}" Height="{Binding ViewHeight}" Width="1350" MinHeight="480" MinWidth="860" Icon="../Resources/icon-alt.ico" Background="Black"
-        Style="{StaticResource CustomWindowStyle}"
+        Style="{StaticResource MainWindowStyle}"
         >
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
