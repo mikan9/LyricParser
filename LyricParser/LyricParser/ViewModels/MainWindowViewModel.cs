@@ -1,4 +1,5 @@
 ﻿using LyricParser.Common;
+using LyricParser.Events;
 using LyricParser.Extensions;
 using LyricParser.Models;
 using LyricParser.Resources;
@@ -35,11 +36,13 @@ namespace LyricParser.ViewModels
         private int MAX_RETRIES = 6;
         private static int retries = 6;
         private static bool paused = false;
+        private int getLyricsDueTime = 3000;
+        private bool isGetLyricsTimerStarted = false;
+        private Timer getLyricsTimer;
 
         private readonly double defFontSize = 16.0;
         private readonly double zoomStep = 25.0;
         private readonly int zoomLevels = 8;
-
 
         private bool? autoSearch = true;
         private bool initComplete = false;
@@ -50,6 +53,7 @@ namespace LyricParser.ViewModels
 
         public Status currentStatus = Status.Standby;
         public Song currentSong;
+        public Lyrics currentLyrics = Lyrics.Empty();
         public string currentUrl = "";
         public static Player currentPlayer = Player.Winamp;
         public static Category debug_mode = Category.None;
@@ -57,12 +61,13 @@ namespace LyricParser.ViewModels
 
         const int MAX_ANIME_RETRIES = 10;
         int anime_retry = 0;
-        int western_retry = 0;
 
         private List<Key> keysDown = new List<Key>();
 
+        private int currentSessionIndex = 0;
         private GlobalSystemMediaTransportControlsSessionManager sessionManager;
         private GlobalSystemMediaTransportControlsSession currentSession;
+        private List<GlobalSystemMediaTransportControlsSession> sessions;
 
         private string _title = "LyricParser";
         private string _songName = " - ";
@@ -86,9 +91,7 @@ namespace LyricParser.ViewModels
         private double _viewHeight = 691;
         private double _lyricsFontSize = 14;
 
-
         private string _songEntry = " - ";
-        //private HistoryEntry _songEntry = new HistoryEntry();
 
         private Visibility _animeRadVisibility = Visibility.Collapsed;
         private Visibility _touhouRadVisibility = Visibility.Collapsed;
@@ -99,6 +102,7 @@ namespace LyricParser.ViewModels
         private Visibility _romajiLyricsVisibility = Visibility.Collapsed;
         private Visibility _englishLyricsVisibility = Visibility.Collapsed;
         private Visibility _infoRightVisibility = Visibility.Visible;
+        private Visibility _changeSessionButtonVisibility = Visibility.Collapsed;
 
         private ImageSource _thumbnail = null;
 
@@ -124,6 +128,11 @@ namespace LyricParser.ViewModels
         {
             get => _songTitle;
             set => SetProperty(ref _songTitle, value);
+        }
+        public string SongEntry
+        {
+            get => _songEntry;
+            set => SetProperty(ref _songEntry, value);
         }
         public string OriginalLyrics
         {
@@ -202,13 +211,6 @@ namespace LyricParser.ViewModels
             set => SetProperty(ref _lyricsFontSize, value);
         }
 
-        // HistoryEntry properties
-        public string SongEntry
-        {
-            get => _songEntry;
-            set => SetProperty(ref _songEntry, value);
-        }
-
         // Visibility properties
         public Visibility AnimeRadVisibility
         {
@@ -255,6 +257,11 @@ namespace LyricParser.ViewModels
             get => _infoRightVisibility;
             set => SetProperty(ref _infoRightVisibility, value);
         }
+        public Visibility ChangeSessionButtonVisibility
+        {
+            get => _changeSessionButtonVisibility;
+            set => SetProperty(ref _changeSessionButtonVisibility, value);
+        }
 
         // ImageSource properties
         public ImageSource Thumbnail
@@ -268,7 +275,7 @@ namespace LyricParser.ViewModels
         #region Commands
         public DelegateCommand GetLyricsCommand { get; }
         public DelegateCommand OverwriteLyricsCommand { get; }
-        public DelegateCommand ViewSizeChangedCommand { get; }
+        public DelegateCommand ChangeSessionCommand { get; }
         public DelegateCommand ViewLoadedCommand { get; }
         public DelegateCommand ViewClosingCommand { get; }
         public DelegateCommand <MouseWheelEventArgs> ViewMouseWheelCommand { get; }
@@ -284,9 +291,8 @@ namespace LyricParser.ViewModels
 
         public DelegateCommand GetCurrentSongCommand { get; }
         public DelegateCommand SearchInBrowserCommand { get; }
-        public DelegateCommand ClearSearchHistoryCommand { get; }
 
-        public DelegateCommand OpenEditLyricsCommand { get; }
+        public DelegateCommand OpenEditorCommand { get; }
         public DelegateCommand OpenSettingsCommand { get; }
         public DelegateCommand ShowHideInfoRightCommand { get; }
 
@@ -336,7 +342,6 @@ namespace LyricParser.ViewModels
             if (debug_mode == Category.None) songCategory = (Category)Properties.Settings.Default.LastCategory;
 
             AutoSearchChecked = Properties.Settings.Default.AutoSearch;
-
         }
 
         // Load themes into dictionaries
@@ -366,6 +371,7 @@ namespace LyricParser.ViewModels
             GetLyricsCommand = new DelegateCommand(async () => await ExecuteGetLyrics());
 
             OverwriteLyricsCommand = new DelegateCommand(async () => await OverwriteLyrics());
+            ChangeSessionCommand = new DelegateCommand(async () => await ChangeSession());
 
             ViewLoadedCommand = new DelegateCommand(OnViewLoaded);
             ViewClosingCommand = new DelegateCommand(OnViewClosing);
@@ -382,16 +388,11 @@ namespace LyricParser.ViewModels
 
             GetCurrentSongCommand = new DelegateCommand(GetCurrentSong);
             SearchInBrowserCommand = new DelegateCommand(SearchInBrowser);
-            ClearSearchHistoryCommand = new DelegateCommand(ClearSearchHistory);
 
-            OpenEditLyricsCommand = new DelegateCommand(OpenEditLyrics); // <------- Make async?
+            OpenEditorCommand = new DelegateCommand(OpenEditor); // <------- Make async?
             OpenSettingsCommand = new DelegateCommand(OpenSettings); // <------- Make async?
 
             ShowHideInfoRightCommand = new DelegateCommand(ToggleInfoRight);
-
-            //HistoryEntry LastSong = DatabaseHandler.GetLastSong();
-
-            //SongEntry = LastSong;
 
             LoadTheme();
             currentSong = Song.Empty();
@@ -426,7 +427,6 @@ namespace LyricParser.ViewModels
                     break;
             }
 
-
             SetStatus(Status.Standby);
             initComplete = true;
 
@@ -437,14 +437,19 @@ namespace LyricParser.ViewModels
         {
             sessionManager = await GlobalSystemMediaTransportControlsSessionManager.RequestAsync();
             sessionManager.CurrentSessionChanged += SessionManager_CurrentSessionChanged;
-            SetCurrentSession();
-
-            await GetCurrentlyPlaying();
+            sessionManager.SessionsChanged += SessionManager_SessionsChanged;
+            SetSessions();
+            await SetCurrentSession();
         }
 
-        private void SessionManager_CurrentSessionChanged(GlobalSystemMediaTransportControlsSessionManager sender, CurrentSessionChangedEventArgs args)
+        private void SessionManager_SessionsChanged(GlobalSystemMediaTransportControlsSessionManager sender, SessionsChangedEventArgs args)
         {
-            SetCurrentSession(); 
+            SetSessions();
+        }
+
+        private async void SessionManager_CurrentSessionChanged(GlobalSystemMediaTransportControlsSessionManager sender, CurrentSessionChangedEventArgs args)
+        {
+            await SetCurrentSession();
         }
 
         private async void CurrentlyPlayingUpdated(GlobalSystemMediaTransportControlsSession sender, MediaPropertiesChangedEventArgs args)
@@ -452,23 +457,59 @@ namespace LyricParser.ViewModels
             await GetCurrentlyPlaying();
         }
 
-        private void SetCurrentSession()
+        private async void SetSessions()
+        {
+            sessions = sessionManager.GetSessions().ToList();
+            if (currentSession != null && currentSession.SourceAppUserModelId != sessionManager.GetCurrentSession().SourceAppUserModelId)
+                await SetCurrentSession();
+            UpdateChangeSessionButtonVisiblity();
+        }
+
+        private int GetSessionIndex(GlobalSystemMediaTransportControlsSession session)
+        {
+            return sessions.FindIndex(x => x.SourceAppUserModelId == session.SourceAppUserModelId);
+        }
+
+        private async Task SetSession(int index)
+        {
+            currentSession = sessions[index];
+            currentSessionIndex = index;
+
+            await GetCurrentlyPlaying();
+        }
+
+        private void UpdateChangeSessionButtonVisiblity()
+        {
+            ChangeSessionButtonVisibility = sessions.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private async Task SetCurrentSession()
         {
             currentSession = sessionManager.GetCurrentSession();
+            currentSessionIndex = GetSessionIndex(currentSession);
 
             if (currentSession == null) return;
             currentSession.MediaPropertiesChanged += CurrentlyPlayingUpdated;
+
+            await GetCurrentlyPlaying();
+        }
+
+        private async Task ChangeSession()
+        {
+            currentSessionIndex = GetSessionIndex(currentSession);
+            int sessionCount = sessions.Count;
+            int nextIndex = currentSessionIndex + 1 < sessionCount ? currentSessionIndex + 1 : 0;
+
+            await SetSession(nextIndex);
         }
 
         private async Task GetCurrentlyPlaying()
         {
-            var currentSession = sessionManager.GetCurrentSession();
-
             if (currentSession != null)
             {
                 Song currentlyPlaying = await GetSongFromSession(currentSession);
 
-                if (currentlyPlaying.Artist != null && currentlyPlaying.Artist.Length > 0 && autoSearch == true)
+                if (!String.IsNullOrWhiteSpace(currentlyPlaying.Artist) && autoSearch == true)
                 {
                     if ((currentlyPlaying.Title != currentSong.Title && !paused))
                     {
@@ -476,6 +517,13 @@ namespace LyricParser.ViewModels
                         retries = MAX_RETRIES;
 
                         await GetLyrics(currentSong.Artist, currentSong.Title);
+
+                        // Make sure lyrics for the currently playing song is fetched
+                        if (isGetLyricsTimerStarted)
+                            getLyricsTimer.Dispose();
+
+                        getLyricsTimer = new Timer(QueueGetLyrics, currentlyPlaying, getLyricsDueTime, Timeout.Infinite);
+                        isGetLyricsTimerStarted = true;
                     }
                 }
             }
@@ -486,49 +534,17 @@ namespace LyricParser.ViewModels
             SongEntry = SongName;
         }
 
-        // Send the editied lyrics to the database to be processed
-        public bool EditLyrics(string title, string title_en, string artist, string original, Category genre)
+        private async void QueueGetLyrics(object obj)
         {
-            bool success = false;
+            Song song = (Song)obj;
 
-            List<string> lyrics = new List<string>
+            if (song.Title != currentSong.Title)
             {
-                original,
-            };
+                retries = MAX_RETRIES;
 
-            //success = DatabaseHandler.AddSong(artist, title, title_en, genre, lyrics, DatabaseHandler.LyricsExist(currentSong, false, this));                      <---------- TO BE IMPLEMENTED
-
-            if (currentSong.Artist == artist && currentSong.Title == title)
-                SetLyrics(original);
-
-            return success;
-        }
-
-        // Show the edited lyrics in the main window
-        public void SetLyrics(string content = "")
-        {
-            lyrics.Clear();
-            lyrics.Add(content);
-
-            SetUpTables();
-        }
-
-        // Add a new HistoryEntry to the collection, remove last item if count exeeds 20 and remove duplicate if exists
-        private void AddHistoryEntry(string data)
-        {
-            //if (data == " - ") return;
-            //if (viewModel.SearchHistory != null && viewModel.SearchHistory.Count > 0)                     <---------- TO BE IMPLEMENTED
-            //{
-            //    if (viewModel.SearchHistory.Count == 20)
-            //    {
-            //        viewModel.SearchHistory.RemoveAt(19);
-            //    }
-            //    if (viewModel.SearchHistory.Any(s => s.Data == data))
-            //        viewModel.SearchHistory.Remove(viewModel.SearchHistory.Single(s => s.Data == data));
-            //}
-
-            //viewModel.AddHistoryEntry(new HistoryEntry { Data = data });
-            //SongEntry = viewModel.SearchHistory.ElementAt(0);
+                await GetLyrics(currentSong.Artist, currentSong.Title);
+                isGetLyricsTimerStarted = false;
+            }
         }
 
         public async Task<Song> GetSongFromSession(GlobalSystemMediaTransportControlsSession session)
@@ -550,7 +566,8 @@ namespace LyricParser.ViewModels
 
                     using (StreamReader sr = new StreamReader(stream.AsStream()))
                     {
-                        var bitmap = new BitmapImage();
+
+                        BitmapImage bitmap = new BitmapImage();
                         bitmap.BeginInit();
                         bitmap.StreamSource = sr.BaseStream;
                         bitmap.CacheOption = BitmapCacheOption.OnLoad;
@@ -561,7 +578,6 @@ namespace LyricParser.ViewModels
                     }
                 }
             }
-
             return currentlyPlaying;
         }
 
@@ -577,7 +593,7 @@ namespace LyricParser.ViewModels
             Thumbnail = song.Thumbnail;
         }
 
-        async Task ExecuteGetLyrics()
+        private async Task ExecuteGetLyrics()
         {
             if (AutoSearchChecked == true)
                 await GetLyrics(currentSong.Artist, currentSong.Title);
@@ -588,7 +604,7 @@ namespace LyricParser.ViewModels
             }
         }
 
-        async Task GetLyrics(string artist, string title)
+        private async Task GetLyrics(string artist, string title)
         {
             CleanUp();
             SetStatus(Status.Searching);
@@ -605,14 +621,19 @@ namespace LyricParser.ViewModels
 
             if (success)
             {
-                SetLyrics(lyrics.Content);
+                OriginalLyrics = lyrics.Content;
                 SetStatus(Status.Done);
             }
             else
                 SetStatus(Status.Failed);
+
+            if (lyrics == null)
+                currentLyrics = new Lyrics() { Artist = artist, Title = title, Content = "" };
+            else 
+                currentLyrics = lyrics;
         }
 
-        async Task<(bool, Lyrics)> AddLyrics(string artist, string title)
+        private async Task<(bool, Lyrics)> AddLyrics(string artist, string title)
         {
             if (isAddingLyrics) return (false, null);
 
@@ -637,8 +658,9 @@ namespace LyricParser.ViewModels
                     if (content == null) content = await new JlyricParser().ParseHtml(_artist.RemoveDiacritics(), _title.RemoveDiacritics(), "-d");
                     break;
                 case Category.Western:
-                    content = await new MetrolyricsParser().ParseHtml(_artist, _title);
-                    if (content == null) content = await new MusixmatchParser().ParseHtml(_artist, _title);
+                    content = await new MusixmatchParser().ParseHtml(_artist, _title);
+                    if (content == null) content = await new MetrolyricsParser().ParseHtml(_artist, _title);
+                    if (content == null) content = await new LyricsfreakParser().ParseHtml(_artist, _title);
                     break;
                 case Category.Other:
                     content = await new AtwikiParser().ParseHtml(_artist, _title);
@@ -662,7 +684,7 @@ namespace LyricParser.ViewModels
             });
         }
 
-        async Task SaveLyrics(string artist, string title, string content)
+        private async Task SaveLyrics(string artist, string title, string content)
         {
             await App.Database.SaveLyricsAsync(new Lyrics()
             {
@@ -672,7 +694,7 @@ namespace LyricParser.ViewModels
             });
         }
 
-        async Task OverwriteLyrics()
+        private async Task OverwriteLyrics()
         {
             await SaveLyrics(currentSong.Artist, currentSong.Title, OriginalLyrics);
             SetStatus(Status.SaveSuccessFul);
@@ -718,21 +740,6 @@ namespace LyricParser.ViewModels
         {
             if (!initComplete) return;
             songCategory = id;
-        }
-
-        // Setup grid that will contain the lyrics
-        private void SetUpTables()
-        {
-            SetStatus(Status.Done);
-
-            OriginalLyrics = "";
-            if (lyrics.Count > 0)
-            {
-                foreach (string str in lyrics)
-                {
-                    OriginalLyrics += str;
-                }
-            }
         }
 
         private void ToggleInfoRight()
@@ -849,14 +856,16 @@ namespace LyricParser.ViewModels
             if (currentUrl != "") Process.Start(currentUrl);
         }
 
-        private void ClearSearchHistory()
+        private void OpenEditor()
         {
-            //viewModel.SearchHistory.Clear();                     <---------- TO BE IMPLEMENTED
-        }
-        private void OpenEditLyrics()
-        {
-            //EditLyricsView el = new EditLyricsView(this);
-            //el.ShowDialog();
+
+            _dialogService.ShowDialog(nameof(EditorView), new DialogParameters() {
+                { "data", currentLyrics}
+            }, r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                    EditorClosed(r.Parameters.GetValue<Lyrics>("data"));
+            });
         }
         private void OpenSettings()
         {
@@ -866,7 +875,18 @@ namespace LyricParser.ViewModels
                     SettingsClosed();
             });
         }
-
+        private async void EditorClosed(Lyrics data)
+        {
+            if (currentSong.Artist == data.Artist && currentSong.Title == data.Title)
+            {
+                OriginalLyrics = data.Content;
+                await OverwriteLyrics();
+            }
+            else
+            {
+                await SaveLyrics(data.Artist, data.Title, data.Content);
+            }
+        }
         private void SettingsClosed()
         {
             LoadSettings();

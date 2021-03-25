@@ -10,8 +10,9 @@ namespace LyricParser.Common
         public const string GENDOU_URL = "http://gendou.com/amusic/?filter=";
         public const string JLYRIC_URL = "http://search2.j-lyric.net/index.php?kt=";
         public const string TOUHOUWIKI_URL = "https://en.touhouwiki.net/wiki/Lyrics:_";
-        public const string METROLYRICS_URL = "https://www.metrolyrics.com/printlyric/";
         public const string MUSIXMATCH_URL = "https://www.musixmatch.com/search/";
+        public const string METROLYRICS_URL = "https://www.metrolyrics.com/printlyric/";
+        public const string LYRICSFREAK_URL = "https://www.lyricsfreak.com/search.php?q=";
         public const string ATWIKI_URL = "https://www5.atwiki.jp/hmiku/?cmd=wikisearch&keyword=";
 
         public const SQLite.SQLiteOpenFlags Flags =

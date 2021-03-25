@@ -4,6 +4,8 @@ using LyricParser.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Text;
+using System;
 
 namespace LyricParser.Utils.Parsers.Western
 {
@@ -55,15 +57,13 @@ namespace LyricParser.Utils.Parsers.Western
             HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes("//*[contains(@class,'mxm-lyrics__content')]");
             if (nodes == null) return null;
 
-            List<string> verses = new List<string>();
+            StringBuilder lyrics = new StringBuilder();
             foreach (HtmlNode node in nodes)
             {
-                verses.Add(node.Element("span").InnerHtml);
-                verses.Add("\r\n");
+                lyrics.Append(node.Element("span").InnerHtml + Environment.NewLine);
             }
-            verses.Add("\r\n");
 
-            return CleanUp(verses);
+            return CleanUp(lyrics.ToString());
         }
     }
 }

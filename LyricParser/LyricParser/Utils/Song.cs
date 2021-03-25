@@ -35,9 +35,9 @@ namespace LyricParser.Utils
 
         public Category Genre { get; set; }
 
-        public BitmapImage Thumbnail { get; set; }
+        public BitmapSource Thumbnail { get; set; }
 
-        public Song(string title, string title_en, string artist, Category genre, BitmapImage thumbnail)
+        public Song(string title, string title_en, string artist, Category genre, BitmapSource thumbnail)
         {
             Title = title;
             Title_EN = title_en;
@@ -46,7 +46,7 @@ namespace LyricParser.Utils
             Thumbnail = thumbnail;
         }
 
-        public Song(string info, string title_en, Category genre, BitmapImage thumbnail)
+        public Song(string info, string title_en, Category genre, BitmapSource thumbnail)
         {
             string[] artistTitle = info.Split('-');
             Artist = artistTitle[0].Trim();

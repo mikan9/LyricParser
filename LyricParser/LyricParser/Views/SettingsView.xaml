@@ -8,8 +8,13 @@
         xmlns:w="clr-namespace:LyricParser"
         xmlns:properties="clr-namespace:LyricParser.Properties"
         mc:Ignorable="d"
-        Height="280" Width="500"
+        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
         >
+    <UserControl.Style>
+        <Style TargetType="UserControl">
+            <Setter Property="prism:Dialog.WindowStyle" Value="{StaticResource SettingsWindowStyle}"/>
+        </Style>
+    </UserControl.Style>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -17,73 +22,68 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <prism:Dialog.WindowStyle>
-        <Style TargetType="Window">
-            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
-            <Setter Property="ResizeMode" Value="CanMinimize" />
-            <Setter Property="ShowInTaskbar" Value="False"/>
-            <Setter Property="WindowState" Value="Normal"/>
-            <Setter Property="SizeToContent" Value="WidthAndHeight"/>
-        </Style>
-    </prism:Dialog.WindowStyle>
     <Grid Background="{DynamicResource TopBackgroundBrush}">
-        <StackPanel>
-            <GroupBox Name="RetrySettings" Header="Retry Settings"  VerticalAlignment="Top">
-                <DockPanel VerticalAlignment="Top">
-                    <Label Content="Max Retries: "></Label>
-                    <TextBox Name="MaxRetriesTxt" VerticalContentAlignment="Center" Text="{Binding MaxRetries}"></TextBox>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Name="RetrySettings" Header="Retry Settings">
+            <DockPanel VerticalAlignment="Top">
+                <Label Content="Max Retries: "></Label>
+                <TextBox Name="MaxRetriesTxt" VerticalContentAlignment="Center" Text="{Binding MaxRetries}"></TextBox>
+            </DockPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Name="UiSettings" Header="UI Settings">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Show Lyrics For" Grid.Column="0" Grid.Row="0"/>
+                    <CheckBox Content="Anime" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchAnime}" />
+                    <CheckBox Content="Touhou" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchTouhou}" />
+                    <CheckBox Content="Western" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchWest}"/>
+                    <CheckBox Content="JP" Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchJP}"/>
+                    <CheckBox Content="Other" Grid.Column="5" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchOther}"/>
+                </Grid>
+                <DockPanel>
+                    <Label Content="Color Theme:"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Themes}" Name="themeBox" SelectedItem="{Binding SelectedTheme}" Width="100" HorizontalAlignment="Right"/>
                 </DockPanel>
-            </GroupBox>
-            <GroupBox Name="UiSettings" Header="UI Settings" VerticalAlignment="Top">
-                <StackPanel>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="70"/>
-                            <ColumnDefinition Width="70"/>
-                            <ColumnDefinition Width="70"/>
-                            <ColumnDefinition Width="70"/>
-                            <ColumnDefinition Width="70"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Label Content="Show Lyrics For" Grid.Column="0" Grid.Row="0"/>
-                        <CheckBox Content="Anime" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchAnime}" />
-                        <CheckBox Content="Touhou" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchTouhou}" />
-                        <CheckBox Content="Western" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchWest}"/>
-                        <CheckBox Content="JP" Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchJP}"/>
-                        <CheckBox Content="Other" Grid.Column="5" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchOther}"/>
-                    </Grid>
-                    <DockPanel>
-                        <Label Content="Color Theme:"/>
-                        <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Themes}" Name="themeBox" SelectedItem="{Binding SelectedTheme}" Width="100" HorizontalAlignment="Right"/>
-                    </DockPanel>
-                    <DockPanel Margin="0 5 0 0">
-                        <Label Content="Language:"/>
-                        <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Locales}" Name="langBox" SelectedItem="{Binding Source={StaticResource UserSettings}, Path=Default.Locale}" Width="100" HorizontalAlignment="Right"/>
-                    </DockPanel>
-                </StackPanel>
-            </GroupBox>
-            <GroupBox Name="DebugSettings" Header="Debug Settings"  VerticalAlignment="Top">
-                <StackPanel VerticalAlignment="Top" Margin="0, 5, 0, 0">
-                    <CheckBox Name="debugFlag" Content="Debug Mode" IsChecked="{Binding DebugChecked}"></CheckBox>
-                    <DockPanel>
-                        <Label Content="Debug Category"></Label>
-                        <ComboBox Name="DebugCategories" Width="100" SelectedIndex="{Binding SelectedDebugCategory}" HorizontalAlignment="Right">
-                            <ComboBoxItem>Anime</ComboBoxItem>
-                            <ComboBoxItem>Touhou</ComboBoxItem>
-                            <ComboBoxItem>Western</ComboBoxItem>
-                            <ComboBoxItem>JP</ComboBoxItem>
-                        </ComboBox>
-                    </DockPanel>
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
-        <DockPanel VerticalAlignment="Bottom">
-            <Button Name="saveBtn" Padding="0, 15, 0, 0" Margin="0, 5, 5, 5" HorizontalAlignment="Right" Content="Save" Width="50" Command="{Binding SaveCommand}"></Button>
+                <DockPanel Margin="0 5 0 0">
+                    <Label Content="Language:"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Locales}" Name="langBox" SelectedItem="{Binding Source={StaticResource UserSettings}, Path=Default.Locale}" Width="100" HorizontalAlignment="Right"/>
+                </DockPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Name="DebugSettings" Header="Debug Settings">
+            <StackPanel VerticalAlignment="Top" Margin="0, 5, 0, 0">
+                <CheckBox Name="debugFlag" Content="Debug Mode" IsChecked="{Binding DebugChecked}"></CheckBox>
+                <DockPanel>
+                    <Label Content="Debug Category"></Label>
+                    <ComboBox Name="DebugCategories" Width="100" SelectedIndex="{Binding SelectedDebugCategory}" HorizontalAlignment="Right">
+                        <ComboBoxItem>Anime</ComboBoxItem>
+                        <ComboBoxItem>Touhou</ComboBoxItem>
+                        <ComboBoxItem>Western</ComboBoxItem>
+                        <ComboBoxItem>JP</ComboBoxItem>
+                    </ComboBox>
+                </DockPanel>
+            </StackPanel>
+        </GroupBox>
+        <DockPanel Grid.Row="3">
+            <Button Name="saveBtn" Margin="0, 5, 5, 5" HorizontalAlignment="Right" Content="Save" Width="50" Command="{Binding SaveCommand}"></Button>
         </DockPanel>
     </Grid>
 </UserControl>

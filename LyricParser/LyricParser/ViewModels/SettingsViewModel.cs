@@ -1,10 +1,5 @@
 ﻿using Prism.Commands;
-using Prism.Services.Dialogs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace LyricParser.ViewModels
@@ -21,10 +16,6 @@ namespace LyricParser.ViewModels
         #region Properties
 
         // String properties
-        public string Title {
-            get => _title;
-            set => SetProperty(ref _title, value);
-        }
         public string SelectedTheme
         {
             get => _selectedTheme;
