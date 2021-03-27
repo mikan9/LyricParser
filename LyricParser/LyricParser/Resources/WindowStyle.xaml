@@ -62,7 +62,7 @@
         <Setter Property="Content" Value="&#xE923;"/>
     </Style>
 
-    <!-- Window -->
+    <!-- Main Window -->
     <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
@@ -162,7 +162,7 @@
                 <WindowChrome CaptionHeight="25" CornerRadius="0" GlassFrameThickness="0,0,0,1" NonClientFrameEdges="None" UseAeroCaptionButtons="False" />
             </Setter.Value>
         </Setter>
-        <Setter Property="Height" Value="340"/>
+        <Setter Property="Height" Value="260"/>
         <Setter Property="Width" Value="500"/>
         <Setter Property="BorderBrush" Value="#FF2D2D30"/>
         <Setter Property="Background" Value="Gray"/>
