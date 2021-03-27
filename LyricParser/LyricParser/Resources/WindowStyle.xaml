@@ -162,7 +162,7 @@
                 <WindowChrome CaptionHeight="25" CornerRadius="0" GlassFrameThickness="0,0,0,1" NonClientFrameEdges="None" UseAeroCaptionButtons="False" />
             </Setter.Value>
         </Setter>
-        <Setter Property="Height" Value="310"/>
+        <Setter Property="Height" Value="340"/>
         <Setter Property="Width" Value="500"/>
         <Setter Property="BorderBrush" Value="#FF2D2D30"/>
         <Setter Property="Background" Value="Gray"/>
