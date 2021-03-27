@@ -5,6 +5,7 @@ using Prism.Unity;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace LyricParser
 {
@@ -15,8 +16,9 @@ namespace LyricParser
     {
         static LyricsDatabase database;
 
-        public App()
+        public App() :base()
         {
+            this.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
         }
 
         public static LyricsDatabase Database
@@ -37,18 +39,11 @@ namespace LyricParser
 
             Thread.CurrentThread.CurrentCulture = new CultureInfo(LyricParser.Properties.UserSettings.Default.Locale);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(LyricParser.Properties.UserSettings.Default.Locale);
-            // LocaleResources.Culture = new CultureInfo("ja-JP");
         }
         public static void ChangeCulture(CultureInfo newCulture)
         {
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
-
-            //var oldWindow = Application.Current.MainWindow;
-            //Application.Current.MainWindow = new MainWindowView();
-            //Application.Current.MainWindow.Show();
-
-            //oldWindow.Close();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -65,6 +60,11 @@ namespace LyricParser
         {
             var w = Container.Resolve<MainWindowView>();
             return w;
+        }
+
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show("Unhandled exception occurred: \n" + e.Exception.Message + "\n " + e.Exception.InnerException, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
