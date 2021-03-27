@@ -1,6 +1,4 @@
 ﻿using LyricParser.Repository;
-using LyricParser.Services;
-using LyricParser.Services.Interfaces;
 using LyricParser.ViewModels;
 using Prism.Ioc;
 using Prism.Unity;

@@ -1,9 +1,7 @@
 ﻿using LyricParser.Common;
-using LyricParser.Events;
 using LyricParser.Extensions;
 using LyricParser.Models;
 using LyricParser.Resources;
-using LyricParser.Services.Interfaces;
 using LyricParser.Utils;
 using LyricParser.Utils.Parsers.Anime;
 using LyricParser.Utils.Parsers.JP;
@@ -26,7 +24,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using Windows.Media.Control;
 
 namespace LyricParser.ViewModels

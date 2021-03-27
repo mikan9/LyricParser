@@ -1,6 +1,5 @@
 ﻿using HtmlAgilityPack;
 using LyricParser.Common;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,9 +34,6 @@ namespace LyricParser.Utils.Parsers.Anime
 
                 string _title = children.ElementAt(1).FirstChild.InnerText.ToLower().Trim().Normalize();
                 string _artist = children.ElementAt(5).ChildNodes.ElementAt(1).InnerText.ToLower().Trim().Normalize();
-
-                //Trace.WriteLine(_title + "___" + title + ": " + _title.Equals(title) + " Length: " + _title.Length + ":" + title.Length);
-                //Trace.WriteLine(_artist + "___" + artist + ": " + _artist.Equals(artist) + " Length: " + _artist.Length + ":" + artist.Length);
 
                 if (_title.Equals(title.ToLower().Normalize()) && _artist.Equals(artist))
                 {

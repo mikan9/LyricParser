@@ -1,7 +1,6 @@
 ﻿using HtmlAgilityPack;
 using LyricParser.Common;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using System;
 
 namespace LyricParser.Utils.Parsers.Western
@@ -14,7 +13,6 @@ namespace LyricParser.Utils.Parsers.Western
         }
         public override async Task<string> ParseHtml(string artist, string title, string optional = "")
         {
-            Trace.WriteLine("LYRICSFREAK");
             string html = await GetHtml(BaseUrl + artist.Replace(" ", "+") + "+" + title.Replace(" ", "+"));
             if (string.IsNullOrEmpty(html)) return null;
 

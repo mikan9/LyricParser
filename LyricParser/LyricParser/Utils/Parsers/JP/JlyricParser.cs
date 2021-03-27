@@ -1,9 +1,7 @@
 ﻿using HtmlAgilityPack;
 using LyricParser.Extensions;
 using LyricParser.Common;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Linq;
 
 namespace LyricParser.Utils.Parsers.JP

@@ -3,7 +3,6 @@ using LyricParser.Extensions;
 using LyricParser.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace LyricParser.Utils.Parsers.Vocaloid
 {
