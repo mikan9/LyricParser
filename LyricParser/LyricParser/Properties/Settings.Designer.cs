@@ -61,18 +61,6 @@ namespace LyricParser.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int LastPlayer {
-            get {
-                return ((int)(this["LastPlayer"]));
-            }
-            set {
-                this["LastPlayer"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public int ZoomIndex {
             get {
@@ -80,18 +68,6 @@ namespace LyricParser.Properties {
             }
             set {
                 this["ZoomIndex"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UseDatabase {
-            get {
-                return ((bool)(this["UseDatabase"]));
-            }
-            set {
-                this["UseDatabase"] = value;
             }
         }
         
@@ -152,42 +128,6 @@ namespace LyricParser.Properties {
             }
             set {
                 this["Maximized"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EditOriginal {
-            get {
-                return ((bool)(this["EditOriginal"]));
-            }
-            set {
-                this["EditOriginal"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EditRomaji {
-            get {
-                return ((bool)(this["EditRomaji"]));
-            }
-            set {
-                this["EditRomaji"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EditEnglish {
-            get {
-                return ((bool)(this["EditEnglish"]));
-            }
-            set {
-                this["EditEnglish"] = value;
             }
         }
         

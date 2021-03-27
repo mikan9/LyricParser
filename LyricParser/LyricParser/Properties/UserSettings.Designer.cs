@@ -12,7 +12,7 @@ namespace LyricParser.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     public sealed partial class UserSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static UserSettings defaultInstance = ((UserSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new UserSettings())));
@@ -80,102 +80,6 @@ namespace LyricParser.Properties {
             }
             set {
                 this["OrigJP"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool RomajiAnime {
-            get {
-                return ((bool)(this["RomajiAnime"]));
-            }
-            set {
-                this["RomajiAnime"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool RomajiTouhou {
-            get {
-                return ((bool)(this["RomajiTouhou"]));
-            }
-            set {
-                this["RomajiTouhou"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool RomajiWest {
-            get {
-                return ((bool)(this["RomajiWest"]));
-            }
-            set {
-                this["RomajiWest"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool RomajiJP {
-            get {
-                return ((bool)(this["RomajiJP"]));
-            }
-            set {
-                this["RomajiJP"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EngAnime {
-            get {
-                return ((bool)(this["EngAnime"]));
-            }
-            set {
-                this["EngAnime"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EngTouhou {
-            get {
-                return ((bool)(this["EngTouhou"]));
-            }
-            set {
-                this["EngTouhou"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EngWest {
-            get {
-                return ((bool)(this["EngWest"]));
-            }
-            set {
-                this["EngWest"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EngJP {
-            get {
-                return ((bool)(this["EngJP"]));
-            }
-            set {
-                this["EngJP"] = value;
             }
         }
         
@@ -342,25 +246,13 @@ namespace LyricParser.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool RomajiOther {
+        [global::System.Configuration.DefaultSettingValueAttribute("Segoe UI")]
+        public string FontFamily {
             get {
-                return ((bool)(this["RomajiOther"]));
+                return ((string)(this["FontFamily"]));
             }
             set {
-                this["RomajiOther"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EngOther {
-            get {
-                return ((bool)(this["EngOther"]));
-            }
-            set {
-                this["EngOther"] = value;
+                this["FontFamily"] = value;
             }
         }
     }
