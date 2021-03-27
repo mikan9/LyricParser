@@ -53,7 +53,6 @@ namespace LyricParser.ViewModels
         public Lyrics currentLyrics = Lyrics.Empty();
         public string currentUrl = "";
         public static Player currentPlayer = Player.Winamp;
-        public static Category debug_mode = Category.None;
         static Category songCategory = Category.Western;
 
         const int MAX_ANIME_RETRIES = 10;
@@ -85,7 +84,10 @@ namespace LyricParser.ViewModels
         private bool _jpRadChecked = false;
         private bool _otherRadChecked = false;
 
-        private double _viewHeight = 691;
+        private double _viewHeight = 690;
+        private double _viewWidth = 1350;
+        private double _viewTop = 0;
+        private double _viewLeft = 0;
         private double _lyricsFontSize = 14;
 
         private string _songEntry = " - ";
@@ -102,6 +104,8 @@ namespace LyricParser.ViewModels
         private Visibility _changeSessionButtonVisibility = Visibility.Collapsed;
 
         private ImageSource _thumbnail = null;
+
+        private WindowState _windowState = WindowState.Normal;
 
         #region Public Properties
 
@@ -202,6 +206,21 @@ namespace LyricParser.ViewModels
             get => _viewHeight;
             set => SetProperty(ref _viewHeight, value);
         }
+        public double ViewWidth
+        {
+            get => _viewWidth;
+            set => SetProperty(ref _viewWidth, value);
+        }
+        public double ViewTop
+        {
+            get => _viewTop;
+            set => SetProperty(ref _viewTop, value);
+        }
+        public double ViewLeft
+        {
+            get => _viewLeft;
+            set => SetProperty(ref _viewLeft, value);
+        }
         public double LyricsFontSize
         {
             get => _lyricsFontSize;
@@ -267,6 +286,13 @@ namespace LyricParser.ViewModels
             set => SetProperty(ref _thumbnail, value);
         }
 
+        // WindowState properties
+        public WindowState WindowState
+        {
+            get => _windowState;
+            set => SetProperty(ref _windowState, value);
+        }
+
         #endregion
 
         #region Commands
@@ -306,6 +332,12 @@ namespace LyricParser.ViewModels
         // Load settings
         public void LoadSettings()
         {
+            ViewHeight = Properties.Settings.Default.Height;
+            ViewWidth = Properties.Settings.Default.Width;
+            ViewTop = Properties.Settings.Default.Top;
+            ViewLeft = Properties.Settings.Default.Left;
+            WindowState = Properties.Settings.Default.WindowState;
+
             MAX_RETRIES = Properties.UserSettings.Default.MaxRetries;
             LyricsFontFamily = Properties.UserSettings.Default.FontFamily;
             ZoomSelectionIndex = Properties.Settings.Default.ZoomIndex;
@@ -316,6 +348,13 @@ namespace LyricParser.ViewModels
     
             CultureInfo newCulture = new CultureInfo(Properties.UserSettings.Default.Locale);
             if (Thread.CurrentThread.CurrentCulture.Name != newCulture.Name) App.ChangeCulture(newCulture);
+
+            var themes = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory + @"Themes\", "*", SearchOption.TopDirectoryOnly)
+                                  .Select(System.IO.Path.GetFileNameWithoutExtension);
+
+            Properties.UserSettings.Default.Themes.Clear();
+            Properties.UserSettings.Default.Themes.AddRange(themes.ToArray());
+            Properties.UserSettings.Default.Save();
 
             LoadTheme();
 
@@ -334,11 +373,6 @@ namespace LyricParser.ViewModels
             if (!Properties.UserSettings.Default.SearchOther) OtherRadVisibility = Visibility.Collapsed;
             else OtherRadVisibility = Visibility.Visible;
 
-            if (Properties.UserSettings.Default.DebugMode) debug_mode = (Category)Properties.UserSettings.Default.DebugCategory;
-            else debug_mode = Category.None;
-
-            if (debug_mode == Category.None) songCategory = (Category)Properties.Settings.Default.LastCategory;
-
             AutoSearchChecked = Properties.Settings.Default.AutoSearch;
         }
 
@@ -350,14 +384,8 @@ namespace LyricParser.ViewModels
 
             var resource = Application.Current.MainWindow.Resources.MergedDictionaries;
             resource.Clear();
-
-            var resDic = new ResourceDictionary();
-            var themeDic = new ResourceDictionary();
-
-            resDic.Source = resUri;
-            themeDic.Source = themeUri;
-
-            resDic.MergedDictionaries.Add(themeDic);
+            var resDic = new ResourceDictionary() { Source = resUri };
+            resDic.MergedDictionaries.Add(new ResourceDictionary() { Source = themeUri });
             resource.Add(resDic);
         }
 
@@ -392,15 +420,7 @@ namespace LyricParser.ViewModels
 
             ShowHideInfoRightCommand = new DelegateCommand(ToggleInfoRight);
 
-            LoadTheme();
             currentSong = Song.Empty();
-
-            var themes = Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory + @"Themes\", "*", SearchOption.TopDirectoryOnly)
-                                  .Select(System.IO.Path.GetFileNameWithoutExtension);
-
-            Properties.UserSettings.Default.Themes.Clear();
-            Properties.UserSettings.Default.Themes.AddRange(themes.ToArray());
-            Properties.UserSettings.Default.Save();
 
             LoadSettings();
 
@@ -807,6 +827,7 @@ namespace LyricParser.ViewModels
 
         private void OnViewLoaded()
         {
+            LoadTheme();
         }
         private async void OnAutoSearchChecked()
         {
@@ -843,22 +864,12 @@ namespace LyricParser.ViewModels
             Properties.Settings.Default.AutoSearch = AutoSearchChecked;
             Properties.Settings.Default.ShowInfoRight = InfoRightVisibility == Visibility.Visible;
 
-            //if (WindowState == WindowState.Maximized)                      <---------- TO BE IMPLEMENTED
-            //{
-            //    Properties.Settings.Default.Top = RestoreBounds.Top;
-            //    Properties.Settings.Default.Left = RestoreBounds.Left;
-            //    Properties.Settings.Default.Height = RestoreBounds.Height;
-            //    Properties.Settings.Default.Width = RestoreBounds.Width;
-            //    Properties.Settings.Default.Maximized = true;
-            //}
-            //else
-            //{
-            //    Properties.Settings.Default.Top = this.Top;
-            //    Properties.Settings.Default.Left = this.Left;
-            //    Properties.Settings.Default.Height = this.Height;
-            //    Properties.Settings.Default.Width = this.Width;
-            //    Properties.Settings.Default.Maximized = false;
-            //}
+            Properties.Settings.Default.Height = ViewHeight;
+            Properties.Settings.Default.Width = ViewWidth;
+            Properties.Settings.Default.Top = ViewTop;
+            Properties.Settings.Default.Left = ViewLeft;
+            Properties.Settings.Default.WindowState = WindowState;
+
             Properties.Settings.Default.Save();
         }
 
