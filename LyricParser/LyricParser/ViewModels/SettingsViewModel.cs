@@ -73,6 +73,7 @@ namespace LyricParser.ViewModels
 
             Properties.UserSettings.Default.Reload();
             SelectedFontFamily = Properties.UserSettings.Default.FontFamily;
+            SelectedTheme = Properties.UserSettings.Default.Theme;
             LoadTheme();
             LoadFontFamilies();
         }
@@ -112,9 +113,8 @@ namespace LyricParser.ViewModels
         private void Save()
         {
             newSettings = true;
-            bool debugMode = DebugChecked;
-            int debugCategory = SelectedDebugCategory;
             MaxRetries = Properties.UserSettings.Default.MaxRetries;
+            Properties.UserSettings.Default.Theme = SelectedTheme;
             Properties.UserSettings.Default.ThemePath = SelectedTheme + ".xaml";
             Properties.UserSettings.Default.MaxRetries = MaxRetries;
             Properties.UserSettings.Default.FontFamily = SelectedFontFamily;
