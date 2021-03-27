@@ -59,6 +59,10 @@
                     <CheckBox Content="Other" Grid.Column="5" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchOther}"/>
                 </Grid>
                 <DockPanel>
+                    <Label Content="Font Family:"/>
+                    <ComboBox ItemsSource="{Binding FontFamilies}" Name="fontFamilyBox" SelectedItem="{Binding SelectedFontFamily}" Width="100" HorizontalAlignment="Right"/>
+                </DockPanel>
+                <DockPanel Margin="0 5 0 0">
                     <Label Content="Color Theme:"/>
                     <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Themes}" Name="themeBox" SelectedItem="{Binding SelectedTheme}" Width="100" HorizontalAlignment="Right"/>
                 </DockPanel>
