@@ -121,13 +121,13 @@ namespace LyricParser.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Maximized {
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public global::System.Windows.WindowState WindowState {
             get {
-                return ((bool)(this["Maximized"]));
+                return ((global::System.Windows.WindowState)(this["WindowState"]));
             }
             set {
-                this["Maximized"] = value;
+                this["WindowState"] = value;
             }
         }
         

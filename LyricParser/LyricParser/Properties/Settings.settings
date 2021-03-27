@@ -26,8 +26,8 @@
     <Setting Name="Left" Type="System.Double" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
-    <Setting Name="Maximized" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+    <Setting Name="WindowState" Type="System.Windows.WindowState" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
     </Setting>
     <Setting Name="ShowInfoRight" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
