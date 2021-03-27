@@ -101,10 +101,10 @@
                     </CheckBox>
                     <RadioButton Name="AnimeRad" Content="{Binding Source={x:Static w:LocaleResources.AnimeRadio}}" Visibility="{Binding AnimeRadVisibility}" IsChecked="{Binding AnimeRadChecked}" Margin="5, 0, 0, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
                     <RadioButton Name="TouhouRad" Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}" Visibility="{Binding TouhouRadVisibility}" IsChecked="{Binding TouhouRadChecked}" Margin="5, 0, 0, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
-                    <RadioButton Name="WestRad" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}" Visibility="{Binding WestRadVisibility}" IsChecked="{Binding WestRadChecked}" Margin="5, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
-                    <RadioButton Name="JpRad" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}" Visibility="{Binding JpRadVisibility}" IsChecked="{Binding JpRadChecked}" Margin="15, 0, -10, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
-                    <RadioButton Name="OtherRad" Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}" Visibility="{Binding OtherRadVisibility}" IsChecked="{Binding OtherRadChecked}" Margin="15, 0, 5, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
-                    <Button Name="EditBtn" Command="{Binding OpenEditorCommand}" Height="20" ToolTip="Edit Lyrics">
+                    <RadioButton Name="WestRad" Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}" Visibility="{Binding WestRadVisibility}" IsChecked="{Binding WestRadChecked}" Margin="5, 0, 0, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                    <RadioButton Name="JpRad" Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}" Visibility="{Binding JpRadVisibility}" IsChecked="{Binding JpRadChecked}" Margin="5, 0, 0, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                    <RadioButton Name="OtherRad" Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}" Visibility="{Binding OtherRadVisibility}" IsChecked="{Binding OtherRadChecked}" Margin="5, 0, 0, 0" VerticalAlignment="Center" Command="{Binding CategoryRadClickedCommand}"/>
+                    <Button Name="EditBtn" Command="{Binding OpenEditorCommand}" Height="20" Margin="5, 0, 0, 0" ToolTip="Edit Lyrics">
                         <TextBlock Padding="2, 0, 2, 0" Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"/>
                     </Button>
                     <Button Name="SaveBtn" Command="{Binding OverwriteLyricsCommand}" Height="20" Margin="5, 0, 0, 0" ToolTip="Overwrite Lyrics">
