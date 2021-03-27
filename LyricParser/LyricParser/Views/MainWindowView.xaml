@@ -139,7 +139,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
-            <TextBox Name="OriginalTxt" Text="{Binding OriginalLyrics}" Visibility="{Binding OriginalLyricsVisibility}" FontSize="{Binding LyricsFontSize}" VerticalContentAlignment="Stretch" Padding="0, 15, 0, 15" Style="{x:Null}" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0"  BorderThickness="0" TextAlignment="Center" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}"/>
+            <TextBox Name="OriginalTxt" Text="{Binding OriginalLyrics}" Visibility="{Binding OriginalLyricsVisibility}" FontFamily="{Binding LyricsFontFamily}" FontSize="{Binding LyricsFontSize}" VerticalContentAlignment="Stretch" Padding="0, 15, 0, 15" Style="{x:Null}" IsReadOnly="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0"  BorderThickness="0" TextAlignment="Center" Background="{x:Null}" Foreground="{DynamicResource LyricsForegroundBrush}"/>
         </Grid>
         <DockPanel Grid.Row="2" VerticalAlignment="Stretch" Background="{DynamicResource BottomBackgroundBrush}">
             <ComboBox DockPanel.Dock="Left" Name="ZoomSelection" Margin="5, 0, 5, 0" Width="80" VerticalAlignment="Center" SelectedIndex="{Binding ZoomSelectionIndex}">
