@@ -29,7 +29,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Name="RetrySettings" Header="Retry Settings">
+        <GroupBox Grid.Row="0" Name="RetrySettings" Header="Retry Settings" IsEnabled="False">
             <DockPanel VerticalAlignment="Top">
                 <Label Content="Max Retries: "></Label>
                 <TextBox Name="MaxRetriesTxt" VerticalContentAlignment="Center" Text="{Binding MaxRetries}"></TextBox>
@@ -72,21 +72,7 @@
                 </DockPanel>
             </StackPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Name="DebugSettings" Header="Debug Settings">
-            <StackPanel VerticalAlignment="Top" Margin="0, 5, 0, 0">
-                <CheckBox Name="debugFlag" Content="Debug Mode" IsChecked="{Binding DebugChecked}"></CheckBox>
-                <DockPanel>
-                    <Label Content="Debug Category"></Label>
-                    <ComboBox Name="DebugCategories" Width="100" SelectedIndex="{Binding SelectedDebugCategory}" HorizontalAlignment="Right">
-                        <ComboBoxItem>Anime</ComboBoxItem>
-                        <ComboBoxItem>Touhou</ComboBoxItem>
-                        <ComboBoxItem>Western</ComboBoxItem>
-                        <ComboBoxItem>JP</ComboBoxItem>
-                    </ComboBox>
-                </DockPanel>
-            </StackPanel>
-        </GroupBox>
-        <DockPanel Grid.Row="3">
+        <DockPanel Grid.Row="2">
             <Button Name="saveBtn" Margin="0, 5, 5, 5" HorizontalAlignment="Right" Content="Save" Width="50" Command="{Binding SaveCommand}"></Button>
         </DockPanel>
     </Grid>
