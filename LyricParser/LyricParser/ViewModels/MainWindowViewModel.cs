@@ -76,8 +76,8 @@ namespace LyricParser.ViewModels
         private string _lyrics = "";
         private string _statusText = "Searching...";
         private string _showHideInfoRightText = "⏵";
+        private string _lyricsFontFamily = "Segoe UI";
 
-        private int _selectedPlayer = 0;
         private int _zoomSelectionIndex = 3;
 
         private bool _autoSearchChecked = true;
@@ -149,13 +149,13 @@ namespace LyricParser.ViewModels
             get => _showHideInfoRightText;
             set => SetProperty(ref _showHideInfoRightText, value);
         }
+        public string LyricsFontFamily
+        {
+            get => _lyricsFontFamily;
+            set => SetProperty(ref _lyricsFontFamily, value);
+        }
 
         // Int properties
-        public int SelectedPlayer
-        {
-            get => _selectedPlayer;
-            set => SetProperty(ref _selectedPlayer, value);
-        }
         public int ZoomSelectionIndex
         {
             get => _zoomSelectionIndex;
@@ -310,6 +310,7 @@ namespace LyricParser.ViewModels
         public void LoadSettings()
         {
             MAX_RETRIES = Properties.UserSettings.Default.MaxRetries;
+            LyricsFontFamily = Properties.UserSettings.Default.FontFamily;
             ZoomSelectionIndex = Properties.Settings.Default.ZoomIndex;
             SetFontSize();
             ShowInfoRight(Properties.Settings.Default.ShowInfoRight);
@@ -405,8 +406,6 @@ namespace LyricParser.ViewModels
             Properties.UserSettings.Default.Save();
 
             LoadSettings();
-
-            currentPlayer = (Player)Properties.Settings.Default.LastPlayer;
 
             switch (songCategory)
             {
@@ -538,6 +537,12 @@ namespace LyricParser.ViewModels
         {
             Song song = (Song)obj;
 
+            if (Thumbnail == Song.Empty().Thumbnail)
+            {
+                BitmapImage thumbnail = await GetThumbnailFromSession(currentSession);
+                if (thumbnail != null) Thumbnail = thumbnail;
+            }
+
             if (song.Title != currentSong.Title)
             {
                 retries = MAX_RETRIES;
@@ -558,27 +563,37 @@ namespace LyricParser.ViewModels
                 currentlyPlaying.Artist = mediaProperties.Artist;
                 currentlyPlaying.Title = mediaProperties.Title;
 
-                var thumbnail = mediaProperties.Thumbnail;
-
-                if (thumbnail != null)
-                {
-                    var stream = await mediaProperties.Thumbnail.OpenReadAsync();
-
-                    using (StreamReader sr = new StreamReader(stream.AsStream()))
-                    {
-
-                        BitmapImage bitmap = new BitmapImage();
-                        bitmap.BeginInit();
-                        bitmap.StreamSource = sr.BaseStream;
-                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmap.EndInit();
-                        bitmap.Freeze();
-
-                        currentlyPlaying.Thumbnail = bitmap;
-                    }
-                }
+                currentlyPlaying.Thumbnail = await GetThumbnailFromSession(session);
             }
             return currentlyPlaying;
+        }
+
+        private async Task<BitmapImage> GetThumbnailFromSession(GlobalSystemMediaTransportControlsSession session)
+        {
+            var mediaProperties = await session.TryGetMediaPropertiesAsync();
+
+            if (mediaProperties == null) return null;
+
+            var thumbnail = mediaProperties.Thumbnail;
+
+            if (thumbnail != null)
+            {
+                var stream = await mediaProperties.Thumbnail.OpenReadAsync();
+
+                using (StreamReader sr = new StreamReader(stream.AsStream()))
+                {
+
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = sr.BaseStream;
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    bitmap.Freeze();
+
+                    return bitmap;
+                }
+            }
+            return null;
         }
 
         private void SetCurrentSong(Song song)
@@ -827,7 +842,6 @@ namespace LyricParser.ViewModels
         private void OnViewClosing()
         {
             Properties.Settings.Default.LastCategory = (int)songCategory;
-            Properties.Settings.Default.LastPlayer = SelectedPlayer;
             Properties.Settings.Default.ZoomIndex = ZoomSelectionIndex;
             Properties.Settings.Default.AutoSearch = AutoSearchChecked;
             Properties.Settings.Default.ShowInfoRight = InfoRightVisibility == Visibility.Visible;
