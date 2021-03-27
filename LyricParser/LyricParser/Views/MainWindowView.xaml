@@ -6,7 +6,8 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:properties="clr-namespace:LyricParser.Properties"
-        Title="{Binding Title}" Height="{Binding ViewHeight}" Width="1350" MinHeight="480" MinWidth="860" Icon="../Resources/icon-alt.ico" Background="Black"
+        Title="{Binding Title}" Height="{Binding ViewHeight, Mode=TwoWay}" Width="{Binding ViewWidth, Mode=TwoWay}" Top="{Binding ViewTop, Mode=TwoWay}" Left="{Binding ViewLeft, Mode=TwoWay}" 
+        WindowState="{Binding WindowState, Mode=TwoWay}" MinHeight="480" MinWidth="860" Icon="../Resources/icon-alt.ico" Background="Black"
         Style="{StaticResource MainWindowStyle}"
         >
     <i:Interaction.Triggers>
