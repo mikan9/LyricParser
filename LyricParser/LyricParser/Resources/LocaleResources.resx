@@ -192,4 +192,40 @@
   <data name="Saving" xml:space="preserve">
     <value>Saving...</value>
   </data>
+  <data name="ColorThemeLabel" xml:space="preserve">
+    <value>Color Theme: </value>
+  </data>
+  <data name="EditButton" xml:space="preserve">
+    <value>Edit Lyrics</value>
+  </data>
+  <data name="FontFamilyLabel" xml:space="preserve">
+    <value>Font Family:</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LanguageSubLabel" xml:space="preserve">
+    <value>(Restart Required):</value>
+  </data>
+  <data name="MaxRetriesLabel" xml:space="preserve">
+    <value>Max Retries:</value>
+  </data>
+  <data name="OverwriteButton" xml:space="preserve">
+    <value>Overwrite Lyrics</value>
+  </data>
+  <data name="RetrySettingsLabel" xml:space="preserve">
+    <value>Retry Settings</value>
+  </data>
+  <data name="SettingsButton" xml:space="preserve">
+    <value>Open Settings</value>
+  </data>
+  <data name="ShowLyricsLabel" xml:space="preserve">
+    <value>Show Lyrics For: </value>
+  </data>
+  <data name="ToggleRightInfoButton" xml:space="preserve">
+    <value>Show/Hide Right Panel</value>
+  </data>
+  <data name="UISettingsLabel" xml:space="preserve">
+    <value>UI Settings</value>
+  </data>
 </root>

@@ -79,6 +79,24 @@ namespace LyricParser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Color Theme: .
+        /// </summary>
+        public static string ColorThemeLabel {
+            get {
+                return ResourceManager.GetString("ColorThemeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Lyrics.
+        /// </summary>
+        public static string EditButton {
+            get {
+                return ResourceManager.GetString("EditButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Lyrics.
         /// </summary>
         public static string EditWindowTitle {
@@ -102,6 +120,15 @@ namespace LyricParser.Resources {
         public static string Failed {
             get {
                 return ResourceManager.GetString("Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Font Family:.
+        /// </summary>
+        public static string FontFamilyLabel {
+            get {
+                return ResourceManager.GetString("FontFamilyLabel", resourceCulture);
             }
         }
         
@@ -133,6 +160,33 @@ namespace LyricParser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string LanguageLabel {
+            get {
+                return ResourceManager.GetString("LanguageLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (Restart Required):.
+        /// </summary>
+        public static string LanguageSubLabel {
+            get {
+                return ResourceManager.GetString("LanguageSubLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Retries:.
+        /// </summary>
+        public static string MaxRetriesLabel {
+            get {
+                return ResourceManager.GetString("MaxRetriesLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Original.
         /// </summary>
         public static string OriginalLabel {
@@ -151,11 +205,29 @@ namespace LyricParser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Overwrite Lyrics.
+        /// </summary>
+        public static string OverwriteButton {
+            get {
+                return ResourceManager.GetString("OverwriteButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parsing....
         /// </summary>
         public static string Parsing {
             get {
                 return ResourceManager.GetString("Parsing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retry Settings.
+        /// </summary>
+        public static string RetrySettingsLabel {
+            get {
+                return ResourceManager.GetString("RetrySettingsLabel", resourceCulture);
             }
         }
         
@@ -250,11 +322,38 @@ namespace LyricParser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Settings.
+        /// </summary>
+        public static string SettingsButton {
+            get {
+                return ResourceManager.GetString("SettingsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Lyrics For: .
+        /// </summary>
+        public static string ShowLyricsLabel {
+            get {
+                return ResourceManager.GetString("ShowLyricsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Standby.
         /// </summary>
         public static string Standby {
             get {
                 return ResourceManager.GetString("Standby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show/Hide Right Panel.
+        /// </summary>
+        public static string ToggleRightInfoButton {
+            get {
+                return ResourceManager.GetString("ToggleRightInfoButton", resourceCulture);
             }
         }
         
@@ -273,6 +372,15 @@ namespace LyricParser.Resources {
         public static string TranslationLabel {
             get {
                 return ResourceManager.GetString("TranslationLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UI Settings.
+        /// </summary>
+        public static string UISettingsLabel {
+            get {
+                return ResourceManager.GetString("UISettingsLabel", resourceCulture);
             }
         }
         

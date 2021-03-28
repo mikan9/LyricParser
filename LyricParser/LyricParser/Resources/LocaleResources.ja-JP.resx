@@ -192,4 +192,40 @@
   <data name="Saving" xml:space="preserve">
     <value>保存中</value>
   </data>
+  <data name="ColorThemeLabel" xml:space="preserve">
+    <value>配色テーマ：</value>
+  </data>
+  <data name="EditButton" xml:space="preserve">
+    <value>歌詞編集</value>
+  </data>
+  <data name="FontFamilyLabel" xml:space="preserve">
+    <value>フォント：</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="LanguageSubLabel" xml:space="preserve">
+    <value>（再起動必須）：</value>
+  </data>
+  <data name="MaxRetriesLabel" xml:space="preserve">
+    <value>再試行最大回数：</value>
+  </data>
+  <data name="OverwriteButton" xml:space="preserve">
+    <value>歌詞上書き</value>
+  </data>
+  <data name="RetrySettingsLabel" xml:space="preserve">
+    <value>再試行設定</value>
+  </data>
+  <data name="SettingsButton" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="ShowLyricsLabel" xml:space="preserve">
+    <value>対象カテゴリ：</value>
+  </data>
+  <data name="ToggleRightInfoButton" xml:space="preserve">
+    <value>右パネル表示/非表示</value>
+  </data>
+  <data name="UISettingsLabel" xml:space="preserve">
+    <value>UI設定</value>
+  </data>
 </root>

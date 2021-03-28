@@ -192,4 +192,37 @@
   <data name="Saving" xml:space="preserve">
     <value>Sparar...</value>
   </data>
+  <data name="ColorThemeLabel" xml:space="preserve">
+    <value>Färgschema: </value>
+  </data>
+  <data name="EditButton" xml:space="preserve">
+    <value>Redigera Låttext</value>
+  </data>
+  <data name="FontFamilyLabel" xml:space="preserve">
+    <value>Typsnitt:</value>
+  </data>
+  <data name="LanguageLabel" xml:space="preserve">
+    <value>Språk</value>
+  </data>
+  <data name="LanguageSubLabel" xml:space="preserve">
+    <value>(Omstart Krävs):</value>
+  </data>
+  <data name="OverwriteButton" xml:space="preserve">
+    <value>Skriv över låttext</value>
+  </data>
+  <data name="RetrySettingsLabel" xml:space="preserve">
+    <value>Retry Inställningar</value>
+  </data>
+  <data name="SettingsButton" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="ShowLyricsLabel" xml:space="preserve">
+    <value>Visa Låttexter För: </value>
+  </data>
+  <data name="ToggleRightInfoButton" xml:space="preserve">
+    <value>Visa/Dölj Högra Panelen</value>
+  </data>
+  <data name="UISettingsLabel" xml:space="preserve">
+    <value>UI Inställningar</value>
+  </data>
 </root>
