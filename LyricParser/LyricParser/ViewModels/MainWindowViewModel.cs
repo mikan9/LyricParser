@@ -331,13 +331,7 @@ namespace LyricParser.ViewModels
 
         // Load settings
         public void LoadSettings()
-        {
-            ViewHeight = Properties.Settings.Default.Height;
-            ViewWidth = Properties.Settings.Default.Width;
-            ViewTop = Properties.Settings.Default.Top;
-            ViewLeft = Properties.Settings.Default.Left;
-            WindowState = Properties.Settings.Default.WindowState;
-
+        { 
             MAX_RETRIES = Properties.UserSettings.Default.MaxRetries;
             LyricsFontFamily = Properties.UserSettings.Default.FontFamily;
             ZoomSelectionIndex = Properties.Settings.Default.ZoomIndex;
@@ -376,7 +370,7 @@ namespace LyricParser.ViewModels
             AutoSearchChecked = Properties.Settings.Default.AutoSearch;
         }
 
-        // Load themes into dictionaries
+        // Clear and add selected theme into dictionary to reload resources at runtime
         public void LoadTheme()
         {
             Uri resUri = new Uri("/Resources/Resources.xaml", UriKind.Relative);
@@ -421,6 +415,12 @@ namespace LyricParser.ViewModels
             ShowHideInfoRightCommand = new DelegateCommand(ToggleInfoRight);
 
             currentSong = Song.Empty();
+
+            ViewHeight = Properties.Settings.Default.Height;
+            ViewWidth = Properties.Settings.Default.Width;
+            ViewTop = Properties.Settings.Default.Top;
+            ViewLeft = Properties.Settings.Default.Left;
+            WindowState = Properties.Settings.Default.WindowState;
 
             LoadSettings();
 
