@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:w="clr-namespace:LyricParser.Resources"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        xmlns:w="clr-namespace:LyricParser"
         xmlns:properties="clr-namespace:LyricParser.Properties"
         mc:Ignorable="d"
         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
@@ -29,13 +29,13 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Name="RetrySettings" Header="Retry Settings" IsEnabled="False">
+        <GroupBox Grid.Row="0" Name="RetrySettings" Header="{Binding Source={x:Static w:LocaleResources.RetrySettingsLabel}}" IsEnabled="True">
             <DockPanel VerticalAlignment="Top">
-                <Label Content="Max Retries: "></Label>
+                <Label Content="{Binding Source={x:Static w:LocaleResources.MaxRetriesLabel}}"></Label>
                 <TextBox Name="MaxRetriesTxt" VerticalContentAlignment="Center" Text="{Binding MaxRetries}"></TextBox>
             </DockPanel>
         </GroupBox>
-        <GroupBox Grid.Row="1" Name="UiSettings" Header="UI Settings">
+        <GroupBox Grid.Row="1" Name="UiSettings" Header="{Binding Source={x:Static w:LocaleResources.UISettingsLabel}}">
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -51,29 +51,30 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Label Content="Show Lyrics For" Grid.Column="0" Grid.Row="0"/>
-                    <CheckBox Content="Anime" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchAnime}" />
-                    <CheckBox Content="Touhou" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchTouhou}" />
-                    <CheckBox Content="Western" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchWest}"/>
-                    <CheckBox Content="JP" Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchJP}"/>
-                    <CheckBox Content="Other" Grid.Column="5" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchOther}"/>
+                    <Label Content="{Binding Source={x:Static w:LocaleResources.ShowLyricsLabel}}" Grid.Column="0" Grid.Row="0"/>
+                    <CheckBox Content="{Binding Source={x:Static w:LocaleResources.AnimeRadio}}" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchAnime}" />
+                    <CheckBox Content="{Binding Source={x:Static w:LocaleResources.TouhouRadio}}" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchTouhou}" />
+                    <CheckBox Content="{Binding Source={x:Static w:LocaleResources.WesternRadio}}" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchWest}"/>
+                    <CheckBox Content="{Binding Source={x:Static w:LocaleResources.JapaneseRadio}}" Grid.Column="4" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchJP}"/>
+                    <CheckBox Content="{Binding Source={x:Static w:LocaleResources.OtherRadio}}" Grid.Column="5" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"  IsChecked="{Binding Source={StaticResource UserSettings}, Path=Default.SearchOther}"/>
                 </Grid>
                 <DockPanel>
-                    <Label Content="Font Family:"/>
+                    <Label Content="{Binding Source={x:Static w:LocaleResources.FontFamilyLabel}}"/>
                     <ComboBox ItemsSource="{Binding FontFamilies}" Name="fontFamilyBox" SelectedItem="{Binding SelectedFontFamily}" Width="100" HorizontalAlignment="Right"/>
                 </DockPanel>
                 <DockPanel Margin="0 5 0 0">
-                    <Label Content="Color Theme:"/>
+                    <Label Content="{Binding Source={x:Static w:LocaleResources.ColorThemeLabel}}"/>
                     <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Themes}" Name="themeBox" SelectedItem="{Binding SelectedTheme}" Width="100" HorizontalAlignment="Right"/>
                 </DockPanel>
                 <DockPanel Margin="0 5 0 0">
-                    <Label Content="Language:"/>
+                    <Label Content="{Binding Source={x:Static w:LocaleResources.LanguageLabel}}"/>
+                    <Label Content="{Binding Source={x:Static w:LocaleResources.LanguageSubLabel}}" Margin="-10, 0, 0, 0" FontSize="12" FontFamily="Segoe UI Light" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding Source={StaticResource UserSettings}, Path=Default.Locales}" Name="langBox" SelectedItem="{Binding Source={StaticResource UserSettings}, Path=Default.Locale}" Width="100" HorizontalAlignment="Right"/>
                 </DockPanel>
             </StackPanel>
         </GroupBox>
         <DockPanel Grid.Row="2">
-            <Button Name="saveBtn" Margin="0, 5, 5, 5" HorizontalAlignment="Right" Content="Save" Width="50" Command="{Binding SaveCommand}"></Button>
+            <Button Name="saveBtn" Margin="0, 5, 5, 5" HorizontalAlignment="Right" Content="{Binding Source={x:Static w:LocaleResources.SaveButton}}" Width="50" Command="{Binding SaveCommand}"></Button>
         </DockPanel>
     </Grid>
 </UserControl>
