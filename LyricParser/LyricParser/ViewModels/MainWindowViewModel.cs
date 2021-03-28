@@ -30,10 +30,10 @@ namespace LyricParser.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private int MAX_RETRIES = 6;
-        private static int retries = 6;
-        private static bool paused = false;
-        private int getLyricsDueTime = 3000;
+        private int maxRetries = 6;
+        private int retries = 6;
+        private int anime_retry = 0;
+        private readonly int getLyricsDueTime = 3000;
         private bool isGetLyricsTimerStarted = false;
         private Timer getLyricsTimer;
 
@@ -42,11 +42,7 @@ namespace LyricParser.ViewModels
         private readonly int zoomLevels = 8;
 
         private bool? autoSearch = true;
-        private bool initComplete = false;
         private bool isAddingLyrics = false;
-
-        private List<string> rows = new List<string>();
-        private List<string> lyrics = new List<string>();
 
         public Status currentStatus = Status.Standby;
         public Song currentSong;
@@ -56,9 +52,8 @@ namespace LyricParser.ViewModels
         static Category songCategory = Category.Western;
 
         const int MAX_ANIME_RETRIES = 10;
-        int anime_retry = 0;
-
-        private List<Key> keysDown = new List<Key>();
+        
+        private readonly List<Key> keysDown = new List<Key>();
 
         private int currentSessionIndex = 0;
         private GlobalSystemMediaTransportControlsSessionManager sessionManager;
@@ -321,24 +316,24 @@ namespace LyricParser.ViewModels
 
         #endregion
 
-        #region Services
+        #region Interfaces
 
-        private IDialogService _dialogService { get; }
+        private IDialogService DialogService { get; }
+
+        private IEventAggregator EventAggregator { get; }
 
         #endregion
-
-        IEventAggregator _eventAggregator { get; }
 
         // Load settings
         public void LoadSettings()
         { 
-            MAX_RETRIES = Properties.UserSettings.Default.MaxRetries;
+            maxRetries = Properties.UserSettings.Default.MaxRetries;
             LyricsFontFamily = Properties.UserSettings.Default.FontFamily;
             ZoomSelectionIndex = Properties.Settings.Default.ZoomIndex;
             SetFontSize();
             ShowInfoRight(Properties.Settings.Default.ShowInfoRight);
 
-            retries = MAX_RETRIES;
+            retries = maxRetries;
     
             CultureInfo newCulture = new CultureInfo(Properties.UserSettings.Default.Locale);
             if (Thread.CurrentThread.CurrentCulture.Name != newCulture.Name) App.ChangeCulture(newCulture);
@@ -385,8 +380,8 @@ namespace LyricParser.ViewModels
 
         public MainWindowViewModel(IEventAggregator ea, IDialogService ds)
         {
-            _eventAggregator = ea;
-            _dialogService = ds;
+            EventAggregator = ea;
+            DialogService = ds;
 
             GetLyricsCommand = new DelegateCommand(async () => await ExecuteGetLyrics());
 
@@ -409,8 +404,8 @@ namespace LyricParser.ViewModels
             GetCurrentSongCommand = new DelegateCommand(GetCurrentSong);
             SearchInBrowserCommand = new DelegateCommand(SearchInBrowser);
 
-            OpenEditorCommand = new DelegateCommand(OpenEditor); // <------- Make async?
-            OpenSettingsCommand = new DelegateCommand(OpenSettings); // <------- Make async?
+            OpenEditorCommand = new DelegateCommand(OpenEditor);
+            OpenSettingsCommand = new DelegateCommand(OpenSettings);
 
             ShowHideInfoRightCommand = new DelegateCommand(ToggleInfoRight);
 
@@ -444,7 +439,6 @@ namespace LyricParser.ViewModels
             }
 
             SetStatus(Status.Standby);
-            initComplete = true;
 
             GetSessionManager();
         }
@@ -527,10 +521,10 @@ namespace LyricParser.ViewModels
 
                 if (!String.IsNullOrWhiteSpace(currentlyPlaying.Artist) && autoSearch == true)
                 {
-                    if ((currentlyPlaying.Title != currentSong.Title && !paused))
+                    if (currentlyPlaying.Title != currentSong.Title)
                     {
                         SetCurrentSong(currentlyPlaying);
-                        retries = MAX_RETRIES;
+                        retries = maxRetries;
 
                         await GetLyrics(currentSong.Artist, currentSong.Title);
 
@@ -562,7 +556,7 @@ namespace LyricParser.ViewModels
 
             if (song.Title != currentSong.Title)
             {
-                retries = MAX_RETRIES;
+                retries = maxRetries;
 
                 await GetLyrics(currentSong.Artist, currentSong.Title);
                 isGetLyricsTimerStarted = false;
@@ -642,7 +636,7 @@ namespace LyricParser.ViewModels
             SetStatus(Status.Searching);
             bool success = true;
 
-            retries = MAX_RETRIES;
+            retries = maxRetries;
 
             Lyrics lyrics = AutoSearchChecked ? await App.Database.GetLyricsAsync(artist.ToLower(), title.ToLower()) : null;
 
@@ -680,7 +674,11 @@ namespace LyricParser.ViewModels
             switch (songCategory)
             {
                 case Category.Anime:
-                    content = await new GendouParser().ParseHtml(_artist, _title, "&page=" + anime_retry);
+                    while (anime_retry < maxRetries && content == null)
+                    {
+                        content = await new GendouParser().ParseHtml(_artist, _title, "&page=" + anime_retry);
+                        anime_retry++;
+                    }
                     break;
                 case Category.Touhou:
                     content = await new TouhouwikiParser().ParseHtml(_artist, _title);
@@ -735,9 +733,7 @@ namespace LyricParser.ViewModels
         // Cleanup lyrics view
         private void CleanUp()
         {
-            rows.Clear();
             OriginalLyrics = "";
-            lyrics.Clear();
         }
 
         // Set status of the search
@@ -770,7 +766,6 @@ namespace LyricParser.ViewModels
         // Set category
         private void SetCategory(Category id)
         {
-            if (!initComplete) return;
             songCategory = id;
         }
 
@@ -822,7 +817,7 @@ namespace LyricParser.ViewModels
             else if (JpRadChecked) SetCategory(Category.JP);
             else if (OtherRadChecked) SetCategory(Category.Other);
 
-            retries = MAX_RETRIES;
+            retries = maxRetries;
         }
 
         private void OnViewLoaded()
@@ -881,7 +876,7 @@ namespace LyricParser.ViewModels
         private void OpenEditor()
         {
 
-            _dialogService.ShowDialog(nameof(EditorView), new DialogParameters() {
+            DialogService.ShowDialog(nameof(EditorView), new DialogParameters() {
                 { "data", currentLyrics}
             }, r =>
             {
@@ -891,7 +886,7 @@ namespace LyricParser.ViewModels
         }
         private void OpenSettings()
         {
-            _dialogService.ShowDialog(nameof(SettingsView), new DialogParameters(), r => 
+            DialogService.ShowDialog(nameof(SettingsView), new DialogParameters(), r => 
             {
                 if (r.Result == ButtonResult.OK)
                     SettingsClosed();
